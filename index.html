@@ -357,7 +357,7 @@
   <div id="loading-screen">
     <img src="https://64.media.tumblr.com/37c52c25279f877bd0bc2d538626c938/2f8407cc51b2210e-be/s540x810/c379bb3cd18325d6b075e62fd26ffe91f5093ee3.jpg" class="loader-logo" alt="Logo" loading="lazy">
     <p class="loader-text">ESTALINGRADO CORP</p>
-    <div style="margin-bottom:20px; font-size:10px; color:var(--primary); letter-spacing: 2px;">SISTEMA DE BÚSQUEDA INTEGRADO</div>
+    <div style="margin-bottom:20px; font-size:10px; color:var(--primary); letter-spacing: 2px;">CONECTANDO A LA INTRA-NET</div>
     <div class="loading-bar"><div id="loading-progress-bar"></div></div>
     <div id="loading-percent">0%</div>
   </div>
@@ -563,14 +563,25 @@ window.onerror = function(message, source, lineno, colno, error) {
 };
 
 var CONFIG = {
-    knownSites: {
-        chatgpt: "https://chatgpt.com/",
-        gemini: "https://gemini.google.com/app?hl=es",
-        youtube: "https://www.youtube.com/",
-        estalingrado: "https://centercorpec.wixsite.com/softwarelab",
-        github: "https://github.com/",
-        wikipedia: "https://es.wikipedia.org/wiki/Wikipedia:Portada"
-    },
+    knownSites: [
+        { url: "https://chatgpt.com/", title: "ChatGPT", icon: "fas fa-robot", keywords: ["chatgpt", "ia", "openai", "chat gpt"] },
+        { url: "https://gemini.google.com/", title: "Google Gemini", icon: "fas fa-sparkles", keywords: ["gemini", "google gemini", "gemini ia"] },
+        { url: "https://www.google.com/", title: "Google", icon: "fab fa-google", keywords: ["google", "buscador", "buscar en google", "san google"] },
+        { url: "https://music.youtube.com/", title: "YouTube Music", icon: "fas fa-music", keywords: ["youtube music", "yt music", "musica", "canciones"] },
+        { url: "https://www.youtube.com/", title: "YouTube", icon: "fab fa-youtube", keywords: ["youtube", "yt", "videos", "vid"] },
+        { url: "https://centercorpec.wixsite.com/softwarelab", title: "Estalingrado Corp", icon: "fas fa-building", keywords: ["estalingrado", "portal", "intranet", "empresa"] },
+        { url: "https://github.com/", title: "GitHub", icon: "fab fa-github", keywords: ["github", "git", "repositorio", "codigo", "código"] },
+        { url: "https://es.wikipedia.org/wiki/Wikipedia:Portada", title: "Wikipedia", icon: "fab fa-wikipedia-w", keywords: ["wikipedia", "wiki", "enciclopedia"] },
+        { url: "https://stackoverflow.com/", title: "Stack Overflow", icon: "fab fa-stack-overflow", keywords: ["stackoverflow", "stack overflow", "errores", "programacion", "programación", "so"] },
+        { url: "https://www.linkedin.com/", title: "LinkedIn", icon: "fab fa-linkedin", keywords: ["linkedin", "red profesional", "empleo", "trabajo", "cv"] },
+        { url: "https://www.reddit.com/", title: "Reddit", icon: "fab fa-reddit", keywords: ["reddit", "foros", "comunidad", "hilos"] },
+        { url: "https://x.com/", title: "X (Twitter)", icon: "fab fa-twitter", keywords: ["twitter", "x", "red social", "tweets", "noticias breves"] },
+        { url: "https://open.spotify.com/", title: "Spotify", icon: "fab fa-spotify", keywords: ["spotify", "podcasts", "playlist", "audio"] },
+        { url: "https://www.twitch.tv/", title: "Twitch", icon: "fab fa-twitch", keywords: ["twitch", "streams", "directos", "gaming", "transmisiones"] },
+        { url: "https://www.amazon.com/", title: "Amazon", icon: "fab fa-amazon", keywords: ["amazon", "compras", "tienda", "shop"] },
+        { url: "https://www.figma.com/", title: "Figma", icon: "fab fa-figma", keywords: ["figma", "diseño", "ui", "ux", "prototipos"] },
+        { url: "https://codepen.io/", title: "CodePen", icon: "fab fa-codepen", keywords: ["codepen", "frontend", "snippets", "html css js"] }
+    ],
     semanticSearch: {
         "noticias de tecnología": ["techcrunch.com", "theverge.com", "wired.com"],
         "aprender programación": ["freecodecamp.org", "codecademy.com", "developer.mozilla.org"]
@@ -578,7 +589,11 @@ var CONFIG = {
     searchSuggestions: [
         "noticias de hoy", "clima en madrid", "javascript tutorial",
         "bitcoin precio", "chatgpt español", "github copilot",
-        "estalingrado software lab", "privacidad online", "wikipedia inteligencia artificial"
+        "estalingrado software lab", "privacidad online", "wikipedia inteligencia artificial",
+        "chatgpt", "gemini", "google", "youtube", "youtube music", "estalingrado", "github", "wikipedia",
+        "musica", "buscador", "ia", "enciclopedia", "videos",
+        "stackoverflow", "linkedin", "reddit", "twitter", "spotify", "twitch", "amazon", "figma", "codepen",
+        "empleo", "compras", "diseño", "programacion", "red profesional"
     ],
     searchEngines: {
         Bing: query => `https://www.bing.com/search?q=${encodeURIComponent(query)}`,
@@ -752,7 +767,11 @@ var UI = {
             if(w.type==='news') UI.loadNewsContent(el); else if(w.type==='weather') UI.loadWeatherContent(el); else if(w.type==='stocks') UI.loadStocksContent(el); else UI.loadBookmarksContent(el);
         }
     },
-    saveWidgets: function() { Utils.safeLocalStorage.set('dashboardWidgets', AppState.widgets); }
+    saveWidgets: function() { Utils.safeLocalStorage.set('dashboardWidgets', AppState.widgets); },
+    resetDashboard: function() { 
+        Utils.safeLocalStorage.remove('dashboardWidgets'); 
+        this.addDefaultWidgets(); 
+    }
 };
 
 var SearchManager = {
@@ -821,6 +840,34 @@ var SearchManager = {
 
     fetchInlineResults: function(query, container) {
         const safeQuery = Utils.escapeHtml(query);
+        const normalizedQuery = query.toLowerCase().trim();
+
+        // 00. ACCESO DIRECTO (Smart Card Inteligente para Known Sites basado en Palabras Clave)
+        const matchedSite = CONFIG.knownSites.find(site => site.keywords.includes(normalizedQuery));
+        
+        if (matchedSite) {
+            const siteDiv = document.createElement("div"); 
+            siteDiv.className = "result"; 
+            siteDiv.style.background = "linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(15, 23, 42, 0.8))";
+            siteDiv.style.border = "1px solid var(--primary)";
+            siteDiv.style.boxShadow = "0 0 25px rgba(59, 130, 246, 0.2)";
+            
+            siteDiv.innerHTML = `
+                <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap: wrap; gap: 15px;">
+                    <div style="display:flex; align-items:center; gap:15px;">
+                        <div style="width:55px; height:55px; background:var(--primary); border-radius:14px; display:flex; align-items:center; justify-content:center; color:white; font-size:26px; box-shadow:0 0 15px var(--primary-glow);">
+                            <i class="${matchedSite.icon}"></i>
+                        </div>
+                        <div>
+                            <strong style="color:var(--text); font-size:1.3em; letter-spacing: 0.5px;">Portal Corporativo: ${matchedSite.title}</strong>
+                            <div style="font-size:12px; color:var(--text-muted); margin-top:3px;"><i class="fas fa-shield-alt" style="color:var(--success);"></i> Conexión directa y segura autorizada</div>
+                        </div>
+                    </div>
+                    <a href="${matchedSite.url}" target="_blank" class="btn btn-primary" style="padding:12px 24px; font-size:14px; font-weight:600; text-transform:uppercase; letter-spacing:1px; box-shadow: 0 4px 15px var(--primary-glow);"><i class="fas fa-external-link-square-alt" style="margin-right:8px;"></i> Acceder al Portal</a>
+                </div>
+            `;
+            container.appendChild(siteDiv);
+        }
 
         // 0. Terminal CLI
         const termDiv = document.createElement("div"); termDiv.className = "result"; termDiv.style.background = "#0d1117"; termDiv.style.borderLeft = "4px solid #58a6ff";
@@ -998,6 +1045,133 @@ var SearchManager = {
                             if(extraContainer) extraContainer.innerHTML = '';
                         }
                     }
+                }
+            }).catch(()=>{});
+        }
+
+        // 6. Multimedia (iTunes)
+        const mediaKeywords = ['cancion', 'canción', 'artista', 'album', 'pelicula', 'película', 'musica', 'música', 'podcast'];
+        const isMedia = mediaKeywords.some(kw => query.toLowerCase().includes(kw));
+        if (isMedia) {
+            let cleanQuery = query.toLowerCase().replace(new RegExp(mediaKeywords.join('|'), 'gi'), '').trim() || query;
+            if(cleanQuery.length > 2) {
+                fetch(`https://itunes.apple.com/search?term=${encodeURIComponent(cleanQuery)}&limit=3`).then(r=>r.json()).then(d=>{
+                    if(d.results && d.results.length > 0) {
+                        const div = document.createElement('div'); div.className = 'result'; div.style.borderLeft = '4px solid #ec4899';
+                        let html = `<strong style="color:#ec4899;"><i class="fas fa-music"></i> Apple Media Data:</strong><div style="display:flex; flex-direction:column; gap:10px; margin-top:10px;">`;
+                        d.results.forEach(item => {
+                            html += `
+                            <div style="display:flex; gap:10px; align-items:center; background:rgba(255,255,255,0.03); padding:8px; border-radius:8px;">
+                                ${item.artworkUrl100 ? `<img src="${item.artworkUrl100}" style="width:50px; height:50px; border-radius:6px; object-fit:cover;">` : ''}
+                                <div style="flex:1;">
+                                    <div style="font-weight:600; font-size:14px; color:var(--text);">${item.trackName || item.collectionName || item.artistName}</div>
+                                    <div style="font-size:12px; color:var(--text-muted);">${item.artistName} • <span style="text-transform:capitalize;">${item.kind || item.wrapperType}</span></div>
+                                </div>
+                                ${item.previewUrl ? `<audio controls src="${item.previewUrl}" style="height:30px; width:120px;"></audio>` : ''}
+                            </div>`;
+                        });
+                        html += `</div>`;
+                        div.innerHTML = html;
+                        container.appendChild(div);
+                    }
+                }).catch(()=>{});
+            }
+        }
+
+        // 7. Series y TV (TVMaze)
+        const tvKeywords = ['serie', 'programa', 'tv', 'temporada', 'show'];
+        const isTv = tvKeywords.some(kw => query.toLowerCase().includes(kw));
+        if(isTv) {
+            let cleanQuery = query.toLowerCase().replace(new RegExp(tvKeywords.join('|'), 'gi'), '').trim() || query;
+            if(cleanQuery.length > 2) {
+                fetch(`https://api.tvmaze.com/search/shows?q=${encodeURIComponent(cleanQuery)}`).then(r=>r.json()).then(d=>{
+                    if(d.length > 0) {
+                        const show = d[0].show;
+                        const div = document.createElement('div'); div.className = 'result'; div.style.borderLeft = '4px solid #14b8a6';
+                        div.innerHTML = `
+                            <div style="display:flex; gap:15px; align-items:flex-start;">
+                                ${show.image ? `<img src="${show.image.medium}" style="width:70px; border-radius:6px;">` : `<div style="width:70px; height:100px; background:rgba(255,255,255,0.05); display:flex; align-items:center; justify-content:center; border-radius:6px;"><i class="fas fa-tv" style="color:#14b8a6; font-size:24px;"></i></div>`}
+                                <div style="flex:1;">
+                                    <strong style="color:#14b8a6; font-size:1.1em;"><i class="fas fa-tv"></i> Base de Datos TVMaze:</strong>
+                                    <h3 style="margin:5px 0 2px; font-size:1.3em; color:var(--text);">${show.name}</h3>
+                                    <div style="font-size:12px; color:var(--text-muted); margin-bottom:8px;">
+                                        ${show.premiered ? show.premiered.split('-')[0] : 'N/A'} • ${show.genres.join(', ')} • ⭐ ${show.rating?.average || '-'}
+                                    </div>
+                                    <div style="font-size:13px; color:var(--text-gray); line-height: 1.4; max-height: 60px; overflow: hidden; text-overflow: ellipsis; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical;">
+                                        ${show.summary ? show.summary.replace(/<[^>]+>/g, '') : 'Sin descripción disponible.'}
+                                    </div>
+                                    ${show.officialSite ? `<a href="${show.officialSite}" target="_blank" class="btn btn-secondary" style="margin-top:10px; padding:4px 10px; font-size:11px;"><i class="fas fa-external-link-alt"></i> Sitio Oficial</a>` : ''}
+                                </div>
+                            </div>`;
+                        container.appendChild(div);
+                    }
+                }).catch(()=>{});
+            }
+        }
+
+        // 8. GitHub Users
+        if(query.toLowerCase().startsWith('github ')) {
+            let user = query.toLowerCase().replace('github ', '').trim();
+            if(user) {
+                fetch(`https://api.github.com/users/${encodeURIComponent(user)}`).then(r=>r.json()).then(d=>{
+                    if(d.login) {
+                        const div = document.createElement('div'); div.className = 'result'; div.style.borderLeft = '4px solid #6e7681';
+                        div.innerHTML = `
+                            <div style="display:flex; gap:15px; align-items:center;">
+                                <img src="${d.avatar_url}" style="width:60px; height:60px; border-radius:50%; border:2px solid #6e7681; box-shadow:0 0 10px rgba(255,255,255,0.05);">
+                                <div style="flex:1;">
+                                    <strong style="color:#c9d1d9;"><i class="fab fa-github"></i> Registro de Desarrollador GitHub:</strong>
+                                    <h3 style="margin:3px 0; color:var(--text);">${d.name || d.login} <span style="font-size:13px; font-weight:400; color:var(--text-gray);">@${d.login}</span></h3>
+                                    ${d.bio ? `<div style="font-size:12px; color:var(--text-muted); margin-bottom:5px;">${d.bio}</div>` : ''}
+                                    <div style="font-size:11px; margin-top:5px; color:var(--text-gray); display:flex; gap:10px;">
+                                        <span><i class="fas fa-users" style="color:var(--primary);"></i> ${d.followers} followers</span> 
+                                        <span><i class="fas fa-book" style="color:var(--primary);"></i> ${d.public_repos} repositorios</span>
+                                    </div>
+                                </div>
+                                <a href="${d.html_url}" target="_blank" class="btn btn-secondary" style="font-size:11px; padding:6px 12px; border-radius:20px;"><i class="fas fa-external-link-alt"></i> Visitar Perfil</a>
+                            </div>`;
+                        container.appendChild(div);
+                    }
+                }).catch(()=>{});
+            }
+        }
+
+        // 9. Pokémon (PokeAPI)
+        if(query.toLowerCase().startsWith('pokemon ') || query.toLowerCase().startsWith('pokémon ')) {
+            let pkm = query.toLowerCase().replace(/pok[eé]mon /i, '').trim();
+            if(pkm) {
+                fetch(`https://pokeapi.co/api/v2/pokemon/${encodeURIComponent(pkm)}`).then(r=>r.json()).then(d=>{
+                    if(d.id) {
+                        const div = document.createElement('div'); div.className = 'result'; div.style.borderLeft = '4px solid #ef4444';
+                        const types = d.types.map(t => t.type.name).join(', ');
+                        div.innerHTML = `
+                            <div style="display:flex; gap:15px; align-items:center;">
+                                <div style="background:radial-gradient(circle, rgba(255,255,255,0.1), transparent); border-radius:50%; padding:5px; border:1px solid rgba(239,68,68,0.2);">
+                                    <img src="${d.sprites.front_default}" style="width:70px; height:70px; image-rendering:pixelated; transform:scale(1.2);">
+                                </div>
+                                <div>
+                                    <strong style="color:#ef4444;"><i class="fas fa-tablet-alt"></i> Base de Datos Pokédex:</strong>
+                                    <h3 style="margin:3px 0; text-transform:capitalize; color:var(--text);">#${d.id} ${d.name}</h3>
+                                    <div style="font-size:12px; color:var(--text-muted); text-transform:capitalize;">Tipo: <span style="color:var(--text);">${types}</span></div>
+                                    <div style="font-size:11px; color:var(--text-gray); margin-top:2px;">Altura: ${d.height/10}m • Peso: ${d.weight/10}kg</div>
+                                </div>
+                            </div>`;
+                        container.appendChild(div);
+                    }
+                }).catch(()=>{});
+            }
+        }
+
+        // 10. Unidad Canina (Dog API)
+        if(['perro', 'perros', 'dog', 'dogs', 'cachorro'].includes(query.toLowerCase())) {
+            fetch('https://dog.ceo/api/breeds/image/random').then(r=>r.json()).then(d=>{
+                if(d.status === 'success') {
+                    const div = document.createElement('div'); div.className = 'result'; div.style.borderLeft = '4px solid #d97706';
+                    div.innerHTML = `
+                        <strong style="color:#d97706;"><i class="fas fa-paw"></i> Unidad Canina Detectada:</strong><br>
+                        <img src="${d.message}" style="width:100%; max-width:400px; height:auto; max-height:250px; object-fit:cover; border-radius:12px; margin-top:10px; box-shadow:0 5px 20px rgba(0,0,0,0.3); border:1px solid rgba(255,255,255,0.1);">
+                    `;
+                    container.appendChild(div);
                 }
             }).catch(()=>{});
         }
