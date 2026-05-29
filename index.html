@@ -416,6 +416,7 @@
         <label><input type="checkbox" value="Baidu" checked> Baidu</label>
         <label><input type="checkbox" value="Startpage" checked> Startpage</label>
         <label><input type="checkbox" value="Wikipedia" checked> Wikipedia</label>
+        <label><input type="checkbox" value="InternetArchive" checked> Internet Archive</label>
         <button class="panel-btn danger" onclick="window.clearHistory()"><i class="fas fa-trash-alt"></i> Borrar Historial</button>
       </div>
 
@@ -431,6 +432,7 @@
       <div id="menuPanel" class="floating-panel">
         <strong>Intra-net</strong>
         <a href="https://nicotips27.github.io/ec-download/"><i class="fas fa-download"></i> EC Download</a>
+        <a href="https://nicotips27.github.io/EC-chanel/"><i class="fas fa-tv"></i> EC Channel</a>
         <a href="https://nicotips27.github.io/ec-Intra-net/"><i class="fas fa-database"></i> Big-Data</a>
         <strong>Administrativo</strong>
         <a href="https://nicotips27.github.io/EC-OS/" target="_blank"><i class="fas fa-laptop"></i> EC OS</a>
@@ -623,7 +625,7 @@ var CONFIG = {
         "chatgpt", "gemini", "google", "youtube", "youtube music", "estalingrado", "github", "wikipedia",
         "musica", "buscador", "ia", "enciclopedia", "videos",
         "stackoverflow", "linkedin", "reddit", "twitter", "spotify", "twitch", "amazon", "figma", "codepen",
-        "empleo", "compras", "diseño", "programacion", "red profesional"
+        "empleo", "compras", "diseño", "programacion", "red profesional", "archivo histórico"
     ],
     searchEngines: {
         Bing: query => `https://www.bing.com/search?q=${encodeURIComponent(query)}`,
@@ -633,7 +635,8 @@ var CONFIG = {
         Brave: query => `https://search.brave.com/search?q=${encodeURIComponent(query)}`,
         Baidu: query => `https://www.baidu.com/s?wd=${encodeURIComponent(query)}`,
         Startpage: query => `https://www.startpage.com/sp/search?query=${encodeURIComponent(query)}`,
-        Wikipedia: query => `https://es.wikipedia.org/wiki/Special:Search?search=${encodeURIComponent(query)}`
+        Wikipedia: query => `https://es.wikipedia.org/wiki/Special:Search?search=${encodeURIComponent(query)}`,
+        InternetArchive: query => `https://archive.org/search?query=${encodeURIComponent(query)}`
     },
     aiCommands: { '/ai': '', '/clima': '', '/traducir': '' }
 };
@@ -1204,6 +1207,47 @@ var SearchManager = {
                     container.appendChild(div);
                 }
             }).catch(()=>{});
+        }
+
+        // 11. Internet Archive (Búsqueda Histórica)
+        const archiveKeywords = ['archivo', 'archive', 'historia web', 'documento antiguo'];
+        const isArchive = archiveKeywords.some(kw => query.toLowerCase().includes(kw));
+        if(isArchive) {
+            let cleanQuery = query.toLowerCase().replace(new RegExp(archiveKeywords.join('|'), 'gi'), '').trim() || query;
+            if(cleanQuery.length > 2) {
+                // Ordenar por número de descargas para asegurar relevancia
+                fetch(`https://archive.org/advancedsearch.php?q=${encodeURIComponent(cleanQuery)}&fl[]=identifier,title,creator,mediatype,year,description&sort[]=downloads+desc&rows=1&page=1&output=json`)
+                .then(r=>r.json()).then(d=>{
+                    if(d.response && d.response.docs && d.response.docs.length > 0) {
+                        const item = d.response.docs[0];
+                        const div = document.createElement('div'); div.className = 'result'; div.style.borderLeft = '4px solid #a8a29e';
+                        const imgUrl = `https://archive.org/services/img/${item.identifier}`;
+                        const itemUrl = `https://archive.org/details/${item.identifier}`;
+                        
+                        div.innerHTML = `
+                            <div style="display:flex; gap:15px; align-items:flex-start;">
+                                <div style="flex-shrink: 0; width: 80px; min-height: 80px; background: rgba(255,255,255,0.05); border-radius: 6px; display: flex; align-items: center; justify-content: center; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.3);">
+                                    <img src="${imgUrl}" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';" style="width:100%; height:auto;">
+                                    <i class="fas fa-landmark" style="display:none; font-size:24px; color:#a8a29e;"></i>
+                                </div>
+                                <div style="flex:1;">
+                                    <strong style="color:#a8a29e; font-size:1.1em;"><i class="fas fa-landmark"></i> Registro Histórico Archive.org:</strong>
+                                    <h3 style="margin:5px 0 2px; font-size:1.3em; color:var(--text);">${item.title}</h3>
+                                    <div style="font-size:12px; color:var(--text-muted); margin-bottom:8px;">
+                                        ${item.creator ? `Creador: <strong style="color:var(--text);">${Array.isArray(item.creator) ? item.creator[0] : item.creator}</strong>` : 'Origen desconocido'} 
+                                        ${item.year ? `&nbsp;•&nbsp; Año: ${item.year}`:''}
+                                        ${item.mediatype ? `&nbsp;•&nbsp; Formato: <span style="text-transform:capitalize;">${item.mediatype}</span>`:''}
+                                    </div>
+                                    <div style="font-size:13px; color:var(--text-gray); line-height: 1.4; max-height: 60px; overflow: hidden; text-overflow: ellipsis; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical;">
+                                        ${item.description ? (Array.isArray(item.description) ? item.description[0] : item.description).replace(/<[^>]+>/g, '') : 'Sin descripción detallada en los archivos.'}
+                                    </div>
+                                    <a href="${itemUrl}" target="_blank" class="btn btn-secondary" style="margin-top:10px; padding:4px 10px; font-size:11px;"><i class="fas fa-external-link-alt"></i> Explorar en Internet Archive</a>
+                                </div>
+                            </div>`;
+                        container.appendChild(div);
+                    }
+                }).catch(()=>{});
+            }
         }
     },
 
