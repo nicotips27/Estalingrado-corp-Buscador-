@@ -662,6 +662,80 @@ var Utils = {
     escapeHtml: (unsafe) => unsafe.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;")
 };
 
+// =========================================
+// MOTOR ORTOGRÁFICO ESTALINGRADO
+// =========================================
+var SpellChecker = {
+    dictionary: [],
+    init: function() {
+        let words = new Set();
+        CONFIG.searchSuggestions.forEach(s => words.add(s.toLowerCase()));
+        CONFIG.knownSites.forEach(site => site.keywords.forEach(k => words.add(k.toLowerCase())));
+        this.dictionary = Array.from(words);
+    },
+    // Algoritmo de Distancia de Levenshtein
+    getDistance: function(a, b) {
+        if(a.length === 0) return b.length;
+        if(b.length === 0) return a.length;
+        let matrix = [];
+        for(let i = 0; i <= b.length; i++) matrix[i] = [i];
+        for(let j = 0; j <= a.length; j++) matrix[0][j] = j;
+        for(let i = 1; i <= b.length; i++){
+            for(let j = 1; j <= a.length; j++){
+                if(b.charAt(i-1) === a.charAt(j-1)) {
+                    matrix[i][j] = matrix[i-1][j-1];
+                } else {
+                    matrix[i][j] = Math.min(matrix[i-1][j-1] + 1, Math.min(matrix[i][j-1] + 1, matrix[i-1][j] + 1));
+                }
+            }
+        }
+        return matrix[b.length][a.length];
+    },
+    findClosest: function(str) {
+        let bestMatch = null;
+        let minDistance = Infinity;
+        for (let word of this.dictionary) {
+            let dist = this.getDistance(str, word);
+            // Tolerancia de error: 1 letra para palabras cortas, 2 para largas
+            let maxAllowed = word.length <= 4 ? 1 : 2;
+            if (dist <= maxAllowed && dist < minDistance) {
+                minDistance = dist;
+                bestMatch = word;
+            }
+        }
+        return bestMatch;
+    },
+    getSuggestion: function(query) {
+        if (!this.dictionary.length) this.init();
+        const q = query.toLowerCase().trim();
+        if (this.dictionary.includes(q)) return null;
+
+        // 1. Intentar corregir la frase completa
+        let bestPhraseMatch = this.findClosest(q);
+        if (bestPhraseMatch) return bestPhraseMatch;
+
+        // 2. Intentar corregir palabra por palabra si es una oración
+        let words = q.split(' ');
+        let correctedWords = [];
+        let changed = false;
+
+        for (let w of words) {
+            if (this.dictionary.includes(w) || w.length < 3) {
+                correctedWords.push(w);
+            } else {
+                let closest = this.findClosest(w);
+                if (closest) {
+                    correctedWords.push(closest);
+                    changed = true;
+                } else {
+                    correctedWords.push(w);
+                }
+            }
+        }
+        return changed ? correctedWords.join(' ') : null;
+    }
+};
+
 var UI = {
     elements: {},
     init: function() {
@@ -847,6 +921,26 @@ var SearchManager = {
         resultsContainer.style.display = 'block'; setTimeout(() => resultsContainer.classList.add('show'), 10);
         resultsDiv.innerHTML = "";
         
+        // --- SUGERENCIA ORTOGRÁFICA ("Quizás quisiste decir") ---
+        const suggestion = SpellChecker.getSuggestion(query);
+        if (suggestion && suggestion.toLowerCase() !== query.toLowerCase()) {
+            const spellDiv = document.createElement("div");
+            spellDiv.style.marginBottom = "20px";
+            spellDiv.style.padding = "10px 16px";
+            spellDiv.style.background = "linear-gradient(90deg, rgba(59, 130, 246, 0.1), transparent)";
+            spellDiv.style.borderRadius = "8px";
+            spellDiv.style.borderLeft = "3px solid var(--primary)";
+            spellDiv.innerHTML = `
+                <span style="color: var(--text-muted); font-size: 14px; margin-right: 5px;">¿Quizás quisiste decir:</span> 
+                <a href="#" onclick="document.getElementById('query').value='${Utils.escapeHtml(suggestion)}'; window.search(); return false;" 
+                   style="color: var(--primary); font-size: 15px; font-weight: 600; font-style: italic; text-decoration: none;">
+                   ${Utils.escapeHtml(suggestion)}
+                </a><span style="color: var(--text-muted);">?</span>
+            `;
+            resultsDiv.appendChild(spellDiv);
+        }
+        // --------------------------------------------------------
+
         const inlineContainer = document.createElement("div"); inlineContainer.id = "inline-results-container";
         const externalContainer = document.createElement("div"); externalContainer.innerHTML = "<div class='loading-spinner'></div>";
         resultsDiv.appendChild(inlineContainer); resultsDiv.appendChild(externalContainer);
