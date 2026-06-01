@@ -431,6 +431,7 @@
 
       <div id="menuPanel" class="floating-panel">
         <strong>Intra-net</strong>
+        <a href="https://nicotips27.github.io/EC-Escritorio/"><i class="fas fa-desktop"></i> EC Escritorio</a>
         <a href="https://nicotips27.github.io/ec-download/"><i class="fas fa-download"></i> EC Download</a>
         <a href="https://nicotips27.github.io/EC-chanel/"><i class="fas fa-tv"></i> EC Channel</a>
         <a href="https://nicotips27.github.io/ec-Intra-net/"><i class="fas fa-database"></i> Big-Data</a>
@@ -594,6 +595,10 @@ window.onerror = function(message, source, lineno, colno, error) {
     }
 };
 
+window.addEventListener("unhandledrejection", function(event) {
+    console.warn("Promesa rechazada no capturada:", event.reason);
+});
+
 var CONFIG = {
     knownSites: [
         { url: "https://chatgpt.com/", title: "ChatGPT", icon: "fas fa-robot", keywords: ["chatgpt", "ia", "openai", "chat gpt"] },
@@ -625,7 +630,8 @@ var CONFIG = {
         "chatgpt", "gemini", "google", "youtube", "youtube music", "estalingrado", "github", "wikipedia",
         "musica", "buscador", "ia", "enciclopedia", "videos",
         "stackoverflow", "linkedin", "reddit", "twitter", "spotify", "twitch", "amazon", "figma", "codepen",
-        "empleo", "compras", "diseño", "programacion", "red profesional", "archivo histórico"
+        "empleo", "compras", "diseño", "programacion", "red profesional", "archivo histórico",
+        "definir", "pais", "receta", "spacex"
     ],
     searchEngines: {
         Bing: query => `https://www.bing.com/search?q=${encodeURIComponent(query)}`,
@@ -842,7 +848,13 @@ var UI = {
                             <div style="font-size:12px; color:var(--text-muted); margin-top:10px;"><i class="fas fa-map-marker-alt" style="color:var(--primary);"></i> ${geo[0].display_name.split(',')[0]}</div>
                         </div>
                     `;
+                }).catch(e => {
+                    console.warn("Error API Clima:", e);
+                    container.innerHTML = '<div class="weather-info">Clima temporalmente no disponible</div>';
                 });
+            }).catch(e => {
+                console.warn("Error API Geo:", e);
+                container.innerHTML = '<div class="weather-info">Ubicación temporalmente no disponible</div>';
             });
     },
     loadStocksContent: function(container) {
@@ -1068,9 +1080,9 @@ var SearchManager = {
                             </div>
                         `;
                     }
-                });
+                }).catch(e => console.warn("Error API Clima Interno:", e));
             }
-        }).catch(()=>{});
+        }).catch(e => console.warn("Error API Mapa:", e));
 
         // 4. Crypto
         const cryptoMap = {'btc':'bitcoin', 'eth':'ethereum', 'sol':'solana', 'doge':'dogecoin'};
@@ -1343,6 +1355,93 @@ var SearchManager = {
                 }).catch(()=>{});
             }
         }
+
+        // 12. Diccionario (Free Dictionary API)
+        const dictMatch = query.toLowerCase().match(/^(definir|significado de) (.+)/);
+        if(dictMatch && dictMatch[2]) {
+            fetch(`https://api.dictionaryapi.dev/api/v2/entries/es/${encodeURIComponent(dictMatch[2])}`).then(r=>r.json()).then(d=>{
+                if(Array.isArray(d) && d.length > 0) {
+                    const wordData = d[0];
+                    const div = document.createElement('div'); div.className = 'result'; div.style.borderLeft = '4px solid #3b82f6';
+                    let meaningsHtml = '';
+                    wordData.meanings.slice(0, 2).forEach(m => {
+                        meaningsHtml += `<div style="margin-top:8px;"><strong>${m.partOfSpeech}</strong>: <span style="color:var(--text-muted);">${m.definitions[0].definition}</span></div>`;
+                    });
+                    div.innerHTML = `<strong style="color:#3b82f6;"><i class="fas fa-book"></i> Diccionario:</strong><h3 style="margin:5px 0; text-transform:capitalize;">${wordData.word}</h3>${meaningsHtml}`;
+                    container.appendChild(div);
+                }
+            }).catch(()=>{});
+        }
+
+        // 13. Información de Países (REST Countries)
+        const countryMatch = query.toLowerCase().match(/^(pais|país) (.+)/);
+        if(countryMatch && countryMatch[2]) {
+            fetch(`https://restcountries.com/v3.1/translation/${encodeURIComponent(countryMatch[2])}`).then(r=>r.json()).then(d=>{
+                if(Array.isArray(d) && d.length > 0) {
+                    const country = d[0];
+                    const div = document.createElement('div'); div.className = 'result'; div.style.borderLeft = '4px solid #10b981';
+                    div.innerHTML = `
+                        <div style="display:flex; gap:15px; align-items:center;">
+                            <div style="font-size:3.5rem; line-height:1; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3));">${country.flag}</div>
+                            <div>
+                                <strong style="color:#10b981;"><i class="fas fa-globe-americas"></i> Base de Datos Global:</strong>
+                                <h3 style="margin:3px 0;">${country.name.common} <span style="font-size:12px; font-weight:normal; color:var(--text-gray);">(${country.cca3})</span></h3>
+                                <div style="font-size:12px; color:var(--text-muted);">
+                                    <strong>Capital:</strong> ${country.capital ? country.capital[0] : 'N/A'} • 
+                                    <strong>Población:</strong> ${country.population.toLocaleString()} • 
+                                    <strong>Región:</strong> ${country.region}
+                                </div>
+                            </div>
+                        </div>`;
+                    container.appendChild(div);
+                }
+            }).catch(()=>{});
+        }
+
+        // 14. Búsqueda de Recetas (TheMealDB)
+        const recipeMatch = query.toLowerCase().match(/^(receta|cocinar) (.+)/);
+        if(recipeMatch && recipeMatch[2]) {
+            fetch(`https://www.themealdb.com/api/json/v1/1/search.php?s=${encodeURIComponent(recipeMatch[2])}`).then(r=>r.json()).then(d=>{
+                if(d.meals && d.meals.length > 0) {
+                    const meal = d.meals[0];
+                    const div = document.createElement('div'); div.className = 'result'; div.style.borderLeft = '4px solid #f59e0b';
+                    div.innerHTML = `
+                        <div style="display:flex; gap:15px; align-items:flex-start;">
+                            <img src="${meal.strMealThumb}" style="width:80px; height:80px; border-radius:8px; object-fit:cover; box-shadow: 0 4px 10px rgba(0,0,0,0.3);">
+                            <div style="flex:1;">
+                                <strong style="color:#f59e0b;"><i class="fas fa-utensils"></i> Archivo Culinario:</strong>
+                                <h3 style="margin:5px 0;">${meal.strMeal}</h3>
+                                <div style="font-size:12px; color:var(--text-muted); margin-bottom:8px;">Categoría: ${meal.strCategory} • Origen: ${meal.strArea}</div>
+                                <a href="${meal.strSource || meal.strYoutube || '#'}" target="_blank" class="btn btn-secondary" style="padding:4px 10px; font-size:11px;"><i class="fas fa-external-link-alt"></i> Ver Detalles</a>
+                            </div>
+                        </div>`;
+                    container.appendChild(div);
+                }
+            }).catch(()=>{});
+        }
+
+        // 15. Rastreador SpaceX (Lanzamientos)
+        if(query.toLowerCase() === 'spacex' || query.toLowerCase() === 'lanzamiento spacex') {
+            fetch('https://api.spacexdata.com/v4/launches/latest').then(r=>r.json()).then(d=>{
+                if(d.id) {
+                    const div = document.createElement('div'); div.className = 'result'; div.style.borderLeft = '4px solid #f8fafc';
+                    const date = new Date(d.date_utc).toLocaleDateString('es-ES', {year:'numeric', month:'long', day:'numeric'});
+                    div.innerHTML = `
+                        <div style="display:flex; gap:15px; align-items:flex-start;">
+                            ${d.links.patch.small ? `<img src="${d.links.patch.small}" style="width:70px; height:70px; filter: drop-shadow(0 2px 5px rgba(255,255,255,0.2));">` : `<i class="fas fa-rocket" style="font-size:3rem; color:#f8fafc;"></i>`}
+                            <div style="flex:1;">
+                                <strong style="color:#f8fafc;"><i class="fas fa-space-shuttle"></i> SpaceX Misión Más Reciente:</strong>
+                                <h3 style="margin:5px 0;">${d.name}</h3>
+                                <div style="font-size:12px; color:var(--text-muted); margin-bottom:5px;">Fecha: ${date} • Vuelo #${d.flight_number} • Éxito: ${d.success ? '<span style="color:var(--success);">Sí</span>' : '<span style="color:var(--danger);">No/Pendiente</span>'}</div>
+                                ${d.details ? `<div style="font-size:12px; color:var(--text-gray); line-height:1.4;">${d.details.substring(0, 150)}...</div>` : ''}
+                                ${d.links.webcast ? `<a href="${d.links.webcast}" target="_blank" class="btn btn-secondary" style="margin-top:8px; padding:4px 10px; font-size:11px;"><i class="fab fa-youtube"></i> Ver Transmisión</a>` : ''}
+                            </div>
+                        </div>`;
+                    container.appendChild(div);
+                }
+            }).catch(()=>{});
+        }
+
     },
 
     processSpecialCommands: function(query) {
