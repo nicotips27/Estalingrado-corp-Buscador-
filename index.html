@@ -109,13 +109,17 @@
     .brand img:hover { transform: scale(1.05); box-shadow: 0 0 15px var(--primary-glow); }
     .brand h1 {
       font-size: 20px; font-weight: 600; margin: 0;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .brand-text {
       background: linear-gradient(to right, #fafafa, #a1a1aa);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
     .pro-badge {
       font-size: 10px; background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white;
-      padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 5px;
+      padding: 3px 8px; border-radius: 6px; font-weight: 700; letter-spacing: 0.5px;
+      -webkit-text-fill-color: white; /* Asegura que el texto sea blanco */
     }
 
     .header-actions { display: flex; gap: 12px; }
@@ -412,7 +416,7 @@
     <header>
       <div class="brand" onclick="location.reload()">
         <img id="main-logo" src="https://64.media.tumblr.com/37c52c25279f877bd0bc2d538626c938/2f8407cc51b2210e-be/s540x810/c379bb3cd18325d6b075e62fd26ffe91f5093ee3.jpg" alt="Logo Estalingrado Corp" loading="lazy"/>
-        <h1>Estalingrado Corp <span class="pro-badge">PRO</span></h1>
+        <h1><span class="brand-text">Estalingrado Corp</span> <span class="pro-badge">PRO</span></h1>
       </div>
       
       <div class="header-actions">
