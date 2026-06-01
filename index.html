@@ -532,6 +532,18 @@
           <button class="btn btn-primary" style="width: 100%;" onclick="window.scanLink()">Escanear</button>
           <div id="linkResult" class="link-result" style="display:none;"></div>
         </div>
+
+        <div class="privacy-tool">
+          <div class="tool-icon"><i class="fas fa-qrcode"></i></div>
+          <div class="tool-title">Generador QR</div>
+          <div class="tool-desc">Crea códigos para compartir</div>
+          <div class="input-group">
+            <label>Texto o Enlace:</label>
+            <input type="text" id="qrInput" placeholder="https://ejemplo.com">
+          </div>
+          <button class="btn btn-primary" style="width: 100%;" onclick="window.generateQR()">Generar QR</button>
+          <div id="qrResult" class="password-result" style="display:none; text-align: center;"></div>
+        </div>
         
         <div class="privacy-tool">
           <div class="tool-icon" style="color: var(--danger);"><i class="fas fa-biohazard"></i></div>
@@ -651,7 +663,8 @@ var CONFIG = {
         "musica", "buscador", "ia", "enciclopedia", "videos",
         "stackoverflow", "linkedin", "reddit", "twitter", "spotify", "twitch", "amazon", "figma", "codepen",
         "empleo", "compras", "diseño", "programacion", "red profesional", "archivo histórico",
-        "definir", "pais", "receta", "spacex"
+        "definir", "pais", "receta", "spacex", "noticias tecnologia", "noticias ciencia",
+        "mercado oro", "mercado plata", "acciones apple", "precio bitcoin"
     ],
     searchEngines: {
         Bing: query => `https://www.bing.com/search?q=${encodeURIComponent(query)}`,
@@ -685,7 +698,20 @@ var Utils = {
     generateId: () => 'widget_' + Math.random().toString(36).substr(2, 9),
     validateEmail: (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email),
     validateUrl: (url) => { try { new URL(url); return true; } catch { return false; } },
-    escapeHtml: (unsafe) => unsafe.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;")
+    escapeHtml: (unsafe) => unsafe.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;"),
+    copyToClipboard: function(text) {
+        const textArea = document.createElement("textarea");
+        textArea.value = text;
+        // Evita el scroll hacia abajo al enfocar el elemento oculto
+        textArea.style.top = "0";
+        textArea.style.left = "0";
+        textArea.style.position = "fixed";
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+        try { document.execCommand('copy'); } catch (err) { console.error('Fallo al copiar', err); }
+        document.body.removeChild(textArea);
+    }
 };
 
 // =========================================
@@ -838,26 +864,50 @@ var UI = {
         `;
         const content = div.querySelector('.widget-content');
         if(widget.type === 'news') UI.loadNewsContent(content);
-        if(widget.type === 'weather') UI.loadWeatherContent(content);
+        if(widget.type === 'weather') UI.loadWeatherContent(content, widget.id);
         if(widget.type === 'stocks') UI.loadStocksContent(content);
         if(widget.type === 'bookmarks') UI.loadBookmarksContent(content);
         return div;
     },
     loadNewsContent: function(container) {
-        container.innerHTML = '<div class="loading-spinner"></div>';
-        setTimeout(() => {
-            container.innerHTML = `
-                <div class="news-item"><a href="#">Nuevas herramientas de IA presentadas</a><div class="news-date">Tech News • Hace 2h</div></div>
-                <div class="news-item"><a href="#">Actualización de privacidad global</a><div class="news-date">Security • Ayer</div></div>
-            `;
-        }, 800);
+        container.innerHTML = '<div class="loading-spinner"></div><div style="font-size:12px; color:var(--text-muted); text-align:center;">Sincronizando feed global...</div>';
+        fetch('https://hn.algolia.com/api/v1/search_by_date?tags=story&hitsPerPage=3')
+        .then(r => r.json())
+        .then(data => {
+            if (data.hits && data.hits.length > 0) {
+                let html = '';
+                data.hits.forEach(item => {
+                    const timeAgo = Math.max(1, Math.floor((new Date() - new Date(item.created_at)) / 3600000));
+                    html += `<div class="news-item"><a href="${item.url || `https://news.ycombinator.com/item?id=${item.objectID}`}" target="_blank">${item.title}</a><div class="news-date"><i class="fas fa-rss"></i> Tech News • Hace ${timeAgo}h</div></div>`;
+                });
+                container.innerHTML = html;
+            } else {
+                container.innerHTML = '<div style="font-size:12px; color:var(--text-muted);">No hay noticias disponibles.</div>';
+            }
+        }).catch(e => {
+            console.warn("Error API Noticias Dashboard:", e);
+            container.innerHTML = '<div style="font-size:12px; color:var(--danger);">Error conectando al servidor de noticias.</div>';
+        });
     },
-    loadWeatherContent: function(container) {
+    loadWeatherContent: function(container, widgetId) {
         container.innerHTML = '<div class="loading-spinner"></div><div style="font-size:12px; color:var(--text-muted); text-align:center;">Detectando ubicación...</div>';
-        const city = AppState.currentCity;
+        const city = Utils.safeLocalStorage.get('weatherCity') || AppState.currentCity;
+        AppState.currentCity = city; // Sincroniza el estado global
+
+        // Renderizado del input buscador integrado en la tarjeta
+        const renderForm = (currentVal) => `
+            <div style="margin-top: 15px; display: flex; gap: 8px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 12px;">
+                <input type="text" id="weatherCityInput-${widgetId}" placeholder="Cambiar ciudad..." value="${Utils.escapeHtml(currentVal)}" onkeydown="if(event.key === 'Enter') window.updateWeatherCity('${widgetId}')" style="flex:1; padding: 8px 12px; border-radius: 8px; border: 1px solid var(--border); background: rgba(0,0,0,0.3); color: white; font-size: 12px; outline: none; transition: 0.2s;" onfocus="this.style.borderColor='var(--primary)'" onblur="this.style.borderColor='var(--border)'">
+                <button onclick="window.updateWeatherCity('${widgetId}')" class="btn btn-primary" style="padding: 8px 12px;"><i class="fas fa-search"></i></button>
+            </div>
+        `;
+
         fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(city)}&format=json&limit=1&accept-language=es`)
             .then(r=>r.json()).then(geo => {
-                if(!geo.length) { container.innerHTML = '<div class="weather-info">Ubicación no encontrada</div>'; return; }
+                if(!geo.length) { 
+                    container.innerHTML = `<div class="weather-info" style="color:var(--warning);"><i class="fas fa-exclamation-triangle" style="font-size:2em; margin-bottom:10px; display:block;"></i>Ubicación no encontrada</div>${renderForm(city)}`; 
+                    return; 
+                }
                 fetch(`https://api.open-meteo.com/v1/forecast?latitude=${geo[0].lat}&longitude=${geo[0].lon}&current_weather=true`)
                 .then(r=>r.json()).then(w => {
                     const cw = w.current_weather;
@@ -867,24 +917,50 @@ var UI = {
                             <div class="weather-temp">${cw.temperature}°C</div>
                             <div style="font-size:12px; color:var(--text-muted); margin-top:10px;"><i class="fas fa-map-marker-alt" style="color:var(--primary);"></i> ${geo[0].display_name.split(',')[0]}</div>
                         </div>
+                        ${renderForm(city)}
                     `;
                 }).catch(e => {
                     console.warn("Error API Clima:", e);
-                    container.innerHTML = '<div class="weather-info">Clima temporalmente no disponible</div>';
+                    container.innerHTML = `<div class="weather-info">Clima temporalmente no disponible</div>${renderForm(city)}`;
                 });
             }).catch(e => {
                 console.warn("Error API Geo:", e);
-                container.innerHTML = '<div class="weather-info">Ubicación temporalmente no disponible</div>';
+                container.innerHTML = `<div class="weather-info">Ubicación temporalmente no disponible</div>${renderForm(city)}`;
             });
     },
     loadStocksContent: function(container) {
-        container.innerHTML = '<div class="loading-spinner"></div>';
-        setTimeout(() => {
-            container.innerHTML = `
-                <div class="stock-price"><div><strong>AAPL</strong><div style="font-size:11px;color:var(--text-gray);">Apple Inc.</div></div><div class="price-up">$182.34<br><small>+0.8%</small></div></div>
-                <div class="stock-price"><div><strong>BTC</strong><div style="font-size:11px;color:var(--text-gray);">Bitcoin</div></div><div class="price-up">$65,240<br><small>+2.4%</small></div></div>
-            `;
-        }, 600);
+        container.innerHTML = '<div class="loading-spinner"></div><div style="font-size:12px; color:var(--text-muted); text-align:center;">Obteniendo cotizaciones...</div>';
+        
+        fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,pax-gold&vs_currencies=usd&include_24hr_change=true')
+        .then(r => r.json())
+        .then(data => {
+            let html = '';
+            const assets = [
+                { id: 'bitcoin', name: 'Bitcoin', symbol: 'BTC' },
+                { id: 'ethereum', name: 'Ethereum', symbol: 'ETH' },
+                { id: 'pax-gold', name: 'Oro Físico (PAXG)', symbol: 'XAU' }
+            ];
+            
+            assets.forEach(asset => {
+                if(data[asset.id]) {
+                    const price = data[asset.id].usd.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+                    const change = data[asset.id].usd_24h_change;
+                    const isUp = change >= 0;
+                    html += `
+                        <div class="stock-price">
+                            <div><strong style="color:var(--text);">${asset.symbol}</strong><div style="font-size:11px;color:var(--text-gray);">${asset.name}</div></div>
+                            <div class="${isUp ? 'price-up' : 'price-down'}" style="text-align:right;">
+                                $${price}<br><small style="font-weight:600;"><i class="fas ${isUp ? 'fa-caret-up' : 'fa-caret-down'}"></i> ${Math.abs(change).toFixed(2)}%</small>
+                            </div>
+                        </div>
+                    `;
+                }
+            });
+            container.innerHTML = html || '<div style="font-size:12px; color:var(--text-muted);">Cotizaciones no disponibles.</div>';
+        }).catch(e => {
+            console.warn("Error API Mercados Dashboard:", e);
+            container.innerHTML = '<div style="font-size:12px; color:var(--danger);">Datos de mercado no disponibles.</div>';
+        });
     },
     loadBookmarksContent: function(container) {
         let history = Utils.safeLocalStorage.get("searchHistory") || [];
@@ -903,13 +979,21 @@ var UI = {
         const w = AppState.widgets.find(x=>x.id===id);
         if(w) {
             const el = document.getElementById(id).querySelector('.widget-content');
-            if(w.type==='news') UI.loadNewsContent(el); else if(w.type==='weather') UI.loadWeatherContent(el); else if(w.type==='stocks') UI.loadStocksContent(el); else UI.loadBookmarksContent(el);
+            if(w.type==='news') UI.loadNewsContent(el); else if(w.type==='weather') UI.loadWeatherContent(el, w.id); else if(w.type==='stocks') UI.loadStocksContent(el); else UI.loadBookmarksContent(el);
         }
     },
     saveWidgets: function() { Utils.safeLocalStorage.set('dashboardWidgets', AppState.widgets); },
     resetDashboard: function() { 
         Utils.safeLocalStorage.remove('dashboardWidgets'); 
         this.addDefaultWidgets(); 
+    },
+    updateWeatherCity: function(widgetId) {
+        const input = document.getElementById('weatherCityInput-' + widgetId);
+        if(input && input.value.trim() !== '') {
+            AppState.currentCity = input.value.trim();
+            Utils.safeLocalStorage.set('weatherCity', AppState.currentCity);
+            UI.refreshWidget(widgetId);
+        }
     }
 };
 
@@ -1104,18 +1188,69 @@ var SearchManager = {
             }
         }).catch(e => console.warn("Error API Mapa:", e));
 
-        // 4. Crypto
-        const cryptoMap = {'btc':'bitcoin', 'eth':'ethereum', 'sol':'solana', 'doge':'dogecoin'};
-        const coin = cryptoMap[query.toLowerCase()] || (['bitcoin','ethereum','solana'].includes(query.toLowerCase()) ? query.toLowerCase() : null);
-        if(coin) {
-            fetch(`https://api.coingecko.com/api/v3/simple/price?ids=${coin}&vs_currencies=usd&include_24hr_change=true`).then(r=>r.json()).then(d=>{
-                if(d[coin]) {
-                    const div = document.createElement('div'); div.className = 'result'; div.style.borderLeft = '4px solid #f59e0b';
-                    const isUp = d[coin].usd_24h_change >= 0;
-                    div.innerHTML = `<strong style="color:#f59e0b; text-transform:capitalize;"><i class="fab fa-bitcoin"></i> Mercado ${coin}:</strong><div style="font-size:24px; font-weight:600; margin-top:5px;">$${d[coin].usd.toLocaleString()} USD <span style="font-size:14px; color:${isUp?'var(--success)':'var(--danger)'};">${isUp?'+':''}${d[coin].usd_24h_change.toFixed(2)}%</span></div>`;
+        // 4. Terminal de Mercados (Crypto, Acciones, Materias Primas)
+        const marketKeywords = ['mercado', 'precio', 'acciones', 'accion', 'cotizacion'];
+        const isMarket = marketKeywords.some(kw => query.toLowerCase().startsWith(kw + ' ')) || ['btc', 'eth', 'bitcoin', 'oro'].includes(query.toLowerCase());
+        
+        if(isMarket) {
+            let asset = query.toLowerCase();
+            marketKeywords.forEach(kw => { asset = asset.replace(kw, '').trim(); });
+            // Mapeo directo de palabras comunes a activos reales
+            const assetMap = {'btc':'bitcoin', 'eth':'ethereum', 'oro':'pax-gold', 'plata':'kinesis-silver'};
+            const searchQuery = assetMap[asset] || asset;
+
+            fetch(`https://api.coingecko.com/api/v3/search?query=${encodeURIComponent(searchQuery)}`)
+            .then(r=>r.json()).then(d=>{
+                if(d.coins && d.coins.length > 0) {
+                    const coinData = d.coins[0];
+                    fetch(`https://api.coingecko.com/api/v3/simple/price?ids=${coinData.id}&vs_currencies=usd&include_24hr_change=true`)
+                    .then(r2=>r2.json()).then(d2=>{
+                        if(d2[coinData.id]) {
+                            const priceData = d2[coinData.id];
+                            const div = document.createElement('div'); div.className = 'result'; div.style.borderLeft = '4px solid #10b981';
+                            const isUp = priceData.usd_24h_change >= 0;
+                            div.innerHTML = `
+                                <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:15px;">
+                                    <div style="display:flex; gap:15px; align-items:center;">
+                                        <img src="${coinData.thumb}" style="width:45px; height:45px; border-radius:50%; box-shadow: 0 4px 10px rgba(0,0,0,0.3);">
+                                        <div>
+                                            <strong style="color:#10b981;"><i class="fas fa-chart-line"></i> Terminal de Mercados:</strong>
+                                            <h3 style="margin:2px 0; color:var(--text); text-transform:capitalize;">${coinData.name} <span style="font-size:14px; color:var(--text-gray);">${coinData.symbol}</span></h3>
+                                        </div>
+                                    </div>
+                                    <div style="text-align:right;">
+                                        <div style="font-size:24px; font-weight:600; color:var(--text);">$${priceData.usd.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 6})} USD</div>
+                                        <div style="font-size:14px; color:${isUp?'var(--success)':'var(--danger)'}; font-weight:500;">
+                                            <i class="fas ${isUp?'fa-arrow-up':'fa-arrow-down'}"></i> ${Math.abs(priceData.usd_24h_change).toFixed(2)}% (24h)
+                                        </div>
+                                    </div>
+                                </div>
+                                <div style="margin-top:15px; display:flex; gap:10px;">
+                                    <a href="https://es.tradingview.com/symbols/${coinData.symbol}USD/" target="_blank" class="btn btn-secondary" style="padding:6px 12px; font-size:12px;"><i class="fas fa-chart-area"></i> Gráfico Interactivo</a>
+                                </div>
+                            `;
+                            if(container.children.length > 1) container.insertBefore(div, container.children[1]); else container.appendChild(div);
+                        }
+                    }).catch(e => console.warn("Error API Precios:", e));
+                } else {
+                    // Fallback Inteligente para Acciones Tradicionales (Ej. Apple, Tesla, etc.)
+                    const div = document.createElement('div'); div.className = 'result'; div.style.borderLeft = '4px solid #3b82f6';
+                    div.innerHTML = `
+                        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:15px;">
+                            <div>
+                                <strong style="color:#3b82f6;"><i class="fas fa-building"></i> Terminal Financiera (Bolsa de Valores):</strong>
+                                <h3 style="margin:2px 0; color:var(--text); text-transform:capitalize;">Activo: ${asset}</h3>
+                                <div style="font-size:12px; color:var(--text-muted);">Redirección segura a terminales de datos en tiempo real.</div>
+                            </div>
+                        </div>
+                        <div style="margin-top:15px; display:flex; gap:10px; flex-wrap:wrap;">
+                            <a href="https://es.tradingview.com/search/?q=${encodeURIComponent(asset)}" target="_blank" class="btn btn-primary" style="padding:6px 12px; font-size:12px; background:linear-gradient(135deg, #2563eb, #1d4ed8);"><i class="fas fa-chart-line"></i> Ver en TradingView</a>
+                            <a href="https://es.finance.yahoo.com/quote/${encodeURIComponent(asset)}" target="_blank" class="btn btn-secondary" style="padding:6px 12px; font-size:12px;"><i class="fab fa-yahoo"></i> Yahoo Finance</a>
+                        </div>
+                    `;
                     if(container.children.length > 1) container.insertBefore(div, container.children[1]); else container.appendChild(div);
                 }
-            }).catch(()=>{});
+            }).catch(e => console.warn("Error API Búsqueda Mercados:", e));
         }
 
         // 5. Archivo Literario (Open Library integrado como nativo)
@@ -1462,6 +1597,34 @@ var SearchManager = {
             }).catch(()=>{});
         }
 
+        // 16. Noticias Globales y Financieras (Hacker News Algolia API)
+        const newsMatch = query.toLowerCase().match(/^(noticia|noticias|news) (.+)/);
+        if (newsMatch && newsMatch[2]) {
+            fetch(`https://hn.algolia.com/api/v1/search?query=${encodeURIComponent(newsMatch[2])}&hitsPerPage=3`)
+            .then(r => r.json())
+            .then(d => {
+                if(d.hits && d.hits.length > 0) {
+                    const div = document.createElement('div'); div.className = 'result'; div.style.borderLeft = '4px solid #a855f7';
+                    let html = `<strong style="color:#a855f7;"><i class="fas fa-newspaper"></i> Agencia de Noticias Integrada:</strong><div style="display:flex; flex-direction:column; gap:10px; margin-top:12px;">`;
+                    d.hits.forEach(item => {
+                        const points = item.points || 0;
+                        html += `
+                        <div style="background:rgba(255,255,255,0.03); padding:12px; border-radius:10px; border: 1px solid rgba(255,255,255,0.05); transition: 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.06)'" onmouseout="this.style.background='rgba(255,255,255,0.03)'">
+                            <a href="${item.url || `https://news.ycombinator.com/item?id=${item.objectID}`}" target="_blank" style="font-weight:600; font-size:14px; color:var(--text); text-decoration:none; display:block; margin-bottom:6px;">${item.title}</a>
+                            <div style="font-size:12px; color:var(--text-muted); display:flex; align-items:center; gap:10px;">
+                                <span><i class="fas fa-user-edit"></i> ${item.author}</span>
+                                <span><i class="far fa-clock"></i> ${new Date(item.created_at).toLocaleDateString()}</span>
+                                <span style="color:var(--warning);"><i class="fas fa-fire"></i> ${points} pts</span>
+                            </div>
+                        </div>`;
+                    });
+                    html += `</div>`;
+                    div.innerHTML = html;
+                    container.appendChild(div);
+                }
+            }).catch(e => console.warn("Error API Noticias:", e));
+        }
+
     },
 
     processSpecialCommands: function(query) {
@@ -1499,7 +1662,7 @@ var PrivacyTools = {
         let pwd = ""; for(let i=0; i<len; i++) pwd += chars.charAt(Math.floor(Math.random() * chars.length));
         const res = document.getElementById('passwordResult');
         res.style.display = 'block'; res.innerHTML = `<span style="color:var(--success); font-size:16px;">${pwd}</span><br>Copiado al portapapeles.`;
-        navigator.clipboard.writeText(pwd);
+        Utils.copyToClipboard(pwd);
     },
     checkEmailSecurity: function() {
         const email = document.getElementById('emailInput').value; const res = document.getElementById('emailResult');
@@ -1514,6 +1677,34 @@ var PrivacyTools = {
         if(!Utils.validateUrl(url)) { res.innerHTML = '<span class="danger">URL inválida (incluye https://)</span>'; return; }
         res.innerHTML = '<span class="safe">✓ El enlace parece seguro. No detectamos redirecciones ofuscadas.</span>';
     },
+    generateQR: function() {
+        const text = document.getElementById('qrInput').value.trim();
+        const res = document.getElementById('qrResult');
+        if(!text) {
+            res.style.display = 'block';
+            res.innerHTML = '<span class="danger">Ingresa texto o URL</span>';
+            return;
+        }
+        res.style.display = 'block';
+        res.innerHTML = '<div class="loading-spinner"></div>';
+        
+        const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(text)}&margin=0`;
+        
+        const img = new Image();
+        img.onload = () => {
+            res.innerHTML = `
+                <div style="background: white; padding: 10px; border-radius: 8px; display: inline-block; box-shadow: 0 4px 10px rgba(0,0,0,0.5);">
+                    <img src="${qrUrl}" alt="QR Code" style="width: 150px; height: 150px; display: block;">
+                </div>
+                <br>
+                <a href="${qrUrl}" target="_blank" download="Estalingrado_QR.png" class="btn btn-secondary" style="margin-top:12px; padding: 6px 12px; font-size: 11px;">
+                    <i class="fas fa-external-link-alt"></i> Abrir QR
+                </a>
+            `;
+        };
+        img.onerror = () => { res.innerHTML = '<span class="danger">Error al generar QR</span>'; };
+        img.src = qrUrl;
+    },
     clearAllData: function() {
         if(confirm('¿Eliminar caché, configuraciones y widgets locales?')) { localStorage.clear(); location.reload(); }
     }
@@ -1524,7 +1715,7 @@ window.openTerm = function(type, q) {
     const cmd = type === 'code' ? `gh search code "${q}"` : `gh copilot suggest "${q}"`;
     cont.innerHTML = `<span style="color:#8b949e;"># Conectando con servidor seguro Estalingrado...</span><br><br><span style="color:#58a6ff;">user@estalingrado:~$</span> ${cmd}<span style="display:inline-block; width:8px; height:15px; background:#58a6ff; animation:blink 1s infinite; vertical-align:middle; margin-left:5px;"></span>`;
     document.getElementById('copy-cmd').onclick = function() {
-        navigator.clipboard.writeText(cmd);
+        Utils.copyToClipboard(cmd);
         const orig = this.innerHTML; this.innerHTML = '<i class="fas fa-check"></i> Copiado';
         setTimeout(() => this.innerHTML = orig, 2000);
     };
@@ -1585,9 +1776,11 @@ window.clearHistory = () => SearchManager.clearHistory();
 window.startVoiceSearch = () => SearchManager.startVoiceSearch();
 window.addWidget = (type) => UI.addWidget(type);
 window.resetDashboard = () => UI.resetDashboard();
+window.updateWeatherCity = (id) => UI.updateWeatherCity(id);
 window.generatePassword = () => PrivacyTools.generatePassword();
 window.checkEmailSecurity = () => PrivacyTools.checkEmailSecurity();
 window.scanLink = () => PrivacyTools.scanLink();
+window.generateQR = () => PrivacyTools.generateQR();
 window.clearAllData = () => PrivacyTools.clearAllData();
 
 document.addEventListener('DOMContentLoaded', () => { App.init(); });
