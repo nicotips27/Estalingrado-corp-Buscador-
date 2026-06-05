@@ -458,7 +458,7 @@
       <div id="menuPanel" class="floating-panel">
         <strong>Intra-net</strong>
         <a href="https://nicotips27.github.io/ec-download/"><i class="fas fa-download"></i> EC Download</a>
-        <a href="https://nicotips27.github.io/ECwebSend/"><i class="fas fa-paper-plane"></i> ECwebSend</a>
+        <a href="https://nicotips27.github.io/ECwebSend/"><i class="fas fa-share-nodes"></i> ECSend</a>
         <a href="https://nicotips27.github.io/EC-chanel/"><i class="fas fa-tv"></i> EC Channel</a>
         <a href="https://nicotips27.github.io/EC-Escritorio/"><i class="fas fa-desktop"></i> EC Escritorio</a>
         <strong>Administrativo</strong>
@@ -659,7 +659,18 @@ var CONFIG = {
         { url: "https://www.twitch.tv/", title: "Twitch", icon: "fab fa-twitch", keywords: ["twitch", "streams", "directos", "gaming", "transmisiones"] },
         { url: "https://www.amazon.com/", title: "Amazon", icon: "fab fa-amazon", keywords: ["amazon", "compras", "tienda", "shop"] },
         { url: "https://www.figma.com/", title: "Figma", icon: "fab fa-figma", keywords: ["figma", "diseño", "ui", "ux", "prototipos"] },
-        { url: "https://codepen.io/", title: "CodePen", icon: "fab fa-codepen", keywords: ["codepen", "frontend", "snippets", "html css js"] }
+        { url: "https://codepen.io/", title: "CodePen", icon: "fab fa-codepen", keywords: ["codepen", "frontend", "snippets", "html css js"] },
+        { url: "https://chat.deepseek.com/", title: "DeepSeek", icon: "fas fa-brain", keywords: ["deepseek", "ds", "deepseek ai", "chat deepseek", "ia deepseek"] },
+        { url: "https://claude.ai/", title: "Claude AI", icon: "fas fa-comment-dots", keywords: ["claude", "anthropic", "claude ai", "ia claude"] },
+        { url: "https://www.perplexity.ai/", title: "Perplexity", icon: "fas fa-search-location", keywords: ["perplexity", "buscador ia", "ia search", "investigacion"] },
+        { url: "https://copilot.microsoft.com/", title: "Microsoft Copilot", icon: "fab fa-microsoft", keywords: ["copilot", "bing ia", "microsoft copilot"] },
+        { url: "https://www.facebook.com/", title: "Facebook", icon: "fab fa-facebook", keywords: ["facebook", "fb", "meta", "red social"] },
+        { url: "https://www.instagram.com/", title: "Instagram", icon: "fab fa-instagram", keywords: ["instagram", "ig", "insta", "fotos", "reels"] },
+        { url: "https://web.whatsapp.com/", title: "WhatsApp Web", icon: "fab fa-whatsapp", keywords: ["whatsapp", "wpp", "wa", "mensajes", "chat"] },
+        { url: "https://www.threads.net/", title: "Threads", icon: "fab fa-threads", keywords: ["threads", "microblogging"] },
+        { url: "https://www.netflix.com/", title: "Netflix", icon: "fas fa-film", keywords: ["netflix", "peliculas", "series", "cine", "streaming"] },
+        { url: "https://discord.com/app", title: "Discord", icon: "fab fa-discord", keywords: ["discord", "chat", "comunidad gamer", "servidores"] },
+        { url: "https://www.tiktok.com/", title: "TikTok", icon: "fab fa-tiktok", keywords: ["tiktok", "videos cortos", "viral"] }
     ],
     semanticSearch: {
         "noticias de tecnología": ["techcrunch.com", "theverge.com", "wired.com"],
@@ -674,7 +685,8 @@ var CONFIG = {
         "stackoverflow", "linkedin", "reddit", "twitter", "spotify", "twitch", "amazon", "figma", "codepen",
         "empleo", "compras", "diseño", "programacion", "red profesional", "archivo histórico",
         "definir", "pais", "receta", "spacex", "noticias tecnologia", "noticias ciencia",
-        "mercado oro", "mercado plata", "acciones apple", "precio bitcoin"
+        "mercado oro", "mercado plata", "acciones apple", "precio bitcoin",
+        "deepseek", "claude", "perplexity", "copilot", "facebook", "instagram", "whatsapp", "netflix", "discord", "tiktok"
     ],
     searchEngines: {
         Bing: query => `https://www.bing.com/search?q=${encodeURIComponent(query)}`,
