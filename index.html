@@ -438,6 +438,7 @@
       <!-- PANELES FLOTANTES -->
       <div id="settingsPanel" class="floating-panel">
         <strong>Motores de Búsqueda</strong>
+        <label><input type="checkbox" value="Google" checked> Google</label>
         <label><input type="checkbox" value="Bing" checked> Bing</label>
         <label><input type="checkbox" value="Yahoo" checked> Yahoo</label>
         <label><input type="checkbox" value="DuckDuckGo" checked> DuckDuckGo</label>
@@ -464,7 +465,7 @@
       <div id="menuPanel" class="floating-panel">
         <strong>Intra-net</strong>
         <a href="https://nicotips27.github.io/ec-download/"><i class="fas fa-download"></i> EC Download</a>
-        <a href="https://nicotips27.github.io/ECwebSend/"><i class="fas fa-share-nodes"></i> ECSend</a>
+        <a href="https://nicotips27.github.io/ECwebSend/"><i class="fas fa-share-nodes"></i> Transfiere archivos entre dispositivos (ECSend)</a>
         <a href="https://nicotips27.github.io/EC-chanel/"><i class="fas fa-tv"></i> EC Channel</a>
         <a href="https://nicotips27.github.io/EC-Escritorio/"><i class="fas fa-desktop"></i> EC Escritorio</a>
         <strong>Administrativo</strong>
@@ -696,6 +697,7 @@ var CONFIG = {
         "noticias de última hora", "noticias internacionales", "noticias de deportes", "noticias de economía", "noticias locales", "noticias políticas"
     ],
     searchEngines: {
+        Google: query => `https://www.google.com/search?q=${encodeURIComponent(query)}`,
         Bing: query => `https://www.bing.com/search?q=${encodeURIComponent(query)}`,
         Yahoo: query => `https://espanol.search.yahoo.com/search?p=${encodeURIComponent(query)}`,
         DuckDuckGo: query => `https://duckduckgo.com/?q=${encodeURIComponent(query)}`,
