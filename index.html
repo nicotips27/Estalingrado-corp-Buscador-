@@ -219,7 +219,22 @@
     }
     .search-button:hover { filter: brightness(1.2); box-shadow: -5px 0 20px rgba(139, 92, 246, 0.4); }
 
-    .search-slogan { margin-top: 25px; font-size: 13px; color: var(--text-muted); text-align: center; font-weight: 300; letter-spacing: 1px; }
+    /* PESTAÑAS DE BÚSQUEDA (TABS) */
+    .search-tabs {
+      display: flex; justify-content: center; gap: 10px; margin-top: 15px; z-index: 20; position: relative;
+    }
+    .search-tab {
+      background: transparent; border: 1px solid transparent; color: var(--text-muted); 
+      font-size: 13px; font-weight: 500; padding: 6px 16px; border-radius: 20px; 
+      cursor: pointer; transition: 0.3s; display: flex; align-items: center; gap: 6px;
+    }
+    .search-tab:hover { color: var(--text); background: rgba(255,255,255,0.05); }
+    .search-tab.active { 
+      color: var(--primary); background: rgba(6, 182, 212, 0.1); 
+      border: 1px solid rgba(6, 182, 212, 0.3); box-shadow: 0 0 10px rgba(6, 182, 212, 0.1);
+    }
+
+    .search-slogan { margin-top: 20px; font-size: 13px; color: var(--text-muted); text-align: center; font-weight: 300; letter-spacing: 1px; }
 
     /* SUGERENCIAS (Adaptadas al estilo Estalingrado) */
     #suggestionsContainer {
@@ -494,6 +509,12 @@
           
           <div id="suggestionsContainer"></div>
         </div>
+        
+        <div class="search-tabs">
+          <button type="button" class="search-tab active" id="tab-web" onclick="window.setSearchMode('web')"><i class="fas fa-globe"></i> Web</button>
+          <button type="button" class="search-tab" id="tab-images" onclick="window.setSearchMode('images')"><i class="fas fa-images"></i> Imágenes</button>
+        </div>
+
         <div class="search-slogan">Red Privada Corporativa · Estalingrado Corp v3.0 Integrado</div>
       </form>
     </div>
@@ -694,7 +715,8 @@ var CONFIG = {
         "definir", "pais", "receta", "spacex", "noticias tecnologia", "noticias ciencia",
         "mercado oro", "mercado plata", "acciones apple", "precio bitcoin",
         "deepseek", "claude", "perplexity", "copilot", "facebook", "instagram", "whatsapp", "netflix", "discord", "tiktok",
-        "noticias de última hora", "noticias internacionales", "noticias de deportes", "noticias de economía", "noticias locales", "noticias políticas"
+        "noticias de última hora", "noticias internacionales", "noticias de deportes", "noticias de economía", "noticias locales", "noticias políticas",
+        "imagenes de paisajes", "fotos de gatitos", "imagenes de tecnologia", "fotos de autos"
     ],
     searchEngines: {
         Google: query => `https://www.google.com/search?q=${encodeURIComponent(query)}`,
@@ -714,7 +736,8 @@ var CONFIG = {
 
 var AppState = {
     isResettingSearch: false, initialized: false, dashboardVisible: false,
-    voiceRecognition: null, isRecording: false, widgets: [], currentCity: 'Madrid'
+    voiceRecognition: null, isRecording: false, widgets: [], currentCity: 'Madrid',
+    searchMode: 'web'
 };
 
 var Utils = {
@@ -1069,6 +1092,21 @@ var SearchManager = {
         resultsContainer.style.display = 'block'; setTimeout(() => resultsContainer.classList.add('show'), 10);
         resultsDiv.innerHTML = "";
         
+        const inlineContainer = document.createElement("div"); inlineContainer.id = "inline-results-container";
+        const externalContainer = document.createElement("div"); 
+        
+        // --- MODO IMÁGENES ---
+        if (AppState.searchMode === 'images') {
+            resultsDiv.appendChild(inlineContainer); resultsDiv.appendChild(externalContainer);
+            SearchManager.renderImageModeResults(query, inlineContainer);
+            
+            let history = Utils.safeLocalStorage.get("searchHistory") || [];
+            if(!history.includes(query)) { history.unshift(query); if(history.length>10) history.pop(); Utils.safeLocalStorage.set("searchHistory", history); }
+            return;
+        }
+        
+        // --- MODO WEB (CÓDIGO ORIGINAL) ---
+        
         // --- SUGERENCIA ORTOGRÁFICA ("Quizás quisiste decir") ---
         const suggestion = SpellChecker.getSuggestion(query);
         if (suggestion && suggestion.toLowerCase() !== query.toLowerCase()) {
@@ -1089,8 +1127,7 @@ var SearchManager = {
         }
         // --------------------------------------------------------
 
-        const inlineContainer = document.createElement("div"); inlineContainer.id = "inline-results-container";
-        const externalContainer = document.createElement("div"); externalContainer.innerHTML = "<div class='loading-spinner'></div>";
+        externalContainer.innerHTML = "<div class='loading-spinner'></div>";
         resultsDiv.appendChild(inlineContainer); resultsDiv.appendChild(externalContainer);
         
         let history = Utils.safeLocalStorage.get("searchHistory") || [];
@@ -1111,6 +1148,35 @@ var SearchManager = {
                 }
             });
         }, 800);
+    },
+
+    renderImageModeResults: function(query, container) {
+        const safeQuery = Utils.escapeHtml(query);
+        const div = document.createElement('div');
+        div.className = 'result';
+        div.style.borderLeft = '4px solid #f43f5e';
+        div.innerHTML = `
+            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:15px;">
+                <div style="display:flex; align-items:center; gap:15px;">
+                    <div style="width:55px; height:55px; background:linear-gradient(135deg, #f43f5e, #be123c); border-radius:14px; display:flex; align-items:center; justify-content:center; color:white; font-size:26px; box-shadow:0 0 15px rgba(244, 63, 94, 0.4);">
+                        <i class="fas fa-images"></i>
+                    </div>
+                    <div>
+                        <strong style="color:#f43f5e; font-size:1.2em;">Modo Imagen Activo</strong>
+                        <h3 style="margin:2px 0; color:var(--text); text-transform:capitalize;">"${safeQuery}"</h3>
+                        <div style="font-size:12px; color:var(--text-muted);">Acceso encriptado a las galerías más potentes del mundo.</div>
+                    </div>
+                </div>
+            </div>
+            <div style="margin-top:20px; display:flex; gap:10px; flex-wrap:wrap;">
+                <a href="https://www.google.com/search?tbm=isch&q=${encodeURIComponent(query)}" target="_blank" class="btn btn-primary" style="background:linear-gradient(135deg, #4285f4, #2563eb); border:none;"><i class="fab fa-google"></i> Google Images</a>
+                <a href="https://www.bing.com/images/search?q=${encodeURIComponent(query)}" target="_blank" class="btn btn-secondary"><i class="fab fa-microsoft"></i> Bing Images</a>
+                <a href="https://yandex.com/images/search?text=${encodeURIComponent(query)}" target="_blank" class="btn btn-secondary"><i class="fas fa-search"></i> Yandex Images</a>
+                <a href="https://duckduckgo.com/?q=${encodeURIComponent(query)}&iax=images&ia=images" target="_blank" class="btn btn-secondary" style="color:#f97316; border-color:rgba(249,115,22,0.3);">🦆 DuckDuckGo</a>
+                <a href="https://www.pinterest.com/search/pins/?q=${encodeURIComponent(query)}" target="_blank" class="btn btn-secondary" style="color:#ef4444; border-color:rgba(239,68,68,0.3);"><i class="fab fa-pinterest"></i> Pinterest</a>
+            </div>
+        `;
+        container.appendChild(div);
     },
 
     fetchInlineResults: function(query, container) {
@@ -1148,6 +1214,36 @@ var SearchManager = {
         const termDiv = document.createElement("div"); termDiv.className = "result"; termDiv.style.background = "#0d1117"; termDiv.style.borderLeft = "4px solid #58a6ff";
         termDiv.innerHTML = `<strong style="color:#58a6ff;"><i class="fas fa-terminal"></i> Estalingrado CLI:</strong><div style="display:flex; gap:10px; margin-top:10px;"><button class="btn btn-secondary" style="background:#161b22; color:#58a6ff; font-family:monospace;" onclick="window.openTerm('code', '${safeQuery.replace(/'/g, "\\'")}')">$ gh search code</button><button class="btn btn-secondary" style="background:#161b22; color:#d2a8ff; font-family:monospace;" onclick="window.openTerm('suggest', '${safeQuery.replace(/'/g, "\\'")}')">$ gh copilot suggest</button></div>`;
         container.appendChild(termDiv);
+
+        // 0.5 Buscador de Imágenes (Multisource)
+        const imageMatch = query.toLowerCase().match(/^(imagen|imágenes|imagenes|foto|fotos)(?: de)? (.+)/);
+        if (imageMatch && imageMatch[2]) {
+            const imgQuery = imageMatch[2].trim();
+            const div = document.createElement('div');
+            div.className = 'result';
+            div.style.borderLeft = '4px solid #f43f5e';
+            div.innerHTML = `
+                <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:15px;">
+                    <div style="display:flex; align-items:center; gap:15px;">
+                        <div style="width:50px; height:50px; background:linear-gradient(135deg, #f43f5e, #be123c); border-radius:12px; display:flex; align-items:center; justify-content:center; color:white; font-size:24px; box-shadow:0 0 15px rgba(244, 63, 94, 0.4);">
+                            <i class="fas fa-images"></i>
+                        </div>
+                        <div>
+                            <strong style="color:#f43f5e; font-size:1.1em;">Centro de Medios Visuales:</strong>
+                            <h3 style="margin:2px 0; color:var(--text); text-transform:capitalize;">"${imgQuery}"</h3>
+                            <div style="font-size:12px; color:var(--text-muted);">Redirección segura a motores de búsqueda de imágenes globales.</div>
+                        </div>
+                    </div>
+                </div>
+                <div style="margin-top:15px; display:flex; gap:10px; flex-wrap:wrap;">
+                    <a href="https://www.google.com/search?tbm=isch&q=${encodeURIComponent(imgQuery)}" target="_blank" class="btn btn-primary" style="background:linear-gradient(135deg, #4285f4, #2563eb); border:none;"><i class="fab fa-google"></i> Google Images</a>
+                    <a href="https://www.bing.com/images/search?q=${encodeURIComponent(imgQuery)}" target="_blank" class="btn btn-secondary"><i class="fab fa-microsoft"></i> Bing Images</a>
+                    <a href="https://yandex.com/images/search?text=${encodeURIComponent(imgQuery)}" target="_blank" class="btn btn-secondary"><i class="fas fa-search"></i> Yandex Images</a>
+                    <a href="https://www.pinterest.com/search/pins/?q=${encodeURIComponent(imgQuery)}" target="_blank" class="btn btn-secondary" style="color:#ef4444; border-color:rgba(239,68,68,0.3);"><i class="fab fa-pinterest"></i> Pinterest</a>
+                </div>
+            `;
+            container.appendChild(div);
+        }
 
         // 1. DuckDuckGo Info
         fetch(`https://api.duckduckgo.com/?q=${encodeURIComponent(query)}&format=json&no_redirect=1&skip_disambig=1`).then(r=>r.json()).then(d=>{
@@ -1804,6 +1900,23 @@ window.toggleHelp = () => UI.toggleModal("help-modal");
 window.mostrarPoliticaPrivacidad = () => UI.toggleModal("privacy-modal");
 window.toggleTerminal = () => UI.toggleModal("modal-terminal");
 window.search = () => SearchManager.performSearch();
+
+window.setSearchMode = function(mode) {
+    AppState.searchMode = mode;
+    document.getElementById('tab-web').classList.toggle('active', mode === 'web');
+    document.getElementById('tab-images').classList.toggle('active', mode === 'images');
+    
+    const input = document.getElementById('query');
+    if (mode === 'images') {
+        input.placeholder = "Buscar imágenes, fotografías, ilustraciones...";
+    } else {
+        input.placeholder = "¿Qué necesitas localizar hoy?";
+    }
+    
+    // Si ya hay algo escrito, re-ejecutamos la búsqueda en el nuevo modo automáticamente
+    if (input.value.trim() !== '') window.search();
+};
+
 window.clearHistory = () => SearchManager.clearHistory();
 window.startVoiceSearch = () => SearchManager.startVoiceSearch();
 window.addWidget = (type) => UI.addWidget(type);
