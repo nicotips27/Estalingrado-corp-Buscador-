@@ -195,7 +195,7 @@
       background: var(--card-bg); backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur);
       border: 1px solid var(--border); border-radius: 40px;
       box-shadow: 0 10px 40px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.05); transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      z-index: 20;
+      z-index: 30; /* Subimos la capa principal por encima de los tabs */
     }
     .search-wrapper:focus-within { background: rgba(39, 39, 42, 0.7); border-color: rgba(139, 92, 246, 0.5); box-shadow: 0 10px 50px rgba(139, 92, 246, 0.2), inset 0 1px 0 rgba(255,255,255,0.1); transform: translateY(-3px); }
     .search-wrapper.active { border-radius: 20px 20px 0 0; }
@@ -221,7 +221,7 @@
 
     /* PESTAÑAS DE BÚSQUEDA (TABS) */
     .search-tabs {
-      display: flex; justify-content: center; gap: 10px; margin-top: 15px; z-index: 20; position: relative;
+      display: flex; justify-content: center; gap: 10px; margin-top: 15px; z-index: 10; position: relative; /* Bajamos los tabs al fondo */
     }
     .search-tab {
       background: transparent; border: 1px solid transparent; color: var(--text-muted); 
@@ -241,7 +241,7 @@
       position: absolute; top: 100%; left: 0; width: 100%;
       background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(20px);
       border: 1px solid rgba(59, 130, 246, 0.2); border-radius: 0 0 20px 20px;
-      padding: 0; display: none; overflow: hidden; max-height: 300px; overflow-y: auto; z-index: 10;
+      padding: 0; display: none; overflow: hidden; max-height: 300px; overflow-y: auto; z-index: 40; /* Capa superior asegurada */
     }
     #suggestionsContainer.show { display: block; padding: 10px 0; }
     .suggestion-item {
