@@ -282,7 +282,7 @@
     .ticker-label i { animation: pulse-live 1.5s infinite; }
     @keyframes pulse-live { 0% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(1.1); } 100% { opacity: 1; transform: scale(1); } }
     .ticker-wrap { flex: 1; overflow: hidden; position: relative; display: flex; align-items: center; background: rgba(0,0,0,0.2); }
-    .ticker { display: flex; white-space: nowrap; animation: ticker-scroll 35s linear infinite; padding-left: 100%; gap: 50px; align-items: center;}
+    .ticker { display: flex; white-space: nowrap; animation: ticker-scroll 60s linear infinite; padding-left: 100%; gap: 50px; align-items: center;}
     .ticker:hover { animation-play-state: paused; }
     .ticker-item { font-size: 14px; color: var(--text); text-decoration: none; transition: 0.2s; display: inline-flex; align-items: center; gap: 8px;}
     .ticker-item:hover { color: var(--primary); }
@@ -429,7 +429,7 @@
       .news-ticker-container { flex-direction: column; border-radius: 8px; }
       .ticker-label { justify-content: center; padding: 8px; font-size: 12px; }
       .ticker-wrap { padding: 10px 0; }
-      .ticker { animation-duration: 25s; }
+      .ticker { animation-duration: 45s; }
       .msn-news-grid { grid-template-columns: 1fr; gap: 15px; } /* Una sola columna fluida */
       .msn-news-img { height: 200px; } /* Imagen más grande en pantallas pequeñas */
       .written-press-container h3 { font-size: 18px; }
@@ -890,6 +890,10 @@ var UI = {
             { url: 'https://www.clarin.com/rss/lo-ultimo/', source: 'Clarín' },
             { url: 'https://www.perfil.com/rss', source: 'Perfil' },
             { url: 'https://feeds.bbci.co.uk/mundo/rss.xml', source: 'BBC Mundo' },
+            { url: 'https://www.xataka.com/feed.xml', source: 'Xataka Tech' },
+            { url: 'https://www.genbeta.com/feed.xml', source: 'Genbeta' },
+            { url: 'https://hipertextual.com/feed', source: 'Hipertextual' },
+            { url: 'https://wwwhatsnew.com/feed/', source: 'Wwwhatsnew' },
             { url: 'https://news.un.org/feed/view/es/109/rss.xml', source: 'ONU Noticias' }
         ];
 
