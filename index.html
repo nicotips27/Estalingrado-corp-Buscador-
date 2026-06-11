@@ -187,7 +187,10 @@
     /* =========================================
        BÚSQUEDA CENTRAL (Estilo Neón Glass)
        ========================================= */
-    .search-container { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; padding: 0 20px; position: relative; z-index: 100; padding-bottom: 60px; }
+    .search-container { 
+      flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; padding: 0 20px; position: relative; z-index: 100; padding-bottom: 60px; 
+      transition: opacity 0.4s ease, transform 0.4s ease;
+    }
     .search-box { width: 100%; max-width: 680px; position: relative; }
     
     .search-wrapper {
@@ -260,8 +263,12 @@
     /* =========================================
        CENTRO DE NOTICIAS (Estilo Microsoft Start)
        ========================================= */
-    #dashboard { display: none; margin: 40px auto; width: 95%; max-width: 1300px; animation: fadeIn 0.4s ease; padding-bottom: 50px; }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    #dashboard { 
+      display: none; margin: 40px auto; width: 95%; max-width: 1300px; padding-bottom: 50px; 
+      opacity: 0; transform: translateY(30px) scale(0.98);
+      transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    #dashboard.show { opacity: 1; transform: translateY(0) scale(1); }
     
     .dashboard-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 15px; }
     .dashboard-header h2 { font-weight: 500; font-size: 26px; color: var(--text); margin:0; display:flex; align-items:center; gap:12px; }
@@ -833,11 +840,40 @@ var UI = {
     },
     toggleDashboard: function() {
         AppState.dashboardVisible = !AppState.dashboardVisible;
+        const searchCont = UI.elements.mainSearch;
+        const dash = UI.elements.dashboard;
+        const resCont = UI.elements.resultsContainer;
+
         if (AppState.dashboardVisible) {
-            UI.elements.dashboard.style.display = 'block'; UI.elements.mainSearch.style.display = 'none'; UI.elements.resultsContainer.classList.remove('show'); setTimeout(()=>UI.elements.resultsContainer.style.display='none',300);
-            UI.loadDashboard();
+            // 1. Ocultar buscador suavemente
+            searchCont.style.opacity = '0';
+            searchCont.style.transform = 'translateY(-30px)';
+            resCont.classList.remove('show');
+            
+            setTimeout(() => {
+                searchCont.style.display = 'none';
+                resCont.style.display = 'none';
+                
+                // 2. Mostrar dashboard con animación elástica
+                dash.style.display = 'block';
+                void dash.offsetWidth; // Forzar renderizado para activar CSS transition
+                dash.classList.add('show');
+                
+                UI.loadDashboard();
+            }, 300);
         } else {
-            UI.elements.dashboard.style.display = 'none'; UI.elements.mainSearch.style.display = 'flex';
+            // 1. Ocultar dashboard suavemente
+            dash.classList.remove('show');
+            
+            setTimeout(() => {
+                dash.style.display = 'none';
+                
+                // 2. Restaurar buscador con suavidad
+                searchCont.style.display = 'flex';
+                void searchCont.offsetWidth; // Forzar renderizado
+                searchCont.style.opacity = '1';
+                searchCont.style.transform = 'translateY(0)';
+            }, 400);
         }
         UI.closeAllPanels();
     },
