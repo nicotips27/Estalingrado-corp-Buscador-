@@ -278,7 +278,7 @@
     
     /* Banner de Titulares (Ticker) */
     .news-ticker-container { display: flex; background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.3); align-items: stretch; }
-    .ticker-label { background: linear-gradient(135deg, var(--danger), #be123c); color: white; font-weight: 700; padding: 12px 20px; z-index: 2; display: flex; align-items: center; gap: 8px; font-size: 13px; white-space: nowrap; letter-spacing: 0.5px; box-shadow: 2px 0 10px rgba(0,0,0,0.5); }
+    .ticker-label { background: linear-gradient(135deg, #3b82f6, #1d4ed8); color: white; font-weight: 700; padding: 12px 20px; z-index: 2; display: flex; align-items: center; gap: 8px; font-size: 13px; white-space: nowrap; letter-spacing: 0.5px; box-shadow: 2px 0 10px rgba(0,0,0,0.5); }
     .ticker-label i { animation: pulse-live 1.5s infinite; }
     @keyframes pulse-live { 0% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(1.1); } 100% { opacity: 1; transform: scale(1); } }
     .ticker-wrap { flex: 1; overflow: hidden; position: relative; display: flex; align-items: center; background: rgba(0,0,0,0.2); }
@@ -456,7 +456,7 @@
       
       <div class="header-actions">
         <button class="top-btn" onclick="window.toggleSettings()" title="Ajustes Motores"><i class="fas fa-cog"></i></button>
-        <button class="top-btn" onclick="window.toggleDashboardView()" title="Centro de Noticias"><i class="fas fa-newspaper"></i></button>
+        <button class="top-btn" onclick="window.toggleDashboardView()" title="ECNews"><i class="fas fa-newspaper"></i></button>
         <button class="top-btn" onclick="window.toggleMenu()" title="Menú Principal"><i class="fas fa-bars"></i></button>
       </div>
 
@@ -526,7 +526,7 @@
     <!-- DASHBOARD Y PRIVACIDAD -->
     <div id="dashboard">
       <div class="dashboard-header">
-        <h2><i class="fas fa-satellite-dish" style="color:var(--primary);"></i> Centro de Noticias PRO</h2>
+        <h2><i class="fas fa-satellite-dish" style="color:var(--primary);"></i> ECNews</h2>
         <div class="dashboard-actions">
             <button class="btn btn-primary" onclick="UI.loadDashboard(true)"><i class="fas fa-sync"></i> Recargar</button>
             <button class="btn btn-secondary" onclick="window.location.href='https://nicotips27.github.io/ECnews/'" style="background: rgba(139, 92, 246, 0.2); border-color: rgba(139, 92, 246, 0.4);"><i class="fas fa-globe"></i> Ir a ECnews</button>
