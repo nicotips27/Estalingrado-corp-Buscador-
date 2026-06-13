@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <meta http-equiv="X-Content-Type-Options" content="nosniff">
-  <title>Estalingrado Corp | Intranet PRO</title>
+  <title>Estalingrado Corp | Intranet</title>
   <link rel="icon" href="https://64.media.tumblr.com/3d305395ebd099966bbd46734f6afa03/4d78480730607865-41/s540x810/3fe6a449b17bd152178f482c75dab5cd26aa27b3.pnj" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -115,15 +115,6 @@
       background: linear-gradient(to right, #fafafa, #a1a1aa);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-    }
-    .pro-badge {
-      font-size: 10px; 
-      background: linear-gradient(135deg, #F59E0B, #FDE047, #D97706); /* Degradado Dorado Premium */
-      color: #1a1a1a; /* Texto oscuro para mejor contraste con el dorado brillante */
-      padding: 3px 8px; border-radius: 6px; font-weight: 800; letter-spacing: 0.5px;
-      -webkit-text-fill-color: #1a1a1a; 
-      text-shadow: none; 
-      box-shadow: 0 0 12px rgba(245, 158, 11, 0.4); /* Brillo dorado */
     }
 
     .header-actions { display: flex; gap: 12px; }
@@ -413,7 +404,6 @@
       .brand img { width: 36px; height: 36px; }
       .brand h1 { font-size: 15px; gap: 5px; }
       .brand-text { max-width: 125px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: inline-block; }
-      .pro-badge { padding: 2px 5px; font-size: 9px; }
       .header-actions { gap: 6px; }
       .top-btn { width: 36px; height: 36px; font-size: 14px; border-radius: 8px; }
       .search-wrapper { border-radius: 20px; }
@@ -451,7 +441,7 @@
     <header>
       <div class="brand" onclick="location.reload()">
         <img id="main-logo" src="https://64.media.tumblr.com/3d305395ebd099966bbd46734f6afa03/4d78480730607865-41/s540x810/3fe6a449b17bd152178f482c75dab5cd26aa27b3.pnj" alt="Logo Estalingrado Corp" loading="lazy"/>
-        <h1><span class="brand-text">Estalingrado Corp</span> <span class="pro-badge">PRO</span></h1>
+        <h1><span class="brand-text">Estalingrado Corp</span></h1>
       </div>
       
       <div class="header-actions">
@@ -582,7 +572,7 @@
     <div id="help-modal" class="modal-overlay">
       <div class="modal-content-wrapper">
         <button class="close-modal" onclick="window.toggleHelp()">×</button>
-        <h2>Guía de Uso PRO</h2>
+        <h2>Guía de Uso</h2>
         <p>
           <strong>Comandos Rápidos Integrados:</strong><br>
           - Escribe <code>/ai [pregunta]</code> para simular consultas inteligentes.<br>
