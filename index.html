@@ -305,51 +305,209 @@
     .toast.warning i { color: var(--warning); }
     .toast.error i { color: var(--danger); }
     /* =========================================
-       CENTRO DE NOTICIAS (Estilo Microsoft Start)
+       CENTRO DE NOTICIAS EC NEWS (Estilo Profesional)
        ========================================= */
     #dashboard { 
-      display: none; margin: 40px auto; width: 95%; max-width: 1300px; padding-bottom: 50px; 
+      display: none; margin: 30px auto; width: 95%; max-width: 1320px; padding-bottom: 60px; 
       opacity: 0; transform: translateY(30px) scale(0.98);
       transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
     #dashboard.show { opacity: 1; transform: translateY(0) scale(1); }
-    
-    .dashboard-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 15px; }
-    .dashboard-header h2 { font-weight: 500; font-size: 26px; color: var(--text); margin:0; display:flex; align-items:center; gap:12px; }
-    .dashboard-actions { display: flex; gap: 15px; align-items: center; }
 
-    .news-dashboard-container { display: flex; flex-direction: column; gap: 35px; }
+    .dashboard-header {
+      display: flex; justify-content: space-between; align-items: center; margin-bottom: 28px;
+      padding: 0 0 16px 0; position: relative;
+      background: linear-gradient(90deg, var(--card-bg), transparent);
+      border-radius: 16px; padding: 18px 24px; border: 1px solid var(--border);
+    }
+    .dashboard-header h2 { font-weight: 600; font-size: 22px; color: var(--text); margin:0; display:flex; align-items:center; gap:12px; letter-spacing: 0.3px; }
+    .dashboard-header h2 i { color: var(--primary); }
+    .dashboard-actions { display: flex; gap: 10px; align-items: center; }
+
+    .news-dashboard-container { display: flex; flex-direction: column; gap: 30px; }
     
-    /* Banner de Titulares (Ticker) */
-    .news-ticker-container { display: flex; background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.3); align-items: stretch; }
-    .ticker-label { background: linear-gradient(135deg, #3b82f6, #1d4ed8); color: white; font-weight: 700; padding: 12px 20px; z-index: 2; display: flex; align-items: center; gap: 8px; font-size: 13px; white-space: nowrap; letter-spacing: 0.5px; box-shadow: 2px 0 10px rgba(0,0,0,0.5); }
+    /* Ticker Profesional */
+    .news-ticker-container {
+      display: flex; background: linear-gradient(135deg, rgba(15,23,42,0.9), rgba(30,41,59,0.9));
+      border: 1px solid rgba(59,130,246,0.2); border-radius: 14px; overflow: hidden;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.05); align-items: stretch;
+    }
+    .ticker-label {
+      background: linear-gradient(135deg, #2563eb, #1d4ed8); color: white; font-weight: 700;
+      padding: 10px 22px; z-index: 2; display: flex; align-items: center; gap: 10px;
+      font-size: 12px; white-space: nowrap; letter-spacing: 1px; text-transform: uppercase;
+      box-shadow: 3px 0 15px rgba(37,99,235,0.3); position: relative;
+    }
+    .ticker-label::after {
+      content: ''; position: absolute; right: -10px; top: 0; bottom: 0; width: 20px;
+      background: linear-gradient(90deg, #2563eb, transparent); z-index: 1;
+    }
     .ticker-label i { animation: pulse-live 1.5s infinite; }
-    @keyframes pulse-live { 0% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(1.1); } 100% { opacity: 1; transform: scale(1); } }
-    .ticker-wrap { flex: 1; overflow: hidden; position: relative; display: flex; align-items: center; background: rgba(0,0,0,0.2); }
-    .ticker { display: flex; white-space: nowrap; animation: ticker-scroll 60s linear infinite; padding-left: 100%; gap: 50px; align-items: center;}
+    @keyframes pulse-live { 0% { opacity: 1; transform: scale(1); } 50% { opacity: 0.6; transform: scale(1.15); } 100% { opacity: 1; transform: scale(1); } }
+    .ticker-wrap { flex: 1; overflow: hidden; position: relative; display: flex; align-items: center; padding: 0 20px; }
+    .ticker-wrap::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 60px; background: linear-gradient(90deg, rgba(15,23,42,0.9), transparent); z-index: 2; pointer-events: none; }
+    .ticker-wrap::after { content: ''; position: absolute; right: 0; top: 0; bottom: 0; width: 60px; background: linear-gradient(-90deg, rgba(15,23,42,0.9), transparent); z-index: 2; pointer-events: none; }
+    .ticker { display: flex; white-space: nowrap; animation: ticker-scroll 50s linear infinite; padding-left: 100%; gap: 40px; align-items: center; }
     .ticker:hover { animation-play-state: paused; }
-    .ticker-item { font-size: 14px; color: var(--text); text-decoration: none; transition: 0.2s; display: inline-flex; align-items: center; gap: 8px;}
-    .ticker-item:hover { color: var(--primary); }
-    .ticker-source { color: var(--text-muted); font-size: 11px; background: rgba(255,255,255,0.1); padding: 2px 6px; border-radius: 4px; }
+    .ticker-item {
+      font-size: 13px; color: #e2e8f0; text-decoration: none; transition: 0.2s;
+      display: inline-flex; align-items: center; gap: 10px; padding: 4px 0;
+      border-bottom: 1px solid transparent;
+    }
+    .ticker-item:hover { color: #60a5fa; border-bottom-color: #60a5fa; }
+    .ticker-source {
+      font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;
+      background: rgba(96,165,250,0.15); color: #60a5fa; padding: 2px 8px; border-radius: 4px;
+    }
     @keyframes ticker-scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
 
-    /* Grid de Noticias Escritas */
-    .written-press-container h3 { margin-bottom: 20px; font-weight: 500; font-size: 20px; display: flex; align-items: center; gap: 10px; }
-    
-    .msn-news-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
-    .msn-news-card { 
-        background: var(--card-bg); backdrop-filter: blur(10px); border: 1px solid var(--border); 
-        border-radius: 16px; overflow: hidden; transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
-        cursor: pointer; display: flex; flex-direction: column; text-decoration: none; height: 100%;
+    /* Grid de Noticias */
+    .written-press-container {
+      background: var(--card-bg); border: 1px solid var(--border); border-radius: 16px;
+      padding: 24px; backdrop-filter: var(--glass-blur);
     }
-    .msn-news-card:hover { transform: translateY(-5px); box-shadow: 0 15px 35px rgba(0,0,0,0.5); border-color: rgba(6, 182, 212, 0.4); }
-    .msn-news-img { width: 100%; height: 170px; object-fit: cover; border-bottom: 1px solid rgba(255,255,255,0.05); background: #1e293b; transition: 0.3s; }
-    .msn-news-card:hover .msn-news-img { transform: scale(1.03); }
+    .written-press-container h3 {
+      margin: 0 0 20px 0; font-weight: 600; font-size: 18px;
+      display: flex; align-items: center; gap: 10px; color: var(--text);
+      letter-spacing: 0.3px; padding-bottom: 14px;
+      border-bottom: 1px solid var(--border);
+    }
+    .written-press-container h3 i { color: var(--secondary); }
     
-    .msn-news-content { padding: 18px; flex: 1; display: flex; flex-direction: column; position: relative; z-index: 2; background: var(--card-bg); }
-    .msn-news-title { font-size: 16px; font-weight: 600; color: var(--text); line-height: 1.4; margin-bottom: 12px; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
-    .msn-news-meta { margin-top: auto; display: flex; justify-content: space-between; align-items: center; font-size: 12px; color: var(--text-muted); font-weight: 500; }
-    .msn-news-source { color: var(--primary); display: flex; align-items: center; gap: 6px; }
+    .news-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 18px;
+    }
+    .news-card {
+      background: rgba(255,255,255,0.02); border: 1px solid var(--border);
+      border-radius: 14px; overflow: hidden; transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+      cursor: pointer; display: flex; flex-direction: column; text-decoration: none; height: 100%;
+      position: relative;
+    }
+    .news-card::before {
+      content: ''; position: absolute; inset: 0; border-radius: 14px;
+      background: linear-gradient(180deg, transparent 60%, rgba(6,182,212,0.03));
+      opacity: 0; transition: 0.35s; pointer-events: none; z-index: 1;
+    }
+    .news-card:hover {
+      transform: translateY(-6px); box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+      border-color: rgba(6, 182, 212, 0.3);
+    }
+    .news-card:hover::before { opacity: 1; }
+    .news-card-img-wrap {
+      position: relative; overflow: hidden; height: 180px; flex-shrink: 0;
+      background: linear-gradient(135deg, #1e293b, #0f172a);
+    }
+    .news-card-img {
+      width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .news-card:hover .news-card-img { transform: scale(1.08); }
+    .news-card-category {
+      position: absolute; top: 12px; left: 12px; z-index: 3;
+      font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;
+      padding: 4px 12px; border-radius: 20px; backdrop-filter: blur(8px);
+      background: rgba(0,0,0,0.6); color: #94a3b8; border: 1px solid rgba(255,255,255,0.1);
+    }
+    .news-card-gradient {
+      position: absolute; bottom: 0; left: 0; right: 0; height: 60%;
+      background: linear-gradient(0deg, rgba(15,23,42,0.8), transparent); z-index: 2;
+    }
+    .news-card-body {
+      padding: 16px 18px 18px; flex: 1; display: flex; flex-direction: column;
+      position: relative; z-index: 2;
+    }
+    .news-card-title {
+      font-size: 15px; font-weight: 600; color: var(--text); line-height: 1.45;
+      margin-bottom: 12px; display: -webkit-box; -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical; overflow: hidden; transition: 0.2s;
+    }
+    .news-card:hover .news-card-title { color: var(--primary); }
+    .news-card-meta {
+      margin-top: auto; display: flex; justify-content: space-between;
+      align-items: center; font-size: 11px; color: var(--text-muted);
+      font-weight: 500; padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.04);
+    }
+    .news-card-source {
+      display: flex; align-items: center; gap: 6px; color: var(--primary);
+      font-weight: 600; font-size: 11px;
+    }
+    .news-card-source-favicon { width: 14px; height: 14px; border-radius: 3px; object-fit: cover; }
+    .news-card-time { display: flex; align-items: center; gap: 4px; }
+
+    /* Estado vacío */
+    .news-empty {
+      grid-column: 1 / -1; text-align: center; padding: 60px 20px;
+      color: var(--text-muted); font-size: 14px;
+    }
+    .news-empty i { font-size: 40px; margin-bottom: 15px; opacity: 0.3; display: block; }
+
+    /* =========================================
+       WIDGET DE CLIMA
+       ========================================= */
+    .weather-widget {
+      background: var(--card-bg); border: 1px solid var(--border); border-radius: 16px;
+      padding: 20px 24px; backdrop-filter: var(--glass-blur);
+    }
+    .weather-header {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 16px; padding-bottom: 14px;
+      border-bottom: 1px solid var(--border);
+    }
+    .weather-header h3 {
+      font-weight: 600; font-size: 16px; color: var(--text);
+      display: flex; align-items: center; gap: 10px; margin: 0;
+    }
+    .weather-header h3 i { color: #fcd34d; }
+    .weather-city-form {
+      display: flex; gap: 8px; align-items: center;
+    }
+    .weather-city-input {
+      background: rgba(255,255,255,0.05); border: 1px solid var(--border);
+      border-radius: 8px; padding: 7px 12px; color: var(--text);
+      font-size: 13px; outline: none; width: 160px; transition: 0.2s;
+    }
+    .weather-city-input:focus { border-color: var(--primary); background: rgba(255,255,255,0.08); }
+    .weather-city-input::placeholder { color: var(--text-gray); }
+    .weather-btn {
+      background: var(--primary); border: none; border-radius: 8px;
+      padding: 7px 14px; color: white; font-size: 12px; font-weight: 600;
+      cursor: pointer; transition: 0.2s; white-space: nowrap;
+    }
+    .weather-btn:hover { filter: brightness(1.2); transform: translateY(-1px); }
+    .weather-body {
+      display: flex; align-items: center; gap: 24px; flex-wrap: wrap;
+      min-height: 60px;
+    }
+    .weather-main {
+      display: flex; align-items: center; gap: 16px;
+    }
+    .weather-icon {
+      font-size: 40px; width: 60px; text-align: center;
+    }
+    .weather-temp {
+      font-size: 36px; font-weight: 700; color: var(--text);
+      line-height: 1;
+    }
+    .weather-temp-unit { font-size: 18px; color: var(--text-muted); font-weight: 400; }
+    .weather-desc {
+      font-size: 14px; color: var(--text-muted); text-transform: capitalize;
+    }
+    .weather-details {
+      display: flex; gap: 20px; flex-wrap: wrap;
+    }
+    .weather-detail-item {
+      display: flex; align-items: center; gap: 6px;
+      font-size: 13px; color: var(--text-muted);
+    }
+    .weather-detail-item i { width: 16px; color: var(--primary); }
+    .weather-loading { color: var(--text-gray); font-size: 13px; }
+    .weather-error { color: var(--danger); font-size: 13px; }
+    @media (max-width: 768px) {
+      .weather-header { flex-direction: column; gap: 12px; align-items: stretch; }
+      .weather-city-form { width: 100%; }
+      .weather-city-input { flex: 1; width: auto; }
+      .weather-body { flex-direction: column; align-items: flex-start; gap: 12px; }
+      .weather-details { width: 100%; justify-content: space-between; }
+    }
 
     /* =========================================
        RESULTADOS
@@ -465,18 +623,21 @@
       .search-button { border-radius: 0 20px 20px 0; width: 60px; }
       
       /* Ajustes Móviles para el Dashboard de Noticias */
-      #dashboard { margin: 20px auto; width: 100%; padding: 0 15px; padding-bottom: 50px; }
-      .dashboard-header { flex-direction: column; gap: 15px; text-align: center; }
-      .dashboard-header h2 { font-size: 20px; justify-content: center; }
-      .dashboard-actions { width: 100%; display: flex; gap: 10px; flex-wrap: wrap; }
-      .dashboard-actions .btn { flex: 1; min-width: 120px; justify-content: center; font-size: 12px; padding: 10px; }
-      .news-ticker-container { flex-direction: column; border-radius: 8px; }
-      .ticker-label { justify-content: center; padding: 8px; font-size: 12px; }
-      .ticker-wrap { padding: 10px 0; }
-      .ticker { animation-duration: 45s; }
-      .msn-news-grid { grid-template-columns: 1fr; gap: 15px; } /* Una sola columna fluida */
-      .msn-news-img { height: 200px; } /* Imagen más grande en pantallas pequeñas */
-      .written-press-container h3 { font-size: 18px; }
+      #dashboard { margin: 15px auto; width: 100%; padding: 0 12px; padding-bottom: 40px; }
+      .dashboard-header { flex-direction: column; gap: 12px; text-align: center; padding: 14px 16px; }
+      .dashboard-header h2 { font-size: 18px; justify-content: center; }
+      .dashboard-actions { width: 100%; display: flex; gap: 8px; flex-wrap: wrap; }
+      .dashboard-actions .btn { flex: 1; min-width: 100px; justify-content: center; font-size: 11px; padding: 8px 10px; }
+      .news-ticker-container { flex-direction: column; border-radius: 10px; }
+      .ticker-label { justify-content: center; padding: 8px 12px; font-size: 11px; border-radius: 10px 10px 0 0; }
+      .ticker-label::after { display: none; }
+      .ticker-wrap { padding: 8px 0; }
+      .ticker { animation-duration: 40s; }
+      .ticker-wrap::before, .ticker-wrap::after { width: 30px; }
+      .written-press-container { padding: 14px; }
+      .written-press-container h3 { font-size: 16px; }
+      .news-grid { grid-template-columns: 1fr; gap: 14px; }
+      .news-card-img-wrap { height: 200px; }
     }
   </style>
 </head>
@@ -598,10 +759,24 @@
           </div>
         </div>
 
+        <!-- Widget Clima -->
+        <div class="weather-widget" id="weatherWidget">
+          <div class="weather-header">
+            <h3><i class="fas fa-cloud-sun"></i> Clima</h3>
+            <form class="weather-city-form" onsubmit="event.preventDefault(); WeatherWidget.setCity(document.getElementById('weather-city-input').value);">
+              <input type="text" id="weather-city-input" class="weather-city-input" placeholder="Ej: Buenos Aires, Argentina..." autocomplete="off">
+              <button type="submit" class="weather-btn"><i class="fas fa-search"></i> Cambiar</button>
+            </form>
+          </div>
+          <div class="weather-body" id="weather-body">
+            <span class="weather-loading"><i class="fas fa-spinner fa-spin"></i> Cargando clima...</span>
+          </div>
+        </div>
+
         <!-- Prensa Escrita Latinoamericana -->
         <div class="written-press-container">
           <h3><i class="fas fa-globe-americas" style="color:var(--secondary);"></i> Prensa Escrita Internacional y LATAM</h3>
-          <div id="latam-news-grid" class="msn-news-grid">
+          <div id="latam-news-grid" class="news-grid">
             <!-- Las tarjetas de noticias se inyectarán aquí -->
           </div>
         </div>
@@ -984,6 +1159,9 @@ var UI = {
     loadDashboard: function(forceReload = false) {
         const grid = document.getElementById('latam-news-grid');
         if(!grid) return;
+
+        // Init weather widget
+        WeatherWidget.init();
         
         // Auto-refresh each 5 minutes
         if (UI._newsRefreshTimer) clearInterval(UI._newsRefreshTimer);
@@ -992,12 +1170,13 @@ var UI = {
         if(grid.dataset.loaded === 'true' && !forceReload) return; 
         
         // Show skeleton while loading
+        grid.className = 'news-grid';
         grid.innerHTML = '';
         for (var i = 0; i < 6; i++) {
-            grid.innerHTML += '<div class="skeleton-card"><div class="skeleton-img skeleton"></div><div class="skeleton-body"><div class="skeleton-line skeleton"></div><div class="skeleton-line skeleton" style="width:85%"></div><div class="skeleton-line skeleton" style="width:45%"></div><div class="skeleton-meta"><span class="skeleton"></span><span class="skeleton"></span></div></div></div>';
+            grid.innerHTML += '<div class="skeleton-card"><div class="skeleton-img skeleton" style="height:180px"></div><div class="skeleton-body"><div class="skeleton-line skeleton"></div><div class="skeleton-line skeleton" style="width:85%"></div><div class="skeleton-line skeleton" style="width:45%"></div><div class="skeleton-meta"><span class="skeleton"></span><span class="skeleton"></span></div></div></div>';
         }
         
-        // Ñe'ẽkuaaty marandu (Fuentes de noticias, APIs de Argentina primero, se remueve El País)
+        // Ñe'ẽkuaaty marandu (Fuentes de noticias, APIs de Argentina primero)
         const feeds = [
             { url: 'https://www.infobae.com/arc/outboundfeeds/rss/?outputType=xml', source: 'Infobae' },
             { url: 'https://www.clarin.com/rss/lo-ultimo/', source: 'Clarín' },
@@ -1041,10 +1220,34 @@ var UI = {
                 return;
             }
 
+            // Función para detectar categoría por palabras clave
+            function detectCategory(title, source) {
+                const t = (title + ' ' + source).toLowerCase();
+                if (/tech|tecnolog|inteligencia|ai|ia|robot|digital|software|app|celular|smartphone|apple|google|microsoft|samsumg|realidad virtual/.test(t)) return 'Tecnología';
+                if (/econom|bolsa|dólar|peso|inflación|banc|finanzas|cripto|bitcoin|mercado|petróleo|empresa/.test(t)) return 'Economía';
+                if (/deport|fútbol|futbol|tenis|básquet|basquet|nba|ligue|messi|ronaldo|olimp/.test(t)) return 'Deportes';
+                if (/salud|medic|vacuna|covid|enfermed|hospit|nutrición/.test(t)) return 'Salud';
+                if (/polític|politic|gobierno|elección|eleccion|presidente|congreso|senado|partido/.test(t)) return 'Política';
+                if (/cultura|arte|cine|música|música|libro|serie|película|pelicula|show|espectáculo/.test(t)) return 'Cultura';
+                if (/ciencia|espacio|nasa|spacex|investigación|descubrim|planeta|naturaleza/.test(t)) return 'Ciencia';
+                if (/educaci|universidad|escuela|colegio|estudiante|aprender|curso/.test(t)) return 'Educación';
+                return 'Noticias';
+            }
+            function formatTimeAgo(dateStr) {
+                const msAgo = Date.now() - new Date(dateStr).getTime();
+                const mins = Math.floor(msAgo / 60000);
+                if (mins < 1) return 'Ahora';
+                if (mins < 60) return mins + 'm';
+                const hours = Math.floor(mins / 60);
+                if (hours < 24) return hours + 'h';
+                const days = Math.floor(hours / 24);
+                return days + 'd';
+            }
+
             // Tomar las 24 noticias más recientes para la parrilla
-            allNews.slice(0, 24).forEach(item => {
-                // Ta'ãnga jeheka (Algoritmo de extracción de imágenes de alta calidad mejorado)
-                let img = 'https://via.placeholder.com/400x250/1e293b/a1a1aa?text=Estalingrado+News';
+            grid.className = 'news-grid';
+            allNews.slice(0, 48).forEach(item => {
+                let img = 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="400" height="250" viewBox="0 0 400 250"><rect fill="#1e293b" width="400" height="250"/><text x="200" y="125" text-anchor="middle" fill="#475569" font-family="sans-serif" font-size="16">EC News</text></svg>');
                 if (item.enclosure && item.enclosure.link) {
                     img = item.enclosure.link;
                 } else if (item.thumbnail) {
@@ -1055,20 +1258,21 @@ var UI = {
                     if(imgMatch) img = imgMatch[1];
                 }
 
-                // Cálculo de "Tiempo Atrás"
-                const msAgo = new Date() - new Date(item.pubDate);
-                const hoursAgo = Math.max(0, Math.floor(msAgo / 3600000));
-                const minsAgo = Math.floor((msAgo % 3600000) / 60000);
-                let timeStr = hoursAgo > 0 ? `Hace ${hoursAgo}h` : (minsAgo > 0 ? `Hace ${minsAgo}m` : 'Hace un momento');
+                const category = detectCategory(item.title, item.sourceName);
+                const timeStr = formatTimeAgo(item.pubDate);
 
                 grid.innerHTML += `
-                    <a href="${item.link}" target="_blank" class="msn-news-card">
-                        <div style="overflow:hidden;"><img src="${img}" class="msn-news-img" loading="lazy"></div>
-                        <div class="msn-news-content">
-                            <div class="msn-news-title">${Utils.escapeHtml(item.title)}</div>
-                            <div class="msn-news-meta">
-                                <span class="msn-news-source"><i class="fas fa-newspaper"></i> ${item.sourceName}</span>
-                                <span><i class="far fa-clock" style="margin-right:4px;"></i> ${timeStr}</span>
+                    <a href="${item.link}" target="_blank" class="news-card" rel="noopener">
+                        <div class="news-card-img-wrap">
+                            <img src="${img}" class="news-card-img" loading="lazy" onerror="this.src='data:image/svg+xml,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="400" height="250" viewBox="0 0 400 250"><rect fill="#1e293b" width="400" height="250"/><text x="200" y="125" text-anchor="middle" fill="#475569" font-family="sans-serif" font-size="16">EC News</text></svg>')}'">
+                            <div class="news-card-gradient"></div>
+                            <span class="news-card-category">${category}</span>
+                        </div>
+                        <div class="news-card-body">
+                            <div class="news-card-title">${Utils.escapeHtml(item.title)}</div>
+                            <div class="news-card-meta">
+                                <span class="news-card-source"><i class="fas fa-newspaper"></i> ${item.sourceName}</span>
+                                <span class="news-card-time"><i class="far fa-clock"></i> ${timeStr}</span>
                             </div>
                         </div>
                     </a>
@@ -1928,6 +2132,107 @@ var PrivacyTools = {
     },
     clearAllData: function() {
         if(confirm('¿Eliminar caché, configuraciones y widgets locales?')) { localStorage.clear(); location.reload(); }
+    }
+};
+
+// =========================================
+// WIDGET DE CLIMA
+// =========================================
+var WeatherWidget = {
+    _city: '',
+    init: function() {
+        this._city = Utils.safeLocalStorage.get('weatherCity') || '';
+        if (this._city) {
+            document.getElementById('weather-city-input').value = this._city;
+            this.fetchWeather(this._city);
+        } else {
+            document.getElementById('weather-body').innerHTML = '<span class="weather-desc" style="color:var(--text-gray);">Ingresa una ciudad para ver el clima actual.</span>';
+        }
+    },
+    setCity: function(city) {
+        city = city.trim();
+        if (!city) return Toast.warn('Escribe una ciudad');
+        this._city = city;
+        Utils.safeLocalStorage.set('weatherCity', city);
+        this.fetchWeather(city);
+    },
+    fetchWeather: function(city) {
+        var body = document.getElementById('weather-body');
+        body.innerHTML = '<span class="weather-loading"><i class="fas fa-spinner fa-spin"></i> Consultando clima...</span>';
+        var self = this;
+        // Geocodificar con Open-Meteo Geocoding API (gratuito, sin API key)
+        fetch('https://geocoding-api.open-meteo.com/v1/search?name=' + encodeURIComponent(city) + '&count=1&language=es&format=json')
+        .then(function(r) { return r.json(); })
+        .then(function(geo) {
+            if (!geo || !geo.results || !geo.results.length) {
+                body.innerHTML = '<span class="weather-error"><i class="fas fa-exclamation-triangle"></i> Ciudad no encontrada. Intenta con otro nombre.</span>';
+                return;
+            }
+            var loc = geo.results[0];
+            var lat = loc.latitude, lon = loc.longitude;
+            var displayName = loc.name + (loc.country ? ', ' + loc.country : '');
+            self._currentLocation = displayName;
+            // Obtener clima con Open-Meteo
+            return fetch('https://api.open-meteo.com/v1/forecast?latitude=' + lat + '&longitude=' + lon + '&current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m&daily=temperature_2m_max,temperature_2m_min,precipitation_probability_max&timezone=auto&forecast_days=1')
+            .then(function(r) { return r.json(); })
+            .then(function(w) {
+                if (!w.current) {
+                    // Fallback a API anterior
+                    return fetch('https://api.open-meteo.com/v1/forecast?latitude=' + lat + '&longitude=' + lon + '&current_weather=true&daily=temperature_max,temperature_min,precipitation_probability,weathercode&timezone=auto')
+                    .then(function(r) { return r.json(); })
+                    .then(function(w2) {
+                        self._renderWeatherLegacy(w2, displayName);
+                    });
+                }
+                var cur = w.current;
+                var daily = w.daily;
+                var code = cur.weather_code;
+                var icon = 'fa-cloud-sun';
+                var desc = 'Variable';
+                if (code === 0 || code === 1) { icon = 'fa-sun'; desc = 'Despejado'; }
+                else if (code === 2) { icon = 'fa-cloud-sun'; desc = 'Parcialmente nublado'; }
+                else if (code === 3) { icon = 'fa-cloud'; desc = 'Nublado'; }
+                else if (code >= 45 && code <= 48) { icon = 'fa-smog'; desc = 'Niebla'; }
+                else if ((code >= 51 && code <= 67) || code >= 80) { icon = 'fa-cloud-rain'; desc = 'Lluvia'; }
+                else if (code >= 71 && code <= 77) { icon = 'fa-snowflake'; desc = 'Nieve'; }
+                else if (code >= 95) { icon = 'fa-bolt'; desc = 'Tormenta'; }
+                var temp = cur.temperature_2m;
+                var feelsLike = cur.apparent_temperature;
+                var humidity = cur.relative_humidity_2m;
+                var wind = cur.wind_speed_10m;
+                var tempMax = daily ? daily.temperature_2m_max[0] : null;
+                var tempMin = daily ? daily.temperature_2m_min[0] : null;
+                var precipProb = daily ? daily.precipitation_probability_max[0] : null;
+                body.innerHTML = '<div class="weather-main"><div class="weather-icon"><i class="fas ' + icon + '" style="color:#fcd34d;"></i></div><div><div class="weather-temp">' + temp + '<span class="weather-temp-unit">°C</span></div><div class="weather-desc">' + desc + ' en ' + Utils.escapeHtml(displayName) + '</div></div></div><div class="weather-details">' + (tempMin !== null ? '<span class="weather-detail-item"><i class="fas fa-arrow-down"></i> ' + tempMin + '°C</span>' : '') + (tempMax !== null ? '<span class="weather-detail-item"><i class="fas fa-arrow-up"></i> ' + tempMax + '°C</span>' : '') + '<span class="weather-detail-item"><i class="fas fa-wind"></i> ' + wind + ' km/h</span>' + (humidity !== null ? '<span class="weather-detail-item"><i class="fas fa-tint"></i> ' + humidity + '%</span>' : '') + '</div>';
+            });
+        })
+        .catch(function(e) {
+            console.error('WeatherWidget error:', e);
+            body.innerHTML = '<span class="weather-error"><i class="fas fa-exclamation-triangle"></i> Error de conexión al consultar el clima.</span>';
+        });
+    },
+    _renderWeatherLegacy: function(w, displayName) {
+        var body = document.getElementById('weather-body');
+        if (!w.current_weather) {
+            body.innerHTML = '<span class="weather-error"><i class="fas fa-exclamation-triangle"></i> No se pudo obtener el clima.</span>';
+            return;
+        }
+        var cw = w.current_weather;
+        var daily = w.daily;
+        var code = cw.weathercode;
+        var icon = 'fa-cloud-sun';
+        var desc = 'Variable';
+        if (code === 0 || code === 1) { icon = 'fa-sun'; desc = 'Despejado'; }
+        else if (code === 2) { icon = 'fa-cloud-sun'; desc = 'Parcialmente nublado'; }
+        else if (code === 3) { icon = 'fa-cloud'; desc = 'Nublado'; }
+        else if (code >= 45 && code <= 48) { icon = 'fa-smog'; desc = 'Niebla'; }
+        else if ((code >= 51 && code <= 67) || code >= 80) { icon = 'fa-cloud-rain'; desc = 'Lluvia'; }
+        else if (code >= 71 && code <= 77) { icon = 'fa-snowflake'; desc = 'Nieve'; }
+        else if (code >= 95) { icon = 'fa-bolt'; desc = 'Tormenta'; }
+        var tempMax = daily ? daily.temperature_max[0] : null;
+        var tempMin = daily ? daily.temperature_min[0] : null;
+        var precipProb = daily ? daily.precipitation_probability[0] : null;
+        body.innerHTML = '<div class="weather-main"><div class="weather-icon"><i class="fas ' + icon + '" style="color:#fcd34d;"></i></div><div><div class="weather-temp">' + cw.temperature + '<span class="weather-temp-unit">°C</span></div><div class="weather-desc">' + desc + ' en ' + Utils.escapeHtml(displayName) + '</div></div></div><div class="weather-details">' + (tempMin !== null ? '<span class="weather-detail-item"><i class="fas fa-arrow-down"></i> ' + tempMin + '°C</span>' : '') + (tempMax !== null ? '<span class="weather-detail-item"><i class="fas fa-arrow-up"></i> ' + tempMax + '°C</span>' : '') + '<span class="weather-detail-item"><i class="fas fa-wind"></i> ' + cw.windspeed + ' km/h</span>' + (precipProb !== null ? '<span class="weather-detail-item"><i class="fas fa-tint"></i> ' + precipProb + '%</span>' : '') + '</div>';
     }
 };
 
