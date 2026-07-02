@@ -55,37 +55,119 @@
     ::-webkit-scrollbar-thumb:hover { background: var(--primary); }
     
     /* =========================================
-       LOADER ESTALINGRADO
+       LOADER ESTALINGRADO - PREMIUM
        ========================================= */
     #loading-screen {
       position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
       background: var(--dark-bg); z-index: 9999; display: flex; flex-direction: column;
-      justify-content: center; align-items: center; transition: opacity 0.5s ease-out;
+      justify-content: center; align-items: center; transition: opacity 0.6s ease-out;
+      overflow: hidden;
+    }
+    #loading-screen::before {
+      content: ''; position: absolute; width: 600px; height: 600px;
+      background: radial-gradient(circle, rgba(139, 92, 246, 0.08) 0%, transparent 70%);
+      animation: loader-bg-pulse 4s ease-in-out infinite;
+    }
+    #loading-screen::after {
+      content: ''; position: absolute; width: 400px; height: 400px;
+      background: radial-gradient(circle, rgba(6, 182, 212, 0.06) 0%, transparent 70%);
+      animation: loader-bg-pulse 4s ease-in-out infinite reverse;
+    }
+    @keyframes loader-bg-pulse {
+      0%, 100% { transform: scale(0.8); opacity: 0.5; }
+      50% { transform: scale(1.2); opacity: 1; }
+    }
+
+    .loader-logo-wrapper {
+      position: relative; width: 120px; height: 120px; margin-bottom: 30px; z-index: 2;
     }
     .loader-logo {
-      width: 110px; height: 110px; border-radius: 30%;
-      border: 2px solid transparent; margin-bottom: 25px;
+      width: 100%; height: 100%; border-radius: 50%;
+      border: 2px solid transparent; object-fit: cover;
       background: linear-gradient(var(--dark-bg), var(--dark-bg)) padding-box, 
                   linear-gradient(135deg, var(--primary), var(--secondary)) border-box;
-      animation: pulse-glow 2s infinite alternate; object-fit: cover;
+      animation: logo-float 3s ease-in-out infinite;
     }
-    @keyframes pulse-glow {
-      0% { box-shadow: 0 0 10px rgba(6, 182, 212, 0.2); transform: scale(0.98); }
-      100% { box-shadow: 0 0 35px rgba(139, 92, 246, 0.6); transform: scale(1.02); }
+    .loader-ring {
+      position: absolute; inset: -8px; border-radius: 50%;
+      border: 2px solid transparent; border-top-color: var(--primary);
+      border-right-color: var(--secondary); animation: ring-spin 2s linear infinite;
     }
+    .loader-ring-inner {
+      position: absolute; inset: -16px; border-radius: 50%;
+      border: 1px solid transparent; border-bottom-color: rgba(6, 182, 212, 0.4);
+      border-left-color: rgba(139, 92, 246, 0.4); animation: ring-spin 3s linear infinite reverse;
+    }
+    .loader-dot {
+      position: absolute; width: 8px; height: 8px; border-radius: 50%;
+      background: var(--primary); animation: dot-orbit 2s linear infinite;
+    }
+    .loader-dot:nth-child(2) { animation-delay: -0.5s; background: var(--secondary); width: 6px; height: 6px; }
+    .loader-dot:nth-child(3) { animation-delay: -1s; background: #fcd34d; width: 5px; height: 5px; }
+    @keyframes logo-float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+    @keyframes ring-spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    @keyframes dot-orbit {
+      0% { top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(0deg) translateX(55px) rotate(0deg); }
+      100% { top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(360deg) translateX(55px) rotate(-360deg); }
+    }
+
     .loader-text {
-      font-size: 16px; letter-spacing: 4px; color: white;
-      margin-bottom: 5px; text-transform: uppercase; font-weight: 500;
+      font-size: 18px; letter-spacing: 6px; color: white;
+      margin-bottom: 6px; text-transform: uppercase; font-weight: 600; z-index: 2;
+      text-shadow: 0 0 20px rgba(139, 92, 246, 0.3);
     }
+    .loader-subtext {
+      font-size: 10px; letter-spacing: 3px; color: var(--primary);
+      margin-bottom: 28px; text-transform: uppercase; font-weight: 400; z-index: 2;
+      animation: subtext-flicker 2s ease-in-out infinite;
+    }
+    @keyframes subtext-flicker {
+      0%, 100% { opacity: 0.6; }
+      50% { opacity: 1; }
+    }
+
     .loading-bar {
-      width: 250px; height: 4px; border-radius: 10px; background: rgba(255,255,255,0.1);
-      overflow: hidden; margin-bottom: 10px; position: relative;
+      width: 280px; height: 3px; border-radius: 10px; background: rgba(255,255,255,0.06);
+      overflow: hidden; margin-bottom: 14px; position: relative; z-index: 2;
+      box-shadow: 0 0 15px rgba(0,0,0,0.3);
     }
     #loading-progress-bar {
-      height: 100%; width: 0%; background: var(--primary);
-      box-shadow: 0 0 10px var(--primary); transition: width 0.1s linear;
+      height: 100%; width: 0%; border-radius: 10px;
+      background: linear-gradient(90deg, var(--primary), var(--secondary), var(--primary));
+      background-size: 200% 100%; animation: progress-shimmer 2s linear infinite;
+      box-shadow: 0 0 12px var(--primary-glow); transition: width 0.1s linear;
     }
-    #loading-percent { color: var(--primary); font-size: 12px; font-weight: 600; font-family: monospace; }
+    @keyframes progress-shimmer {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+
+    .loader-status {
+      display: flex; align-items: center; gap: 8px; z-index: 2;
+    }
+    #loading-percent {
+      color: var(--primary); font-size: 11px; font-weight: 600; font-family: 'Outfit', monospace;
+      min-width: 35px; text-align: right;
+    }
+    .loader-status-dots {
+      display: flex; gap: 4px;
+    }
+    .loader-status-dot {
+      width: 4px; height: 4px; border-radius: 50%; background: var(--primary);
+      animation: status-dot-bounce 1.4s ease-in-out infinite;
+    }
+    .loader-status-dot:nth-child(2) { animation-delay: 0.2s; }
+    .loader-status-dot:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes status-dot-bounce {
+      0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; }
+      40% { transform: scale(1); opacity: 1; }
+    }
 
     #main-content {
       display: none; opacity: 0; transition: opacity 0.8s ease-in;
@@ -644,11 +726,25 @@
 <body>
   <!-- LOADER ESTALINGRADO -->
   <div id="loading-screen">
-    <img src="https://64.media.tumblr.com/3d305395ebd099966bbd46734f6afa03/4d78480730607865-41/s540x810/3fe6a449b17bd152178f482c75dab5cd26aa27b3.pnj" class="loader-logo" alt="Logo" loading="lazy">
+    <div class="loader-logo-wrapper">
+      <div class="loader-ring"></div>
+      <div class="loader-ring-inner"></div>
+      <div class="loader-dot"></div>
+      <div class="loader-dot"></div>
+      <div class="loader-dot"></div>
+      <img src="https://64.media.tumblr.com/3d305395ebd099966bbd46734f6afa03/4d78480730607865-41/s540x810/3fe6a449b17bd152178f482c75dab5cd26aa27b3.pnj" class="loader-logo" alt="Logo" loading="lazy">
+    </div>
     <p class="loader-text">ESTALINGRADO CORP</p>
-    <div style="margin-bottom:20px; font-size:10px; color:var(--primary); letter-spacing: 2px;">CONECTANDO A LA INTRA-NET</div>
+    <div class="loader-subtext">Inicializando sistema seguro</div>
     <div class="loading-bar"><div id="loading-progress-bar"></div></div>
-    <div id="loading-percent">0%</div>
+    <div class="loader-status">
+      <div class="loader-status-dots">
+        <div class="loader-status-dot"></div>
+        <div class="loader-status-dot"></div>
+        <div class="loader-status-dot"></div>
+      </div>
+      <div id="loading-percent">0%</div>
+    </div>
   </div>
 
   <div id="main-content">
@@ -699,9 +795,9 @@
         <a href="https://nicotips27.github.io/ECwebSend/"><i class="fas fa-share-nodes"></i> Transfiere archivos entre dispositivos (ECSend)</a>
         <a href="https://nicotips27.github.io/EC-chanel/"><i class="fas fa-tv"></i> EC Channel</a>
         <a href="https://nicotips27.github.io/ECnews/"><i class="fas fa-newspaper"></i> ECnews</a>
+        <a href="https://nicotips27.github.io/EC-OS/"><i class="fas fa-laptop"></i> EC OS</a>
         <strong>Administrativo</strong>
         <a href="https://nicotips27.github.io/ec-Intra-net/"><i class="fas fa-database"></i> Big-Data</a>
-        <a href="https://nicotips27.github.io/EC-Escritorio/"><i class="fas fa-laptop"></i> EC OS</a>
         <a href="https://centercorpec.wixsite.com/estalingradocorp" target="_blank" rel="noopener noreferrer"><i class="fas fa-building"></i> Intra-net Web</a>
         <strong>Soporte</strong>
         <a href="#" onclick="window.toggleHelp(); return false;"><i class="fas fa-info-circle"></i> Ayuda Comandos</a>
@@ -2285,16 +2381,27 @@ var App = {
     },
     startLoader: function() {
         const { loadingScreen, progressBar, percentText, mainContent } = UI.elements;
-        let start = null; const duration = 1500;
+        let start = null; const duration = 2000;
+        const messages = ['Inicializando motor de búsqueda...', 'Cargando módulos de seguridad...', 'Sincronizando datos corporativos...', 'Preparando interfaz...', 'Conectando a la red privada...'];
+        let msgIndex = 0;
+        const subtext = loadingScreen.querySelector('.loader-subtext');
+        
         function anim(time) {
             if(!start) start = time; const elapsed = time - start; const p = Math.min((elapsed/duration)*100, 100);
             progressBar.style.width = p + '%'; percentText.textContent = Math.floor(p) + '%';
+            
+            if(Math.floor(p) > (msgIndex + 1) * 20 && msgIndex < messages.length - 1) {
+                msgIndex++;
+                if(subtext) { subtext.style.opacity = '0'; setTimeout(()=>{ subtext.textContent = messages[msgIndex]; subtext.style.opacity = '1'; }, 200); }
+            }
+            
             if(p < 100) requestAnimationFrame(anim);
             else {
+                if(subtext) subtext.textContent = 'Sistema listo';
                 setTimeout(() => {
                     loadingScreen.style.opacity = '0';
-                    setTimeout(() => { loadingScreen.style.display = 'none'; mainContent.style.display = 'flex'; setTimeout(()=>mainContent.style.opacity='1', 50); }, 500);
-                }, 200);
+                    setTimeout(() => { loadingScreen.style.display = 'none'; mainContent.style.display = 'flex'; setTimeout(()=>mainContent.style.opacity='1', 50); }, 600);
+                }, 300);
             }
         }
         loadingScreen.style.display = 'flex'; loadingScreen.style.opacity = '1';
