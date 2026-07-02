@@ -1,175 +1,192 @@
-Estalingrado Corp | Intranet PRO
-📋 Descripción
-Estalingrado Corp Intranet PRO es una interfaz de búsqueda y dashboard integrada que combina múltiples motores de búsqueda, herramientas de privacidad y widgets informativos en una experiencia visual tipo "cyber/aurora". El sistema opera completamente en el lado del cliente (localStorage) y no requiere backend.
+# Estalingrado Corp | Intranet PRO
 
-✨ Características Principales
-🔍 Búsqueda Multimotor
-Consulta simultánea a 10 motores de búsqueda (Google vía enlace externo, Bing, Yahoo, DuckDuckGo, Yandex, Brave, Baidu, Startpage, Wikipedia, Internet Archive)
+![Status](https://img.shields.io/badge/status-PRODUCTION-green)
+![Version](https://img.shields.io/badge/version-3.0-blue)
+![License](https://img.shields.io/badge/license-INTERNAL-red)
 
-Tarjetas enriquecidas con APIs públicas:
+> Sistema de búsqueda y dashboard corporativo integrado con estética Aurora Cyber. Opera 100% en el navegador sin backend.
 
-Wikipedia, OpenStreetMap (mapas interactivos + clima)
+---
 
-Open Library (libros), iTunes (música), TVMaze (series)
+## Descripción
 
-GitHub (perfiles), PokeAPI (Pokémon), Dog CEO (imágenes de perros)
+Estalingrado Corp Intranet PRO es una interfaz de búsqueda y dashboard profesional que combina múltiples motores de búsqueda, herramientas de privacidad y widgets informativos en una experiencia visual cyber/aurora con glassmorphism.
 
-CoinGecko (criptomonedas), SpaceX (lanzamientos)
+---
 
-REST Countries (información de países)
+## Características Principales
 
-TheMealDB (recetas), Free Dictionary API
+### Búsqueda Multimotor
+Consulta simultánea a 18 motores de búsqueda:
+- Google, Bing, Yahoo, DuckDuckGo, Yandex, Brave
+- Baidu, Startpage, Ecosia, SearXNG, Mojeek
+- Gibiru, Swisscows, Ask.com, AOL, Naver, Sogou
+- Wikipedia, Internet Archive
 
-Hacker News (noticias tecnológicas)
+### Tarjetas Inteligentes (APIs Integradas)
+| API | Uso |
+|-----|-----|
+| DuckDuckGo | Información rápida |
+| Wikipedia REST | Resúmenes de artículos |
+| Open-Meteo | Clima actual |
+| Nominatim | Geocodificación + Mapas Leaflet |
+| CoinGecko | Precios de criptomonedas |
+| Open Library | Información de libros |
+| iTunes Search | Música y podcasts |
+| TVMaze | Información de series |
+| GitHub API | Perfiles de usuario |
+| PokeAPI | Datos de Pokémon |
+| Dog CEO | Imágenes de perros |
+| Internet Archive | Búsqueda histórica |
+| Free Dictionary | Definiciones |
+| REST Countries | Información de países |
+| TheMealDB | Recetas de cocina |
+| SpaceX API | Lanzamientos espaciales |
+| Hacker News | Noticias tecnológicas |
 
-🧠 Corrector Ortográfico Inteligente
-Algoritmo de distancia de Levenshtein para sugerir correcciones ortográficas
+### Modos de Búsqueda
+- **Web** - Búsqueda estándar multimotor
+- **Imágenes** - Búsqueda visual multisource
+- **IA** - Acceso directo a ChatGPT, Gemini, Perplexity, DeepSeek, Claude, Copilot
 
-Sugiere "¿Quizás quisiste decir...?" cuando detecta errores tipográficos
+### Herramientas de Privacidad
+| Herramienta | Descripción |
+|-------------|-------------|
+| Generador de Claves | Contraseñas robustas (8-32 caracteres) |
+| Auditoría de Email | Verificación de filtraciones |
+| Scanner de URL | Análisis de enlaces sospechosos |
+| Generador QR | Crea códigos QR al instante |
+| Limpieza Digital | Borra datos locales |
 
-📊 Dashboard PRO
-Widgets configurables: Noticias, Clima, Mercados Financieros, Historial
+### Intranet Corporativa
+- EC Download - Descargas
+- ECSend - Transferencia de archivos
+- EC Channel - Canal multimedia
+- ECnews - Centro de noticias
+- EC OS - Sistema operativo web
+- Big-Data - Base de datos
+- Intra-net Web - Portal corporativo
 
-Persistencia de widgets en localStorage
+---
 
-Actualización individual de cada widget
+## Instalación
 
-🛡️ Herramientas de Privacidad
-Herramienta	Descripción
-Generador de contraseñas	Claves robustas (8-32 caracteres)
-Auditoría de email	Verificación simulada de filtraciones
-Escáner de URLs	Análisis básico de enlaces sospechosos
-Generador QR	Crea códigos QR a partir de texto o URLs
-Limpieza digital	Borra todos los datos almacenados localmente
-🎤 Comandos Especiales y Voz
-Búsqueda por voz (Web Speech API)
+### Requisitos
+- Navegador moderno (Chrome, Edge, Firefox, Safari)
+- Soporte ES6+, localStorage
+- Web Speech API (opcional, para voz)
 
-Comandos: /ai [pregunta], /traducir [texto]
+### Paso 1: Clonar
+```bash
+git clone https://github.com/nicotips27/Estalingrado-corp-Buscador-.git
+cd Estalingrado-corp-Buscador-
+```
 
-Acceso directo a portales: Escribe "github", "youtube", "chatgpt", etc. → tarjeta inteligente con botón de acceso
+### Paso 2: Abrir
+Abre `index.html` en tu navegador o usa un servidor local:
+```bash
+# Con Python
+python -m http.server 8000
 
-🖥️ CLI Integrado
-Terminal simulada con comandos gh search code y gh copilot suggest
+# Con Node.js
+npx serve .
+```
 
-🚀 Instalación y Uso
-Requisitos
-Navegador moderno con soporte para:
+---
 
-ES6+
+## Atajos de Teclado
 
-localStorage
+| Atajo | Acción |
+|-------|--------|
+| `Ctrl + K` | Enfocar barra de búsqueda |
+| `Ctrl + D` | Abrir/Cerrar Dashboard |
+| `Esc` | Cerrar menús / detener voz |
 
-Web Speech API (opcional, para voz)
+---
 
-IntersectionObserver (implícito)
+## Comandos Especiales
 
-Instalación Local
-Clona o descarga el repositorio:
+| Comando | Descripción |
+|---------|-------------|
+| `/ai [pregunta]` | Consulta inteligente simulada |
+| `/traducir [texto]` | Traducción rápida |
+| `clima en [ciudad]` | Reporte meteorológico |
+| `definir [palabra]` | Definición de diccionario |
+| `pokemon [nombre]` | Datos de Pokémon |
+| `github [usuario]` | Perfil de GitHub |
 
-bash
-git clone https://github.com/nicotips27/ec-intranet-pro
-cd ec-intranet-pro
-Abre el archivo index.html en tu navegador (doble clic o servidor local).
+---
 
-Acceso Directo desde Otro Proyecto
-html
-<!-- Si tienes otro proyecto y quieres enlazar a la Intranet: -->
-<a href="https://nicotips27.github.io/ec-Intra-net/">Acceso a Intranet PRO</a>
-⌨️ Atajos de Teclado
-Atajo	Acción
-Ctrl + K	Enfocar barra de búsqueda
-Ctrl + D	Abrir/Cerrar Dashboard
-Esc	Cerrar menús / detener dictado por voz
-🧩 Estructura del Proyecto
-text
-ec-intranet-pro/
-├── index.html          # Archivo único (todo en uno)
-├── README.md           # Este archivo
-└── (sin dependencias externas - CDNs usadas)
-CDNs utilizadas:
+## Estructura del Proyecto
 
-Font Awesome 6.4.0
+```
+Estalingrado-corp-Buscador-/
+├── index.html          # Archivo principal (todo en uno)
+├── README.md           # Documentación
+└── js/
+    └── script.js       # Script complementario
+```
 
-Google Fonts (Outfit)
+---
 
-Leaflet (mapas, cargada dinámicamente)
+## Personalización
 
-🔌 APIs Integradas (Todas Públicas)
-API	Uso
-DuckDuckGo Instant Answer	Información rápida
-Wikipedia REST	Resúmenes de artículos
-Open-Meteo	Clima actual
-Nominatim (OpenStreetMap)	Geocodificación
-CoinGecko	Precios de criptomonedas
-Open Library	Información de libros
-iTunes Search	Música y podcasts
-TVMaze	Información de series
-GitHub API	Perfiles de usuario
-PokeAPI	Datos de Pokémon
-Dog CEO	Imágenes aleatorias de perros
-Internet Archive	Búsqueda histórica
-Free Dictionary API	Definiciones
-REST Countries	Información de países
-TheMealDB	Recetas de cocina
-SpaceX API	Lanzamientos espaciales
-Hacker News (Algolia)	Noticias tecnológicas
-🎨 Personalización
-Modificar Motores de Búsqueda
-Edita el objeto CONFIG.searchEngines en el script:
-
-javascript
-searchEngines: {
-    Google: query => `https://www.google.com/search?q=${encodeURIComponent(query)}`,
-    // Agrega o elimina según necesites
-}
-Añadir Nuevos Sitios de Acceso Rápido
-Agrega entradas a CONFIG.knownSites:
-
-javascript
-{ url: "https://ejemplo.com", title: "Mi Sitio", icon: "fas fa-star", keywords: ["ejemplo", "mi sitio"] }
-Cambiar Tema/Colores
-Modifica las variables CSS en :root:
-
-css
---primary: #06b6d4;   /* Color principal (cyan) */
---secondary: #8b5cf6;  /* Color secundario (violeta) */
+### Cambiar Colores
+Modifica las variables CSS en `:root`:
+```css
+--primary: #06b6d4;    /* Cyan */
+--secondary: #8b5cf6;  /* Violet */
 --dark-bg: #09090b;    /* Fondo oscuro */
-📱 Compatibilidad
-Dispositivo	Soporte
-Desktop (Chrome/Edge/Firefox/Safari)	✅ Completo
-Tablet (iPad/Android)	✅ Parcial (responsive)
-Móvil	✅ Parcial (adaptado)
-⚠️ Limitaciones y Notas
-Las búsquedas a Google/Bing/Yahoo redirigen externamente (no se procesan localmente)
+```
 
-Las APIs de terceros pueden tener límites de tasa (CORS no bloquea, son públicas)
+### Agregar Motores de Búsqueda
+Edita `CONFIG.searchEngines`:
+```javascript
+searchEngines: {
+    MiMotor: query => `https://mi-motor.com/search?q=${encodeURIComponent(query)}`,
+}
+```
 
-La auditoría de email y escáner de URLs son simulaciones educativas (no verifican bases de datos reales)
+### Agregar Sitios de Acceso Rápido
+Añade entradas a `CONFIG.knownSites`:
+```javascript
+{ 
+    url: "https://ejemplo.com", 
+    title: "Mi Sitio", 
+    icon: "fas fa-star", 
+    keywords: ["ejemplo", "mi sitio"] 
+}
+```
 
-El reconocimiento de voz solo funciona en HTTPS o localhost (Chrome requiere contexto seguro)
+---
 
-🔒 Privacidad
-Todo el almacenamiento es local (localStorage)
+## Compatibilidad
 
-No se envían datos a servidores propios
+| Dispositivo | Soporte |
+|-------------|---------|
+| Desktop (Chrome/Edge/Firefox/Safari) | ✅ Completo |
+| Tablet | ✅ Responsive |
+| Móvil | ✅ Adaptado |
 
-Las consultas a APIs externas se realizan directamente desde tu navegador
+---
 
-📄 Licencia
-Uso interno del proyecto Estalingrado Corp — Todos los derechos reservados a sus respectivos autores.
+## Privacidad
 
-👨‍💻 Autor
-Desarrollado por Estalingrado Corp — Intranet integrada para operaciones PRO.
+- ✅ 100% local (localStorage)
+- ✅ Sin servidores propios
+- ✅ APIs públicas directas desde el navegador
 
-📌 Enlaces Relacionados
-EC Escritorio
+---
 
-ECwebSend
+## Enlaces Relacionados
 
-EC Download
+- [EC Escritorio](https://nicotips27.github.io/EC-Escritorio/)
+- [ECwebSend](https://nicotips27.github.io/ECwebSend/)
+- [EC Download](https://nicotips27.github.io/ec-download/)
+- [EC Channel](https://nicotips27.github.io/EC-chanel/)
+- [EC OS](https://nicotips27.github.io/EC-OS/)
+- [ECnews](https://nicotips27.github.io/ECnews/)
 
-EC Channel
+---
 
-EC OS
-
-Nota: Este proyecto es una demostración de capacidades técnicas. Para entornos productivos reales, considera implementar backend propio y validaciones de seguridad adicionales.
+**Desarrollado por Estalingrado Corp** — Sistema Intranet Integrado v3.0
