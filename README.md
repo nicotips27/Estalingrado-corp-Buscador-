@@ -58,14 +58,34 @@ Consulta simultánea a 18 motores de búsqueda:
 | Generador QR | Crea códigos QR al instante |
 | Limpieza Digital | Borra datos locales |
 
-### Intranet Corporativa
-- EC Download - Descargas
-- ECSend - Transferencia de archivos
-- EC Channel - Canal multimedia
-- ECnews - Centro de noticias
-- EC OS - Sistema operativo web
-- Big-Data - Base de datos
-- Intra-net Web - Portal corporativo
+### Intranet Corporativa (Menú Desplegable)
+
+El menú desplegable del header organiza los accesos en tres secciones:
+
+| Sección | Enlace | Comportamiento |
+|---------|--------|----------------|
+| **Intra-net** | Intra-net Web | Misma pestaña |
+| | EC Market | Misma pestaña |
+| | EC Download | Misma pestaña |
+| | ECSend (Transferencia de archivos) | Misma pestaña |
+| | EC Channel | Misma pestaña |
+| | ECnews | Misma pestaña |
+| **Administrativo** | Big-Data | Misma pestaña |
+| | Página de la Empresa | Misma pestaña |
+| **Soporte** | Ayuda Comandos | Modal interno |
+| | Privacidad | Modal interno |
+
+#### Enlaces actuales
+- Intra-net Web: `https://estalingradocorp.github.io/Intra-net/`
+- EC Market: `https://estalingradocorp.github.io/EstalingradoCorp/market.html`
+- EC Download: `https://nicotips27.github.io/ec-download/`
+- ECSend: `https://nicotips27.github.io/ECwebSend/`
+- EC Channel: `https://nicotips27.github.io/EC-chanel/`
+- ECnews: `https://nicotips27.github.io/ECnews/`
+- Big-Data: `https://nicotips27.github.io/ec-Intra-net/`
+- Página de la Empresa: `https://estalingradocorp.github.io/EstalingradoCorp/`
+
+> **Nota:** Todos los accesos web abren en la misma pestaña (sin `target="_blank"`). "EC OS" fue eliminado del menú.
 
 ---
 
@@ -121,10 +141,9 @@ npx serve .
 
 ```
 Estalingrado-corp-Buscador-/
-├── index.html          # Archivo principal (todo en uno)
+├── index.html          # Archivo principal (todo en uno: HTML, CSS y JS)
 ├── README.md           # Documentación
-└── js/
-    └── script.js       # Script complementario
+└── CNAME               # Subdominio de GitHub Pages
 ```
 
 ---
@@ -158,6 +177,8 @@ Añade entradas a `CONFIG.knownSites`:
 }
 ```
 
+Los accesos del menú desplegable se editan directamente en el HTML, dentro de `#menuPanel` (aproximadamente línea 735). Cada sección usa `<strong>` como encabezado y los enlaces son `<a href="..."><i class="..."></i> Texto</a>`. Para que un enlace abra en la misma pestaña, no incluyas `target="_blank"`.
+
 ---
 
 ## Compatibilidad
@@ -181,11 +202,14 @@ Añade entradas a `CONFIG.knownSites`:
 ## Enlaces Relacionados
 
 - [EC Escritorio](https://nicotips27.github.io/EC-Escritorio/)
-- [ECwebSend](https://nicotips27.github.io/ECwebSend/)
+- [Intra-net Web](https://estalingradocorp.github.io/Intra-net/)
+- [EC Market](https://estalingradocorp.github.io/EstalingradoCorp/market.html)
 - [EC Download](https://nicotips27.github.io/ec-download/)
+- [ECwebSend](https://nicotips27.github.io/ECwebSend/)
 - [EC Channel](https://nicotips27.github.io/EC-chanel/)
-- [EC OS](https://nicotips27.github.io/EC-OS/)
 - [ECnews](https://nicotips27.github.io/ECnews/)
+- [EC OS](https://nicotips27.github.io/EC-OS/)
+- [Página de la Empresa](https://estalingradocorp.github.io/EstalingradoCorp/)
 
 ---
 
