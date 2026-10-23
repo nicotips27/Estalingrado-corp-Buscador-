@@ -1,0 +1,1118 @@
+# Bitácora de sesiones — Estalingrado Corp (recepción de clientes y sistema de gestión)
+# Formato: cronología breve de cada sesión de trabajo con el asistente.
+# Sesiones anteriores a hoy no tienen fecha exacta registrada; se ordenan por secuencia.
+
+============================================================
+SESIÓN 1 — Auditoría de la página institucional (Etapa 1)
+============================================================
+- Se auditió la página de referencia (estalingradocorp.github.io) en solo lectura.
+- Se extrajo la identidad verificada: fondo #000, azules #2563eb/#3b82f6/#60a5fa/#1d4ed8,
+  degradado .tg, Inter + JetBrains Mono, Font Awesome 6.5.1, navbar glass, tarjetas glass.
+- Se verificaron datos de contacto en empresa.html: Salta Capital (zona sur); redes
+  YouTube/Facebook/X/Telegram. Teléfono y correo NO publicados → no se inventaron.
+- Se dejó claro: no modificar el sitio institucional; crear proyecto aparte.
+
+============================================================
+SESIÓN 2 — Base del proyecto (Etapa 2)
+============================================================
+- Se creó la estructura: index.html, css/styles.css, js/main.js, assets/ (logo.jpg,
+  favicon.jpg descargados del sitio oficial), README.md.
+- Secciones: navbar con menú móvil accesible, hero con CTA, dos tarjetas de servicios
+  (#servicios), sección recepción preparada, contacto (con id duplicado resuelto:
+  input renombrado medio-contacto), footer con año dinámico.
+- Se replicaron los patrones institucionales (pill/badge, botones uppercase, encabezados
+  con línea azul, glow-line del footer) sin frameworks ni build.
+
+============================================================
+SESIÓN 3 — Flujo de recepción (Etapa 3)
+============================================================
+- Stepper accesible de 3 pasos: Servicio → Datos → Revisión.
+- Validación en cliente: aria-invalid, mensajes err-*, foco al primer campo inválido,
+  corrección en línea al escribir; campos del grupo inactivo deshabilitados.
+- Revisión armada solo con textContent (XSS: HTML del usuario siempre literal).
+- Envío deshabilitado a propósito: ENVIO = { tipo: null, destino: null } en js/main.js;
+  enviarSolicitud() retorna no-habilitado; botón Enviar siempre deshabilitado;
+  #estado-envio informa que nada se envió; nunca se borran datos ni se simula éxito.
+
+============================================================
+SESIÓN 4 — Bug + Auditoría en navegador real (Etapa 4 · 18/10/2026)
+============================================================
+- BUG encontrado y corregido: pulsar tarjeta de servicio en paso 2/3 dejaba el resumen
+  obsoleto (servicio anterior). Corrección: el handler de tarjetas vuelve al paso
+  correspondiente conservando datos.
+- Auditoría completa con Chromium/Playwright contra servidor local (puerto 8123):
+  1440/390/360 px, consola limpia, sin desborde horizontal, recorridos funcionales,
+  XSS, texto extenso, prefers-reduced-motion, menú móvil con Escape.
+- Suites jsdom (63 aserciones) y Playwright en verde. Limitación declarada: la
+  revisión estética fina requiere checklist humano (la asistente no ve imágenes).
+- README actualizado con estado, resultados y checklist manual.
+
+============================================================
+SESIÓN 5 — Sistema de gestión (solo especificación, NO aprobada aún)
+============================================================
+- Se definió en chat la especificación funcional completa (11 secciones): stack
+  React+TS panel / Node+TS+Fastify API / PostgreSQL+Prisma / Zod / /api/v1 /
+  sesiones con cookie; entidades clientes, equipos, servicios técnicos, proyectos web,
+  tickets, presupuestos, facturación y reportes; estados de 3-5 por entidad.
+- Plan de 8 etapas de implementación propuesto.
+- Auditoría de solo lectura: en la carpeta solo existe la recepción; sin Git, backend,
+  panel, Prisma ni .env. Conclusión: DETENTE — AUDITORÍA COMPLETADA. Sin implementar nada.
+- Acuerdo: primero aprobar la especificación, versionarla en el repo y hacer git init.
+
+============================================================
+SESIÓN 6 — 19/10/2026 — Rediseño visual + desduplicación + documentación
+============================================================
+- Pedido del usuario: (a) fondo con orbes azules/violetas en CSS puro (decisión propia:
+  CSS sobre canvas JS); (b) reorganizar la recepción eliminando la selección de servicio
+  duplicada, conservando el flujo de 3 pasos; (c) NO habilitar envío ni BD; (d) crear
+  documentación completa y esta bitácora; (e) verificar y detener al final.
+- index.html: capa .orbs con 5 orbes decorativos (aria-hidden, sin eventos); aviso inicial
+  #recepcion-aviso con enlace a #servicios; stepper y formulario ocultos hasta elegir;
+  ítem 01 "Servicio" se marca completado con el nombre elegido; línea informativa
+  #servicio-actual; eliminados del formulario: radios de servicio, btn-datos,
+  err-servicio, btn-volver-servicio y el botón "Atrás" redundante.
+- css/styles.css: estilos .orbs (fijos, blur 90px, keyframes orbe-drift 45-65 s),
+  .aviso y .flow__servicio; borrado el bloque muerto .service-option* (~80 líneas);
+  orbes estáticos con prefers-reduced-motion.
+- js/main.js: estado servicioActual; abrirFormulario() desde las tarjetas; irAPaso(2|3);
+  cambio de servicio en vivo (si se está en Revisión se vuelve a Datos); ENVIO intacto.
+- Pruebas reescritas para el nuevo flujo y en verde (19/10/2026):
+  jsdom 65/65 · Playwright visual 54/54 (1440/390/360) · Playwright extra 29/29.
+  Falso positivo corregido en la suite: el detector de desborde ahora ignora la capa
+  .orbs (salen del viewport a propósito y no generan scroll; scrollW === clientW).
+- DOCUMENTACION.md y bitacora.txt creados; README.md actualizado.
+- FIN DE LA SESIÓN: se detuvo a pedido y se espera la revisión visual humana
+  (checklist del README) antes de seguir.
+
+============================================================
+SESIÓN 7 — 19/10/2026 — Correcciones tras la revisión del usuario
+============================================================
+Feedback recibido (dos puntos):
+a) El fondo estaba mal: no había que pintar la página con orbes de color
+   difuminados, sino IMITAR el fondo dinámico de la página institucional
+   (sus partículas/orbes flotantes unidas por líneas).
+b) El formulario estaba roto: solo se pidió NO repetir las tarjetas dentro del
+   formulario (ya están a la vista en #servicios). El formulario se despliega
+   al tocar una tarjeta, según corresponda.
+
+Correcciones aplicadas:
+- Fondo: se borró la capa .orbs de blobs CSS y su CSS. Ahora hay un canvas
+  <canvas id="fondo-particulas"> fijo (z-index:-1, sin eventos, aria-hidden)
+  que replica el canvas #pc de la referencia: hasta 110 orbes de 0.9-3.5 px
+  con halo, velocidad ±0.15 px/cuadro, opacidad 0.15-0.6, líneas de unión a
+  <120 px con alpha 0.07·(1-d/120) y grosor 0.5 px, envoltura toroidal, resize.
+  Colores: azules #2563eb/#3b82f6 y un tercio de violeta #7c3aed.
+  prefers-reduced-motion: se dibuja una vez y no se anima. Sin dependencias.
+- Formulario: se eliminaron los elementos agregados de más en la sesión anterior
+  (el aviso #recepcion-aviso con su CSS y la línea #servicio-actual con su CSS).
+  Se restauró la descripción original de la sección. Queda exactamente lo
+  pedido: formulario sin el paso de selección duplicado, desplegándose en el
+  paso 2 al tocar una tarjeta de #servicios.
+- Suites actualizadas y en verde (19/10/2026): jsdom 62/62 (test-recepcion)
+  + 11/11 (test-tecnico); Playwright visual 64/64 (1440/390/360, con píxeles
+  del canvas verificados); Playwright extra 26/26 (incluye orbes estáticos
+  con movimiento reducido: dos capturas idénticas).
+- Se borró la suite obsoleta etapa4-repro.js (reproducía el bug viejo ya
+  corregido y cubierto); test-tecnico.js pasó de radios a tarjeta.
+- DOCUMENTACION.md y README.md actualizados con lo corregido.
+- FIN DE LA SESIÓN: se detiene y se espera la revisión del usuario.
+
+============================================================
+SESIÓN 8 — 19/10/2026 — Tipografía y formulario más legibles
+============================================================
+Pedido: "mejorar la tipografía y el formulario, tiene que ser legible fácilmente
+e intuitivo". Definido con el usuario antes de tocar nada: alcance SOLO la
+sección de recepción (identidad intacta) y mejora VISIBLE (no sutil).
+
+Aplicado:
+- Jerarquía dentro del formulario: título de paso 1.125rem -> 1.375rem y
+  subtítulos de grupo con regla fina (.flow__subtitulo): "Tus datos",
+  "Equipo y problema", "Tu sitio web", "Qué necesitás".
+- Labels de 11px a 13px semibold y más brillantes; inputs de mono 14px a
+  Inter 16px (mejor lectura y sin zoom automático en iOS) con alto mínimo 48px
+  y subrayado reforzado; placeholder legible y placeholders de ejemplo
+  (nombre y contacto).
+- Nota "Los campos marcados con * son obligatorios" arriba del formulario;
+  el placeholder del textarea pasa a ser un ejemplo concreto del servicio
+  elegido (cambia en aplicarServicio() junto a las etiquetas).
+- Hints a 13px, errores a 14px semibold, stepper a 12px con paso activo en
+  bold, resumen con valores a 16px, caja de estado a 15px, botones del flujo
+  de 48px con flecha de avance.
+- Todo acotado a #recepcion/.flow; el resto de la página sin cambios.
+- Suites en verde tras los cambios: jsdom 62/62 + 11/11; visual 64/64;
+  extra 26/26 (ninguna aserción dependía de los tamaños modificados).
+- DOCUMENTACION.md (§4.4 y Etapa 6) y README.md (checklist) actualizados.
+- FIN DE LA SESIÓN: se detiene y se espera la revisión visual del usuario.
+
+============================================================
+SESIÓN 9 — 19/10/2026 — Supabase + panel de solicitudes
+============================================================
+Pedido aprobado: conectar la recepción con Supabase y construir el panel admin
+dentro del mismo sitio, explicando paso a paso (el usuario recién aprende a
+programar), actualizar la documentación y subir el repo.
+
+Decisiones tomadas con el usuario:
+- Supabase: solo tiene cuenta, todavía NO creó el proyecto. La URL y la anon key
+  se pegan después en js/config.js.
+- Panel v1: solo solicitudes (sin clientes, facturación ni presupuestos).
+- El envío público se habilita ahora (queda activo al configurar Supabase).
+- Stack: vanilla sin build, igual que el resto de la página.
+- GitHub no hace falta para conectar Supabase; solo para publicar. El dominio
+  y el correo (propuesto estalingradocorp.servicios@gmail.com) quedan para más
+  adelante.
+
+Implementado:
+- supabase/schema.sql: tablas solicitudes y admins, índices, trigger
+  tocar_actualizado_en, RLS (público solo inserta con límites; admins leen y
+  actualizan), grants/revokes e instrucciones de alta del admin. Re-ejecutable.
+- supabase/INSTRUCCIONES.md: guía para principiantes (crear proyecto en São
+  Paulo, copiar URL/anon key, ejecutar SQL, crear usuario Auto Confirm, insertar
+  UUID en admins, probar con npx http-server, seguridad y troubleshooting).
+- js/config.js: window.CONFIG_SUPABASE con url/anonKey vacías (override-able
+  para pruebas).
+- index.html: carga config.js antes de main.js, honeypot #hp-empresa, nota de
+  privacidad, id="icono-estado" y botón #btn-nueva oculto.
+- css/styles.css: .status--ok/.status--error, .hp, .flow__privacidad.
+- js/main.js: ENVIO lee CONFIG_SUPABASE; POST REST con apikey/Authorization/
+  Prefer y timeout 20 s; estados enviando/éxito/error; éxito con "Nueva
+  solicitud" (reset al paso 2); error conserva datos y permite reintentar;
+  honeypot confirma sin enviar. Sin config, el botón sigue deshabilitado y
+  avisa (comportamiento anterior intacto).
+- admin.html + css/admin.css + js/admin.js: login por REST (sessionStorage,
+  refresh ante 401), stats por estado, lista (máx. 500, orden desc), búsqueda y
+  filtros, detalle en <dialog>, cambio de estado + notas con PATCH, CSV con BOM
+  y ";", render 100% textContent, noindex y robots.txt. Sin config, login
+  deshabilitado con aviso.
+- Pruebas nuevas fuera del proyecto: test-supabase.js (jsdom, 48/48) y
+  test-admin.js (Chromium con page.route, 60/60). Las 4 suites anteriores
+  siguen verdes (62+11, 64, 26). Las de Etapa 7 usan red simulada: falta probar
+  contra el Supabase real del usuario.
+- README.md, DOCUMENTACION.md (§1, §2, §3, §4.2, §4.5, §5, §6, §7, §8) y esta
+  bitácora actualizados. El plan viejo React/Node/Fastify/Prisma quedó
+  descartado para esta etapa.
+- git init + primer commit local. Repo subido con la cuenta elegida por el
+  usuario (nicolabarranco27-a11y), público y rama main:
+  https://github.com/nicolabarranco27-a11y/recepcion-estalingrado
+  GitHub Pages activado desde main:
+  https://nicolabarranco27-a11y.github.io/recepcion-estalingrado/
+  El primer deploy quedó en cola por el incidente de GitHub Actions/Pages del
+  19/10/2026 (githubstatus.com). Dominio y correo siguen sin configurar.
+- Corrección pedida por el usuario: el primer commit había quedado con el
+  autor global "EstalingradoCorp <laboutiquecatydog10@gmail.com>", de otra
+  cuenta/proyecto. No había colaboradores agregados. Se reescribió el autor y
+  el committer de ambos commits a nicolabarranco27-a11y y se actualizó el
+  remoto; contributors muestra solo esa cuenta. Git local del repo quedó con
+  identidad propia.
+
+Pendiente del usuario:
+1. Crear el proyecto Supabase y pegar URL + anon key en js/config.js.
+2. Ejecutar supabase/schema.sql en el SQL Editor.
+3. Crear el usuario admin (Auto Confirm) e insertar su UUID en admins.
+4. Decir con qué cuenta de GitHub subir el repo. (Hecho: nicolabarranco27-a11y,
+   repo público recepcion-estalingrado.)
+
+- FIN DE LA SESIÓN: se detiene y se espera la revisión del usuario.
+
+============================================================
+SESIÓN 10 - 19/10/2026 - Supabase conectado y probado en vivo
+============================================================
+Objetivo: dejar la recepción enviando de verdad a Supabase y el panel admin
+funcionando contra el proyecto real, guiando al usuario (principiante) paso a
+paso.
+
+Hecho:
+- Proyecto Supabase del usuario: "estalingrado-corp" (ref ndiljaxvcbratynvivir).
+  La anon key que compartió se validó (rol "anon" y ref coincidentes) y la URL
+  correcta es la base sin /rest/v1/.
+- js/config.js completado con url + anonKey (commit 660d79a). Pages lo publicó
+  (verificado: el archivo servido contiene el proyecto nuevo, portada HTTP 200).
+- El usuario ejecutó supabase/schema.sql en el SQL Editor: "Success. No rows
+  returned". Comprobado desde afuera con la anon key: la tabla solicitudes ya
+  existe; la lectura pública devuelve 0 filas; inserciones inválidas
+  (notas_internas, estado "cerrada", servicio fuera de la lista) se rechazan con
+  401 -> RLS activa y limitando correctamente.
+- Verificación en vivo con Playwright (script temporal): config.js cargado,
+  botón "Enviar solicitud" habilitado y 0 errores de consola.
+- Error del usuario y corrección: creó el admin con "Invite", y el correo caía
+  en localhost:3000 (página caída). Solución: borrar el usuario invitado y usar
+  Authentication -> Users -> Add user -> "Create new user" con Auto Confirm.
+  UID 5cc30f4b-cead-4901-8620-05f59a2aaf9c, correo nbmn38@gmail.com, insertado
+  en public.admins. Probado de punta a punta: envío desde la página publicada,
+  login en /admin.html y solicitud visible en la lista.
+- Atajo secreto de acceso pedido por el usuario: mantener Ctrl y hacer 3 clics
+  sobre el logo (.brand) abre admin.html en otra pestaña; se cancela el ancla
+  y un clic normal sigue yendo a #inicio. Verificado en Chromium real contra el
+  servidor local (popup abre admin.html, sin errores de consola).
+- Las suites de etiqueta visual y de panel afirmaban el estado "sin configurar"
+  y ahora js/config.js tiene datos reales: se fuerza CONFIG_SUPABASE vacío con
+  addInitScript en esas comprobaciones. Batería completa en verde:
+  test-recepcion (62), test-tecnico (11), etapa4-visual (64), etapa4-extra (26),
+  test-supabase (48), test-admin (60).
+- Documentado el acceso al panel (sin enlace público por dirección): sección
+  nueva "Cómo entrar al panel" en README con la dirección directa, el atajo y
+  el acceso de favoritos / pantalla de inicio.
+
+Pendiente:
+- Apagar "Allow new users to sign up" en Authentication (recomendado).
+- Opcional: Site URL en Authentication -> URL Configuration para evitar la
+  página caída en correos de Supabase.
+- Dominio propio, correo oficial y revisión visual humana del checklist.
+
+- FIN DE LA SESIÓN: se detiene y se espera la revisión del usuario.
+
+============================================================
+SESIÓN 11 - 19/10/2026 - Endurecimiento de seguridad y acceso móvil
+============================================================
+Pedido del usuario: actualizar git y toda la documentación, explicar cómo entrar
+desde el celular y asegurar una buena ciberseguridad.
+
+Auditoría hecha:
+- Sin claves privadas en el repositorio: la unica clave es la anon (publica por
+  diseno); no hay service_role en ningun archivo.
+- Sin scripts, estilos ni manejadores inline en el HTML (permite una CSP
+  estricta sin unsafe-inline). Sin innerHTML/eval en el JS.
+- Revisados: RLS de Supabase, exportacion CSV, sesion del panel, robots/noindex.
+
+Cambios aplicados:
+- supabase/schema.sql: trigger anti-spam solicitudes_limitar +
+  limitar_solicitudes() (SECURITY DEFINER, search_path=public) que rechaza la
+  cuarta solicitud del mismo contacto en 10 minutos; indice
+  (contacto, creado_en desc); nota sobre apagar los registros y el Site URL.
+- js/main.js: al recibir el error DEMASIADAS_SOLICITUDES muestra "Esperá unos
+  minutos" (lee respuesta.text() con guarda para los fetch simulados) y
+  conserva los datos.
+- js/admin.js: celdaCsv() antepone apostrofo a las celdas que empiezan con
+  = + - @ (o tabulacion/retorno) para neutralizar la inyeccion de formulas en
+  Excel/Sheets.
+- index.html y admin.html: meta Content-Security-Policy (scripts propios,
+  estilos/fuentes solo de los CDN usados, conexiones a *.supabase.co,
+  object-src/frame-src none, base-uri/form-action self,
+  upgrade-insecure-requests) y meta referrer strict-origin-when-cross-origin.
+- Pruebas: test-supabase.js suma la seccion F (anti-spam) -> 53 aserciones.
+  verificar-csp.js nuevo: local y publicado con 0 cortes por CSP, 0 errores de
+  consola, fuentes, iconos y logo ok. Bateria completa en verde (62+11+64+26+53+60
+  = 276). GitHub Pages confirmado con Enforce HTTPS activo.
+- Documentacion: README (seccion Seguridad + pasos de acceso desde Android y
+  iPhone), DOCUMENTACION (§4.6 endurecimiento, §5 y §6/§7 actualizados) y esta
+  bitacora.
+
+Pendiente del usuario:
+- Re-ejecutar supabase/schema.sql en el SQL Editor para activar el anti-spam.
+- Apagar "Allow new users to sign up" y poner el Site URL publicado.
+- Contrasena larga y unica para el panel; verificacion en dos pasos en GitHub y
+  Supabase.
+
+- FIN DE LA SESIÓN: se detiene y se espera la revisión del usuario.
+
+============================================================
+SESIÓN 12 - 19/10/2026 - Accesos del inicio y repaso de botones
+============================================================
+Pedido del usuario (ajustes chicos):
+1. En el inicio hay dos botones; el primero debia decir "Servicios Informaticos
+   y web" y llevar a ambos servicios de la recepcion.
+2. El segundo ("Iniciar solicitud") estaba de mas porque llevaba al mismo lugar;
+   en su lugar debia llevar a la pagina de la empresa.
+3. Los botones del formulario (Editar datos / Enviar solicitud / Nueva
+   solicitud) y los equivalentes del panel debian verse bien, con buena
+   presencia y contraste.
+
+Hecho:
+- index.html (hero): el primer boton ahora dice "Servicios informaticos y web" y
+  mantiene href="#servicios". El segundo pasa a "Conocer la empresa", enlace
+  externo a https://estalingradocorp.github.io/EstalingradoCorp/ con
+  target="_blank" y rel="noopener noreferrer" e icono
+  fa-arrow-up-right-from-square. Las tarjetas de servicio conservan su
+  "Iniciar solicitud" (ahi si corresponde).
+- css/styles.css: .btn con radio 10px, min-height 3.25rem, justify-content
+  center, weight 600 y transicion con sombra/transform; .btn--outline con borde
+  #52525b, fondo sutil y hover azul; .btn--solid con sombra y leve elevacion;
+  estado deshabilitado explicito (gris #3f3f46 / texto #d4d4d8 en solidos y
+  #71717a en contornos) en lugar del opacity .4; .flow__actions con
+  min-width 11rem por boton.
+- css/admin.css: .btn--sm con min-height 2.75rem (44px tactiles), radio 8px,
+  padding y peso mayores.
+- Verificacion nueva verificar-botones.js (Chromium): alturas de 52px (44 en los
+  chicos) y contrastes 15,78:1 (contorno) y 21:1 (solidos). Las 6 suites siguen
+  en verde (276 aserciones) sin desborde en 390/360.
+- Documentacion: README (seccion "Accesos del inicio y botones", checklist con
+  Etapa 8), DOCUMENTACION (§3 fila 8 y §4.7) y esta bitacora.
+
+- FIN DE LA SESIÓN: se detiene y se espera la revisión del usuario.
+
+============================================================
+SESIÓN 13 - 20/10/2026 - Soporte al cliente (tercer servicio)
+============================================================
+Pedido del usuario: la pagina no es solo servicios informaticos y webs, tambien
+es soporte al cliente; quiere una seccion para eso. Correo nuevo creado por la
+empresa: estalingradocorpsupport@protonmail.com (el usuario confirmo la
+ortografia con "support"). El telefono llega mas adelante (no se inventa).
+
+Decisiones tomadas con el usuario:
+- Soporte integrado al MISMO sistema: tercera tarjeta en Servicios que abre la
+  misma recepcion, misma tabla y mismo panel (no un canal aparte).
+- Seccion visible #soporte ademas de la tarjeta.
+- Campos: Motivo (select obligatorio) + Producto o servicio relacionado (opcional).
+- Orden de trabajo: primero soporte, despues la exportacion en Excel (que ya
+  saldra con las columnas de los 3 servicios).
+
+Hecho:
+- supabase/migracion-soporte.sql (nuevo): agrega las 2 columnas, amplia el
+  check de servicio a ('tecnico','web','soporte') y reescribe la politica RLS
+  validando los largos nuevos. Idempotente (se puede re-ejecutar).
+- supabase/schema.sql: mismos cambios aplicados al archivo fuente (el create
+  table if not exists NO modifica una tabla existente, por eso el bloque de
+  alter table queda igual dentro del archivo) + comentario del resumen.
+- index.html: enlace "Soporte" en navbar desktop y movil; tercera tarjeta
+  #servicio-soporte (fa-headset, data-servicio="soporte"); seccion #soporte con
+  3 pasos (.soporte-steps), correo con mailto y CTA a #servicios; grupo
+  #campos-soporte con select Motivo (obligatorio) e input Producto (opcional);
+  correo agregado tambien a la lista de #contacto; comentario del TODO de
+  telefono actualizado.
+- js/main.js: SERVICIOS.soporte, ETIQUETAS con motivoSoporte/productoRelacionado,
+  aplicarServicio refactorizada a GRUPOS_SERVICIO (3 grupos, muestra uno y
+  deshabilita los otros dos) con TEXTOS_SERVICIO (labels y placeholders),
+  datosParaSupabase con if/else if por servicio (antes else mandaba campos web),
+  y ENDURECIMIENTO: #btn-enviar solo envia si el paso 3 (Revision) esta visible.
+- admin.html: opcion "Soporte" en el filtro de servicio.
+- js/admin.js: SERVICIOS.soporte, buscador incluye motivo/producto, meta de la
+  lista con motivo, detalle con filas Motivo y Producto relacionado, y el CSV
+  actual ahora refleja esos dos campos.
+- css/styles.css: .soporte-steps (grid con linea azul y numeros en mono),
+  .soporte-canales (correo + CTA), y fix de overflow-wrap: anywhere en
+  .contact-list__value (el correo largo desbordaba a 360px; lo detecto la suite).
+- Pruebas ampliadas: test-recepcion 82, test-tecnico 11, etapa4-visual 64,
+  etapa4-extra 33, test-supabase 66, test-admin 66 -> TOTAL 322 PASS, 0 FAIL.
+- Documentacion: README (intro de 3 servicios, estructura, datos de contacto con
+  el correo verificado, seccion "Soporte al cliente", checklist Etapa 9),
+  DOCUMENTACION (§3 fila 9, §4.1, §4.2, §4.8 nueva y §5 con los conteos nuevos),
+  INSTRUCCIONES.md (sección 8 + fila de diagnostico).
+
+PENDIENTE (usuario): ejecutar supabase/migracion-soporte.sql en Supabase
+(SQL Editor -> New query -> pegar -> Run). Sin eso, las solicitudes de soporte
+se rechazan. Despues hay que probar una solicitud real desde la pagina.
+
+- FIN DE LA SESIÓN: se detiene y se espera la revisión del usuario.
+
+============================================================
+SESIÓN 14 - 20/10/2026 - Exportacion a Excel (.xlsx) sin librerias
+============================================================
+Segunda tarea acordada con el usuario despues del soporte: pasar del CSV a un
+Excel real. Decisiones ya cerradas: .xlsx de verdad, generado en el navegador
+sin librerias (prohibidas por el proyecto), dos hojas (Solicitudes + Resumen),
+columnas con los 3 servicios, agrupado por servicio (tecnico, web, soporte y
+desconocidos al final, mas reciente primero dentro de cada grupo), exportando
+lo filtrado en pantalla, y el CSV se reemplaza (no se quedan los dos).
+
+Hecho:
+- js/exportacion.js (nuevo, cargado antes de admin.js en admin.html):
+  - ZIP sin comprimir (STORE) escrito a mano con DataView: cabeceras locales,
+    directorio central y fin de archivo con sus firmas hex; CRC32 propio con
+    tabla de 256 y polinomio 0xEDB88320; marcas DOS de fecha/hora; flag UTF-8
+    0x0800. Sin CompressionStream ni zlib.
+  - UTF-8 propio (aUtf8) con pares sustitutos, sin depender de TextEncoder.
+  - Partes OOXML: [Content_Types].xml, _rels/.rels, xl/workbook.xml,
+    xl/_rels/workbook.xml.rels, xl/styles.xml (4 estilos: normal, titulo
+    negrita, fecha dd/mm/yyyy hh:mm, cabecera blanco sobre azul #1D4ED8) y una
+    hoja por pestaña.
+  - Celdas: texto como inlineStr (el archivo NO puede contener formulas, asi
+    que la inyeccion de formulas queda eliminada por diseno), numeros como <v>,
+    fechas como serial de Excel con formato de fecha; todo con limpiarXml()
+    (caracteres de control), escaparXml() y tope de 32767 caracteres.
+  - Hoja con dimension, panel congelado en la fila de cabecera, anchos de
+    columna y autoFilter.
+  - API: Exportacion.titulo/encabezado/fecha/texto, crear(hojas) -> Uint8Array
+    y descargar(nombre, bytes) via Blob + <a download>.
+- admin.html: boton #btn-xlsx "Exportar Excel" (fa-file-excel) reemplaza al
+  "Exportar CSV" (#btn-csv); se carga js/exportacion.js antes de js/admin.js.
+- js/admin.js: se elimino celdaCsv/exportarCsv; ahora exportarExcel() arma la
+  hoja Solicitudes con 15 columnas (Nº, Recibida, Actualizada, Estado, Servicio,
+  Nombre, Contacto, Tipo de problema, Dispositivo, Tipo de proyecto, Sitio
+  actual, Motivo, Producto relacionado, Descripcion, Notas internas) con fechas
+  reales de Excel; agruparPorServicio() reordena sin usar indices peligrosos;
+  hoja Resumen con generacion, cantidad, filtros aplicados y conteos por estado
+  y por servicio; el nombre de archivo agrega los filtros (solicitudes-fecha
+  [-estado][-servicio][-q-busqueda-saneada].xlsx); sin filas no descarga y lo
+  informa; si falta exportacion.js muestra un aviso.
+- Pruebas: test-admin.js reescrito en su bloque de exportacion (+14
+  aserciones): parser de ZIP propio en la suite (leerZip, STORE y DEFLATE),
+  firma PK, estructura del paquete, dos hojas, cabeceras completas, fechas con
+  s=2 y serial 46..., HTML del usuario escapado, ausencia de <f>, orden
+  agrupado (los datos de prueba se acomodaron para que el orden por fecha
+  difiera del agrupado y el test lo demuestre), exportacion filtrada,
+  nombre con la busqueda normalizada (-q-panaderia) y caso sin filas.
+- Suites en verde: recepcion 82 + tecnico 11 + visual 64 + extra 33 +
+  supabase 66 + panel 80 = 336 PASS, 0 FAIL.
+- Documentacion: README (estructura con exportacion.js, botones del panel,
+  seccion de seguridad sobre la exportacion, verificacion 20/10 y checklist
+  Etapa 10), DOCUMENTACION (§1, §3 fila 10, §4.5, §4.6, §4.8, §4.9 nueva, §5
+  con 336, §6 columnas de la tabla + alcance del panel y §7 item 8) y esta
+  bitacora.
+
+PENDIENTE (usuario): ejecutar supabase/migracion-soporte.sql (Etapa 9) y, si
+quiere, revisar el .xlsx que descarga el panel abriendo el Excel.
+
+SESIÓN 15 (20/10/2026) — ETAPA 11: PULIR LA REDUNDANCIA DEL SOPORTE
+-------------------------------------------------------------------
+
+Motivo (queja del usuario): el soporte aparecia dos veces (tarjeta en
+Servicios + seccion #soporte) y encima el CTA de #soporte mandaba a #servicios.
+
+Decisiones del usuario (respondidas por el):
+- Quitar la tarjeta #servicio-soporte de #servicios: quedan solo 2 tarjetas
+  (tecnico y web).
+- El CTA de #soporte es la entrada al formulario: href="#recepcion" con
+  data-servicio="soporte" (mecanismo [data-servicio] ya existente).
+- Estilo btn--solid (mas presencia visual que el enlace de tarjeta).
+- Nombre "Soporte al cliente" (paso de "Soporte técnico" por el choque con
+  "Servicio técnico informático").
+- Icono fa-headset, sin chevron.
+- RESTRICCION EXPLICITA: nada de git ni de publicar hasta que el usuario
+  revise los cambios.
+
+Cambios aplicados (sin commit):
+- index.html: desc de #servicios ajustada ("...si ya sos cliente, el soporte
+  esta mas abajo"); tarjeta #servicio-soporte eliminada; paso 01 de
+  .soporte-steps apunta al boton; CTA reemplazado por <a href="#recepcion"
+  class="btn btn--solid" data-servicio="soporte"> + fa-headset +
+  "Soporte al cliente".
+- js/main.js: solo 2 comentarios actualizados (~261, ~360); cero cambios de
+  logica (el handler [data-servicio] ya abria el formulario).
+- Pruebas: test-recepcion.js bloque 2b (2 tarjetas, sin #servicio-soporte,
+  CTA solido + icono) → 86 PASS; etapa4-extra.js bloque C2 con el mismo
+  ajuste (click explicito en el CTA) → 33 PASS; verificar-soporte.js
+  reescrito (14 aserciones contra servidor local).
+- Bateria completa en verde: recepcion 86 + tecnico 11 + visual 64 + extra
+  33 + supabase 66 + panel 80 = 340 PASS, 0 FAIL. verificar-soporte.js
+  TODO OK contra http://localhost:8123/.
+- Documentacion: README (seccion de soporte Etapas 9/11, verificacion, fila
+  Etapa 11, checklist 3/4), DOCUMENTACION (§3 fila 11, §4.1 entrada, §4.8
+  tarjeta→CTA, §5 conteos con 340 y filas de recepcion/extra) y esta
+  bitacora.
+
+PENDIENTE (usuario): revisar los cambios locales de la Etapa 11. Recien
+ahi: commit + push + Pages, y verificar en vivo. Sigue pendiente ademas
+ejecutar supabase/migracion-soporte.sql (Etapa 9).
+
+- FIN DE LA SESIÓN: se detiene y se espera la revisión del usuario.
+
+SESIÓN 16 (20/10/2026) — ETAPA 12: ESCRITURA DEL HERO + ETAPA 13: ORBES SIN AURA
+--------------------------------------------------------------------------------
+
+El usuario reviso la Etapa 11 ("perfecto") y pidio dos cosas nuevas:
+a) Animacion de escritura fluida en los textos principales al cargar, tal
+   como la tiene la pagina oficial de la empresa.
+b) Fondo dinamico correcto, pero sin el aura externa de los orbes
+   (aspecto mas minimalista).
+
+Referencia: la pagina oficial (estalingradocorp.github.io) escribe el h1
+(#hero-t1-txt) y el sub (#hero-sub-txt) con setInterval de 30 ms, cursor
+"▌" azul mono que parpadea (@keyframes cursorBlink) y se quita al terminar
+cada texto. Lo imitamos sin copiar sus textos (los nuestros son fijos,
+no hay variantes aleatorias).
+
+ETAPA 12 — escritura del hero:
+- js/main.js: IIFE "Escritura del hero" despues del canvas. Lee los
+  childNodes del h1 y del .lead, los recrea por segmentos (los textos ya
+  estan en el HTML: SEO y accesibilidad intactos) y los reescribe a
+  30 ms/char; el span .tg del degradado se conserva con su clase.
+- Cursor span.hero__cursor (aria-hidden, "▌") que se borra al terminar
+  cada texto; primero el titulo, despues el párrafo (como la oficial).
+- Sin salto de layout: se mide el alto final de cada texto (tras
+  document.fonts.ready) y se reserva en min-height hasta terminar.
+- Movimiento reducido: si prefers-reduced-motion, la funcion no arranca
+  (texto completo de entrada, sin cursor).
+- css/styles.css: .hero__cursor + @keyframes hero-parpadeo (step-end).
+
+ETAPA 13 — orbes sin aura:
+- Orbe.prototype.dibujar() ya no pinta el circulo exterior difuso
+  (size * 2.6 al 20% de opacidad): solo queda el circulo central de
+  color. La red de lineas entre orbes no cambia.
+
+Pruebas: etapa4-visual.js +4 (cursor visible al cargar con aria-hidden,
+escritura terminada sin cursor y con titulo/párrafo completos, span.tg
+conservado; solo en el viewport 1440 para no triplicar la espera);
+etapa4-extra.js +1 en el bloque reducedMotion (hero completo sin cursor
+ni escritura). Bateria completa: recepcion 86 + tecnico 11 + visual 68 +
+extra 34 + supabase 66 + panel 80 = 345 PASS, 0 FAIL.
+
+Documentacion: README (identidad sin aura, seccion Etapas 12/13, verificacion,
+fila Etapa 12/13, checklist item 2 y item 11), DOCUMENTACION (§3 filas 12-13,
+§4.10 nueva, §5 con 345) y esta bitacora.
+
+PENDIENTE (usuario): revisar todo lo local (Etapas 11, 12 y 13 juntas) y
+decidir si se publica de una. Sigue pendiente ejecutar
+supabase/migracion-soporte.sql (Etapa 9).
+
+- FIN DE LA SESIÓN: se detiene y se espera la revisión del usuario.
+
+SESIÓN 17 (20/10/2026) — CORRECCIÓN DE LA ESCRITURA + PILL ANIMADA
+------------------------------------------------------------------
+
+Feedback del usuario tras probar la Etapa 12:
+a) "La animación de escritura está bugueada debajo del título principal".
+b) "Recepción de clientes · en línea también debe tener animación".
+
+Diagnóstico de (a): el párrafo del hero está en index.html con saltos de
+línea e indentación dentro de un único nodo de texto; la animación escribía
+esos caracteres en blanco uno por uno (~11 ticks de 30 ms = 330 ms) después
+del salto de línea del fuente, o sea una pausa en seco en medio de la frase,
+justo debajo del título. Igual al inicio y al final del nodo.
+
+Solución (js/main.js, segmentosDe):
+- Colapso de espacios: cada segmento pasa por /\s+/g -> ' ', se filtran
+  vacíos y se recortan los espacios inicial/final. La frase final queda
+  exacta: "Estalingrado Corp recibe tus solicitudes. Elegí el servicio que
+  necesitás y comenzá tu atención con nuestro equipo."
+
+Solución de (b):
+- La pill "Recepción de clientes · en línea" ahora se escribe PRIMERO
+  (pill -> título -> párrafo), con el mismo mecánico de 30 ms/char.
+  El objetivo es el último hijo de .pill (el span de texto); el punto
+  pulsante (.pill__dot) no se toca.
+- css/styles.css: .pill .hero__cursor en blanco (--text-strong) porque
+  el texto de la pill ya es azul y el cursor azul no se distinguía.
+
+Pruebas: etapa4-visual.js +2 (pill escrita completa; párrafo final con
+texto exacto, sin espacios raros del fuente) y el bloque de movimiento
+reduced ahora también exige la pill completa. Bateria: recepcion 86 +
+tecnico 11 + visual 70 + extra 34 + supabase 66 + panel 80 = 347 PASS,
+0 FAIL.
+
+Documentacion: README (seccion Etapa 12 con pill y colapso, verificacion,
+fila Etapa 12, checklist item 11), DOCUMENTACION (§3 fila 12, §4.10 con el
+colapso y las pruebas, §5 con 347) y esta bitacora.
+
+PENDIENTE (usuario): revisar todo lo local (Etapas 11, 12 y 13) y decidir
+si se publica de una. Sigue pendiente ejecutar
+supabase/migracion-soporte.sql (Etapa 9).
+
+- FIN DE LA SESIÓN: se detiene y se espera la revisión del usuario.
+
+SESIÓN 18 (20/10/2026) — SIN FLASH: EL TEXTO NO APARECE ESCRITO PRIMERO
+-----------------------------------------------------------------------
+
+Feedback del usuario: "La animación está bugueada: tiene que aparecer al
+momento de cargar la página, no aparecer escrito y escribirse nuevamente."
+
+Diagnóstico: el texto completo vive en el HTML (por SEO/accesibilidad) y
+main.js lo borraba recién en document.fonts.ready. Entre el primer pintado y
+ese momento se veía el texto COMPLETO; después se vaciaba y volvía a
+escribirse entero — el "parpadeo" que reportó el usuario.
+
+Solución (js/main.js, IIFE "Escritura del hero"):
+- main.js corre síncrono al final del <body> (antes del primer pintado).
+  Ahora mismo al ejecutar el IIFE: se parsean los segmentos de pill, título y
+  párrafo, se mide el alto de título/párrafo (con fuentes de respaldo) y se
+  vacían los tres textos reservando min-height. El navegador nunca llega a
+  pintar el texto completo.
+- document.fonts.ready re-mide el alto exacto con las fuentes reales (monta
+  el texto completo y lo vacía en el mismo tick, sin pintado intermedio) y
+  recién ahí empieza la secuencia pill → título → párrafo.
+- escribir() ahora recibe los segmentos ya parseados (antes los re-leía del
+  DOM vacío); montar() reconstruye el texto completo para medir.
+- Con movimiento reducido se sale antes de cualquier limpieza: el texto
+  completo del HTML queda tal cual (nada cambia para esos usuarios).
+
+Pruebas: etapa4-visual.js +1 aserción anti-flash — en el evento load el
+título no debe estar completo ni con cursor de escritura (si main.js no
+limpiara antes de pintar, esto fallaría). Batería: recepcion 86 + tecnico 11
++ visual 71 + extra 34 + supabase 66 + panel 80 = 348 PASS, 0 FAIL.
+
+Documentacion: README (sección Etapa 12 con limpieza síncrona, verificación,
+checklist item 11), DOCUMENTACION (§3 fila 12, §4.10 con el anti-flash y las
+pruebas, §5 con 348) y esta bitacora.
+
+PENDIENTE (usuario): revisar todo lo local (Etapas 11, 12 y 13) y decidir
+si se publica de una. Sigue pendiente ejecutar
+supabase/migracion-soporte.sql (Etapa 9).
+
+- FIN DE LA SESIÓN: se detiene y se espera la revisión del usuario.
+
+SESIÓN 19 (20/10/2026) — ETAPA 14: IMÁGENES INSTITUCIONALES EN LA PÁGINA
+------------------------------------------------------------------------
+
+El usuario confirmó que la escritura del hero "quedó bien" y agregó la
+carpeta Imagenes/ con dos fotos nuevas:
+- Imagenes/imagen.jpg  (1640x924, apaisada): imagen con el logo de la empresa
+  al centro sobre contraste azul.
+- Imagenes/oficina.jpg (640x800, vertical): foto de la oficina.
+Petición: integrarlas "bien pensadas, en dos lugares" (no juntas), y además
+un título gigante "OFICINAS".
+
+Ubicación elegida (confirmada con el usuario: "Hero + recepción"):
+1) HERO — imagen.jpg como pieza visual a la derecha del título.
+   - index.html: figure.hero__visual con img.hero__img (alt descriptivo,
+     width/height reales para evitar CLS), como segunda columna del
+     .hero__container.
+   - css/styles.css: .hero .container pasa a grid 1.1fr/.9fr (centrado
+     vertical); la imagen lleva radio --radius-card, borde --card-border y
+     doble sombra (negra + resplandor azul). A <=900px se apila debajo del
+     texto con max-width 34rem.
+2) RECEPCIÓN — oficina.jpg + título gigante "OFICINAS".
+   - index.html: bloque .oficinas al FINAL de #recepcion (después del
+     form): cuando el form está oculto da cuerpo a la sección; cuando se
+     abre, queda debajo sin empujar los pasos.
+   - Título gigante como <p class="oficinas__titulo tg"> (no es un heading
+     de la sección: el h2 sigue siendo "Iniciá tu solicitud"): degradado
+     --gradient-tg de la marca, clamp(3rem, 8vw, 5.5rem), Inter 700
+     (máximo peso cargado de Google Fonts), mayúsculas, y pie mono
+     "Salta Capital, Argentina" (dato ya publicado en #contacto, no se
+     inventó nada).
+   - css: grilla 1.15fr/.85fr con la foto (radio + borde + sombra azul);
+     a <=768px pasa a una sola columna.
+- Sin JS nuevo, sin librerías; CSP img-src 'self' cubre ambas rutas
+  (verificar-csp.js: 0 cortes, TODO OK). Las rutas respetan la mayúscula
+  de la carpeta "Imagenes/" (importante para GitHub Pages en Linux).
+
+Pruebas: etapa4-visual.js +2 (las dos imágenes cargadas con
+complete+naturalWidth>0, y el bloque con título "OFICINAS", pie exacto y
+alt en ambas fotos). Batería: recepcion 86 + tecnico 11 + visual 73 +
+extra 34 + supabase 66 + panel 80 = 350 PASS, 0 FAIL. Los verificadores
+csp/soporte/botones también en verde contra local.
+
+Nota: verificar-csp.js informa "fuente Inter: false" en index — es
+pre-existente (el sitio publicado lo informa igual; ningún elemento usa
+peso 400 de Inter, así que document.fonts.check('16px Inter') queda false).
+No afecta el resultado: el verificador termina TODO OK.
+
+Documentacion: README (árbol con Imagenes/, sección "Imágenes
+institucionales (Etapa 14)", verificación 350, fila Etapa 14, checklist
+manual 12), DOCUMENTACION (§3 fila 14, §4.11 nueva, §5 con 73 y 350) y esta
+bitacora.
+
+PENDIENTE (usuario): revisar todo lo local (Etapas 11, 12, 13 y 14) y
+decidir si se publica de una. Sigue pendiente ejecutar
+supabase/migracion-soporte.sql (Etapa 9).
+
+- FIN DE LA SESIÓN: se detiene y se espera la revisión del usuario.
+
+SESIÓN 20 (20/10/2026) — AJUSTE DE LA ETAPA 14 TRAS REVISIÓN DEL USUARIO
+------------------------------------------------------------------------
+
+Feedback del usuario:
+a) El título "Oficinas" era gigante: tiene que ser minimalista, en blanco
+   y que no ocupe mucho espacio.
+b) La foto de la oficina quedaría mejor "por donde dice Soporte al cliente".
+c) La otra imagen (el cerebro, en el hero) se deja como está.
+
+Cambios:
+- index.html: se eliminó el bloque .oficinas de #recepcion y la foto pasó
+  al INTRO de #soporte, en la nueva grilla .soporte__intro (1.35fr / .65fr):
+  a la izquierda el section__head existente (margin-bottom anulado dentro
+  del intro), a la derecha figure.oficinas__figura con la foto y su
+  figcaption.oficinas__pie — "Oficinas" como <span> blanco (no heading: el
+  h2 de la sección sigue siendo "Soporte al cliente") + el pie mono
+  "Salta Capital, Argentina". En móvil se apila debajo del encabezado.
+- css/styles.css: .oficinas__titulo pasó de clamp(3rem, 8vw, 5.5rem) con
+  degradado .tg a color blanco puro (--text-strong), Inter 600,
+  clamp(1.375rem, 2.5vw, 1.75rem) = 22-28 px; foto con max-width 300px;
+  media <=768px: .soporte__intro a una columna.
+- index.html: alt de la imagen del hero mejorado con lo que describió el
+  usuario ("Cerebro con contraste azul y el logo de Estalingrado Corp al
+  centro"); la imagen no se movió.
+- etapa4-visual.js: las 2 aserciones de la Etapa 14 ahora exigen que la
+  foto esté DENTRO de #soporte (no en #recepcion), que el título sea
+  blanco exacto rgb(255,255,255), de hasta 32 px, con el pie y los alt.
+
+Revisión pedida por el usuario antes de dar por terminado el trabajo:
+- Batería completa: recepcion 86 + tecnico 11 + visual 73 + extra 34 +
+  supabase 66 + panel 80 = 350 PASS, 0 FAIL.
+- Verificadores contra local: verificar-csp (0 cortes, TODO OK),
+  verificar-soporte (TODO OK) y verificar-botones (TODO OK).
+- Probe de layout con Playwright en 1440/768/390/360: sin scroll
+  horizontal, foto sin solape con el encabezado, pasos del soporte por
+  debajo de la foto, título rgb(255,255,255) 28px (22px en móvil) peso
+  600, 0 errores de consola → REVISION LAYOUT: TODO OK.
+
+Documentacion: README (árbol, sección Etapa 14, fila del checklist y
+checklist manual 12 actualizados a #soporte + título blanco), DOCUMENTACION
+(§3 fila 14, §4.11 reescrita, §5) y esta bitacora.
+
+PENDIENTE (usuario): revisar todo lo local (Etapas 11, 12, 13 y 14) y
+decidir si se publica de una. Sigue pendiente ejecutar
+supabase/migracion-soporte.sql (Etapa 9).
+
+- FIN DE LA SESIÓN: se detiene y se espera la revisión del usuario.
+
+SESIÓN 21 (20/10/2026) — AJUSTE DE POSICIÓN Y TAMAÑO DE LA FOTO EN #SOPORTE
+---------------------------------------------------------------------------
+
+Feedback del usuario tras ver la Etapa 14: "me gusta; posicionar mejor la
+imagen un poco más arriba a la derecha según la coordenada que tiene, y que
+sea un poco más grande". Se refiere a Imagenes/oficina.jpg en #soporte (la
+imagen del cerebro en el hero se dejó como está).
+
+Cambios (solo css/styles.css):
+- .soporte__intro: columnas 1.35fr/.65fr → 1.15fr/.85fr (columna ancha para
+  la foto) y align-items: center → start (el encabezado arranca arriba).
+- .oficinas__figura: margin: -3rem 0 0 → la foto sube 48px por encima de la
+  primera línea del encabezado (queda a la derecha, con su borde derecho en
+  el borde del contenedor, que no se movió).
+- .oficinas__img: max-width 300px → 360px (más grande).
+- Media <=768px: se anula el margin-top negativo de la foto (en móvil la
+  foto va debajo del encabezado, sin pisarse).
+
+Medición antes/después (1440px, probe Playwright):
+- Antes: foto x=895 y=2318, 281x351 px; encabezado y=2434.
+- Después: foto x=809 y=2270, 360x450 px; encabezado y=2318.
+  → 48px más arriba, +79px de ancho, borde derecho igual (1169≈1176).
+
+Revisión: suite visual 73/73; batería completa 350 PASS, 0 FAIL; probe de
+layout en 1440/768/390/360: sin desborde, sin solapes, foto arriba del
+encabezado en desktop, pasos debajo, 0 errores de consola → TODO OK.
+
+Documentacion: DOCUMENTACION §4.11 actualizada (columnas, margin negativo,
+max-width 360) y esta bitacora.
+
+PENDIENTE (usuario): revisar todo lo local (Etapas 11, 12, 13 y 14) y
+decidir si se publica de una. Sigue pendiente ejecutar
+supabase/migracion-soporte.sql (Etapa 9).
+
+- FIN DE LA SESIÓN: se detiene y se espera la revisión del usuario.
+
+SESIÓN 22 (20/10/2026) — REVISIÓN APROBADA Y PUBLICACIÓN EN GITHUB PAGES
+------------------------------------------------------------------------
+
+Feedback del usuario: "me gusta. actualiza toda la documentación. actualiza
+el repo y pages". Se levanta la restricción de no publicar.
+
+Documentacion final antes del commit:
+- README: fila de la Etapa 11 sin "pendiente de revisión", checklist manual
+  marcado "revisado y aprobado el 20/10/2026" y la "limitación honesta" de
+  revisión humana reemplazada por el registro de las rondas de revisión.
+- DOCUMENTACION: filas 11, 12, 13 y 14 a "Hecha y publicada", §7.1 marcado
+  ✔ (revisión humana) y §8 limitación ajustada.
+
+Commit y publicación:
+- git add -A (6 archivos modificados + 2 imágenes nuevas) → commit
+  1de6c8a "Cerrar Etapas 11 a 14: soporte directo, escritura del hero,
+  orbes minimalistas e imagenes" → git push origin main
+  (1770a46 → 1de6c8a).
+- GitHub Pages desplegó en ~30 segundos; verificado en vivo:
+  https://nicolabarranco27-a11y.github.io/recepcion-estalingrado/
+  HTML con hero__img / soporte__intro / oficinas__figura, CSS con
+  soporte__intro + hero-parpadeo, e Imagenes/imagen.jpg (144.023 bytes) y
+  Imagenes/oficina.jpg (52.500 bytes) con HTTP 200 (mayúsculas exactas).
+- Sitio publicado ahora con las Etapas 11, 12, 13 y 14. Batería previa al
+  commit: 350 PASS, 0 FAIL.
+
+PENDIENTE (usuario): ejecutar supabase/migracion-soporte.sql en Supabase
+(SQL Editor → Run, guía §8 de supabase/INSTRUCCIONES.md); hasta entonces el
+servicio "Soporte" se rechaza en la BD. Siguen los pendientes conocidos de
+DOCUMENTACION §7 (teléfono, 2FA, dominio).
+
+- FIN DE LA SESIÓN: Etapas 11-14 publicadas y documentadas.
+
+SESIÓN 23 (21/10/2026) — ETAPA 15: FORMULARIO POR SECCIÓN, INSTAGRAM Y TRANSICIONES
+----------------------------------------------------------------------------------
+
+El usuario pidió, para trabajar en local (sin publicar todavía):
+1. Separar el formulario por sección: al pedir soporte, el formulario se
+   despliega debajo de la sección #soporte y no salta arriba al formulario
+   conjunto; técnico y web quedan como están.
+2. Mejorar todas las transiciones y animaciones, sin exagerar.
+3. Incorporar el Instagram de la empresa (https://www.instagram.com/nicotips27/
+   en los canales.
+
+Implementación (un solo formulario, movido por JS):
+- index.html: el stepper + form existentes se envolvieron en
+  #bloque-formulario dentro de #slot-recepcion; se agregó #slot-soporte al
+  final del container de #soporte (después de pasos y canales). El CTA
+  "Soporte al cliente" pasó de href="#recepcion" a href="#slot-soporte".
+  Texto del paso 01 de la sección actualizado ("se despliega acá abajo").
+- js/main.js: nueva función ubicarFormulario(valor) que mueve el mismo nodo
+  al slot del servicio (soporte -> #slot-soporte; técnico/web ->
+  #slot-recepcion) antes de desplegarlo. Se conservan los datos escritos y no
+  se duplican ids. Clase .entrando con fade-up para la entrada al cambiar de
+  sección.
+- css/styles.css:
+  - .slot-form:not(:empty) con margen superior; .bloque-formulario.entrando
+    con fade-up .45s.
+  - Keyframe reutilizable fade-up (pasos .35s, avisos .3s, errores .25s).
+  - Menú móvil: fade de entrada + enlaces con desplazamiento leve.
+  - Nav: subrayado que crece desde la izquierda.
+  - Botones: respuesta al presionar (scale .98).
+  - Tarjetas de canales: elevación de 2px; avatar del logo scale 1.06;
+    íconos del pie: elevación y colores de marca.
+  - Skip link con deslizamiento.
+  - Colores hover del pie pasan de :nth-child() a clases sf--yt/sf--ig/sf--fb/
+    sf--x/sf--tg (Instagram usa #e1306c).
+  - Todo cubierto por la regla global de prefers-reduced-motion.
+- Instagram: item en #contacto (fa-instagram, @nicotips27, target _blank +
+  rel noopener) y en el pie. Sin datos inventados: la cuenta la pasó el
+  usuario.
+
+Pruebas (adaptadas al nuevo comportamiento, no se relajaron):
+- test-recepcion.js 86 -> 91 (Instagram en canales y pie; formulario arranca
+  en #slot-recepcion; soporte lo despliega en #soporte; web lo devuelve).
+- etapa4-extra.js 34 -> 36 (ubicación real en Chromium al pedir soporte y al
+  volver con la tarjeta técnica). Se corrigió el test de foco con Tab: ahora
+  corta en cuanto encuentra :focus-visible visible en vez de contar 25 tabs
+  fijos (el enlace nuevo de Instagram corría el foco al chrome del navegador).
+- etapa4-visual.js 73 -> 76 (a 1440: formulario dentro de su sección, debajo
+  de pasos y canales, y slot liberado al volver).
+- verificar-soporte.js 14 -> 16 (Instagram y ubicación).
+- Batería completa: 360 PASS, 0 FAIL (91 + 11 + 76 + 36 + 66 + 80).
+- probe-soporte.js (nuevo, fuera del conteo): 1440/768/390/360 sin scroll
+  horizontal, formulario debajo de canales y bajo la navbar al anclar, clase
+  .entrando activa, consola limpia, y vuelta correcta a #recepcion.
+- verificar-csp.js TODO OK (0 cortes); verificar-botones.js sin fallas.
+
+Documentacion actualizada: README (redes con Instagram, resumen de suites
+360, etapa 15, checklist 4 y 13) y DOCUMENTACION (fila 15, §4.1, nueva §4.12,
+§5 con 360).
+
+PENDIENTE (usuario): revisar en local; no se hizo commit ni push. Sigue
+pendiente ejecutar supabase/migracion-soporte.sql (Etapa 9).
+
+- FIN DE LA SESIÓN: se detiene y se espera la revisión del usuario.
+
+SESIÓN 24 (21/10/2026) — Cerebro neuronal en el hero y capa de sinapsis
+(Local, sin commit ni push, como pidió el usuario.)
+
+Pedido: integrar la imagen "Cerebro neural de neón azul" (cerebro-neuronal.png)
+como base visual del hero, integrada al fondo oscuro, sin bordes visibles, y
+animar las conexiones con pulsos que viajen por las lineas reales (tipo C),
+con brillo del chip, hover discreto, pausa con pestana oculta, respeto por
+prefers-reduced-motion, responsive y sin tocar otras secciones.
+
+Inspeccion previa (antes de editar):
+- El hero es figure.hero__visual > img.hero__img con Imagenes/imagen.jpg, en
+  la 2a columna de la grilla .hero .container (1.1fr/.9fr), con estilo de
+  tarjeta (borde + radio + sombras): era la imagen decorativa a sustituir.
+- La imagen nueva estaba en Imagenes/Cerebro neural de neon azul.png: 1672x940,
+  PNG de 24 bpp (sin alfa), fondo casi negro (esquinas R0 G0-1 B2-4, brillo
+  medio 7.8/255). Con ese fondo, mix-blend-mode: screen la funde con el
+  hero sin rectangulo visible.
+- Convencion de animacion ya existente en el repo: canvas de orbes con
+  requestAnimationFrame, debounce de 150 ms al redimensionar y
+  prefers-reduced-motion. La CSP (script-src 'self') permite canvas local.
+- Se decide renombrar el archivo a cerebro-neuronal.png (URL limpia, sin
+  espacios ni acentos). imagen.jpg NO se borra: queda en el repositorio.
+
+Cambios:
+- Imagenes/Cerebro neural de neon azul.png -> Imagenes/cerebro-neuronal.png
+  (renombrado; 1.46 MB, 1672x940).
+- index.html: figure.hero__visual con data-sinapsis="cargando"; img.hero__img
+  apunta a cerebro-neuronal.png (width 1672, height 940, alt "Cerebro
+  neuronal azul con microchip central y conexiones luminosas"); se agrega
+  canvas.hero__neural (aria-hidden) dentro de la figura.
+- css/styles.css: .hero__visual con position: relative; .hero__img sin marco
+  (se quitan border, radius y box-shadow) y con mix-blend-mode: screen,
+  filter saturate(1.05) brightness(1.03) y mask-image radial (ellipse 80% 80%,
+  difuminado hacia los bordes); .hero__neural absoluto (inset 0), 100% x 100%,
+  pointer-events: none y mix-blend-mode: screen.
+- js/main.js: nueva IIFE "Sinapsis del hero" (ES5, sin librerias):
+  - Muestreo unico de la imagen a 480 px de ancho: mascara binaria de los
+    pixeles mas luminosos con umbral adaptativo sobre el maximo (se corrige
+    si la cobertura queda vacia o llena).
+  - Los pulsos avanzan SOLO a pixeles encendidos vecinos (prefiriendo
+    mantener la direccion, con saltos de hasta 3 px por el antialiasing).
+    No se unen puntos por cercania: si no hay linea encendida, la senal se
+    reinicia en otro punto de la red.
+  - El chip se detecta por centroide de lo mas brillante en la zona central:
+    los pulsos no nacen ni entran en un radio del 10 % del ancho y solo recibe
+    un resplandor radial tenue (alfa ~0.16, oscilacion suave), sin deformarlo.
+  - Estela de 11 posiciones con sprites pre-renderizados (azul y cian),
+    composicion screen; 11 pulsos base (7 en pantallas chicas) + 6 extra que
+    solo aparecen con el hover.
+  - Hover (solo con hover:hover): la actividad sube a 1.55 con interpolacion
+    (~0.045 por cuadro) y vuelve sola a 1 al salir.
+  - Rendimiento: requestAnimationFrame, sin nodos DOM ni gradientes por
+    cuadro, DPR max 2, pausa con visibilitychange, re-medicion con debounce
+    de 150 ms.
+  - prefers-reduced-motion: no se dibuja nada (data-sinapsis="estatica"); si
+    el canvas no esta o la imagen no se puede muestrear, queda solo la imagen
+    (data-sinapsis="sin-datos").
+  - Marcadores: data-sinapsis (cargando/activa/estatica/sin-datos) y
+    data-intensidad (1.00 en reposo).
+
+Pruebas (adaptadas, no relajadas):
+- etapa4-visual.js 76 -> 85: +4 a 1440 px (capa alineada y sin eventos;
+  imagen con mascara y screen; pulsos dibujados; el hover sube la actividad y
+  al salir vuelve sola), +1 por viewport (alineacion de la capa) y +2 en un
+  contexto reducedMotion:"reduce" (capa estatica sin pixeles; hero completo
+  sin escritura ni errores de JS).
+- probe-sinapsis.js (nuevo, fuera del conteo): 1440/768/390/360 con la capa
+  alineada y activa; los pulsos caen sobre zonas 4-5x mas luminosas que el
+  promedio de la imagen; 65-76 % de lo dibujado esta junto a lineas reales
+  frente a 12-13 % de puntos al azar (radio de 3 px en el mapa de 480 px);
+  ciclo de hover (1.00 -> 1.46 -> 1.02) y movimiento reducido (capa vacia).
+  - Ademas midio la union imagen-fondo: banda de 200x80 px sobre el borde
+    superior de la imagen, diferencia de luminancia 0.1 entre adentro y
+    afuera, sin costura ni rectangulo visible.
+- Bateria completa: 369 PASS, 0 FAIL (91 + 11 + 85 + 36 + 66 + 80).
+- Verificadores: verificar-csp TODO OK (0 cortes), verificar-botones sin
+  fallas, verificar-soporte 16/16, probe-soporte TODO OK.
+
+Documentacion actualizada: README (arbol con la nueva imagen, seccion "Cerebro
+neuronal y sinapsis", resumen de suites 369, etapa 16 del checklist, items 12
+y 14 de la revision visual) y DOCUMENTACION (fila 16, nota en 4.11, nueva
+4.13, 5 con 369 y el detalle de la suite visual).
+
+PENDIENTE: revision visual humana del resultado estetico (la imagen no se
+puede ver desde aqui; se verifico de forma automatica la alineacion, la
+integracion, el color de los pulsos y su reparto sobre las lineas reales).
+Sin commit ni push. Sigue pendiente ejecutar supabase/migracion-soporte.sql
+(Etapa 9).
+
+- FIN DE LA SESIÓN: se detiene y se espera la revisión del usuario.
+
+SESIÓN 25 (21/10/2026) — Corrección de la composición del cerebro en el hero
+(Local, sin commit ni push, como pidió el usuario.)
+
+Pedido: agrandar el cerebro del hero (más o menos un 40-60 %), quitar la zona
+rectangular oscura, hacer que los extremos se desvanezcan progresivamente hasta
+el negro (sin cortes ni rectas), conservar el detalle de las conexiones y que
+algunas lineas se continuen hacia el fondo, que el chip siga siendo pequeño y
+minimalista pero reconocible, y que se vea como parte del fondo tecnologico y
+no como una tarjeta. Sin tocar titulo, tipografia, colores, botones, encabezado,
+fondo general ni otras secciones; sin borrar imagen.jpg ni otros recursos; sin
+publicar.
+
+Diagnostico (medido con Chromium, no a ojo: el modelo no puede ver imagenes):
+- El archivo original (1672x940) no estaba centrado: la banda negra izquierda
+  ocupaba el 25 % del ancho y el motivo llegaba al borde derecho del archivo.
+  Los bordes eran negro puro (brillo medio 0.5/255).
+- El rectángulo oscuro no venía de la imagen sino del navegador: .reveal deja
+  transform: translateY(0), y un transform crea contexto de apilamiento, asi
+  que el mix-blend-mode: screen de la imagen se mezclaba solo contra un fondo
+  transparente y el negro del PNG se pintaba sobre el degradado azul del hero.
+- El nucleo brillante del motivo (brillo >= 45/255) ocupaba el 63 % del ancho
+  del archivo: con la caja anterior (582 px) se veian 365 px de cerebro.
+
+Cambios:
+- Imagenes/Cerebro neural de neon azul.png vuelve a su nombre original y queda
+  INTACTA; Imagenes/cerebro-neuronal.png pasa a ser el asset de trabajo:
+  recortado (se elimina la banda negra izquierda, con 6 px de margen) y con
+  ALFA REAL (el negro de fondo pasa a transparente con alfa segun luminancia y
+  los bordes se desvanecen con una rampa suave). 1299x853, 149 KB (antes
+  1,46 MB). El chip, las lineas y los colores no se retocan.
+- index.html: width/height de la imagen actualizados a 1299x853.
+- css/styles.css: filtro saturate(1.08) brightness(1.12); mascara mas suave
+  (ellipse 84% 86%); .hero__visual.visible con transform: none para que el
+  screen alcance el fondo real del hero; a >=901 px la caja se ensancha
+  clamp(2rem, 5vw, 5rem) y se corre clamp(1rem, 2.5vw, 2.5rem) a la izquierda
+  (dentro del hueco de la grilla). Sin transform: scale, para no romper el
+  mapeo del canvas.
+- js/main.js: SIN CAMBIOS (la capa de sinapsis se conserva tal cual).
+
+Resultado medido (1440/768/390/360):
+- Caja de la imagen a 1440: 582x327 -> 654x430 px; nucleo brillante del cerebro
+  365 -> ~528 px (+45 %).
+- Sin rectángulo: la franja interna de la caja y el fondo del hero difieren
+  0,0-0,2 de luminancia (antes el negro tapaba).
+- Canvas alineado a la imagen en los cuatro anchos; sin invasion del titulo;
+  sin scroll horizontal; consola limpia; sinapsis activa.
+- En movil (390 y 360 px) el cerebro queda debajo del texto y de los botones.
+
+Pruebas:
+- etapa4-visual.js 85 -> 86: +1 (composicion del hero: fondo transparente en
+  las esquinas, caja >= 640 px a 1440, natural 1299x853 y sin invasion del
+  titulo).
+- probe-hero.js (nuevo, fuera del conteo): 1440/768/390/360 con caja, rectangulo
+  medido (diferencia 0,0-0,2), invasion y scroll horizontal; deja capturas en
+  pruebas/shots/hero-*.png para revision visual humana.
+- probe-sinapsis.js TODO OK. Se corrigio el criterio del sonda para usar el
+  mismo umbral de "pixel encendido" que el renderizador (umbral 35 con la
+  correccion por cobertura): 70-72 % junto a lineas reales contra 15-18 % al
+  azar. Con el umbral viejo la medicion daba 49 % y habria parecido un fallo
+  que en realidad era una diferencia de criterio.
+- Bateria completa: 370 PASS, 0 FAIL (91 + 11 + 86 + 36 + 66 + 80).
+- Verificadores: verificar-csp TODO OK (0 cortes), verificar-botones sin
+  fallas, probe-soporte TODO OK. verificar-soporte tiene 3 fallos (boton
+  solido de soporte, Instagram y despliegue del formulario) que se verificaron
+  como PREEVISTENTES: se repitieron con los cambios guardados en git stash y
+  fallan igual, asi que no tienen que ver con el hero.
+
+Documentacion actualizada: README (arbol con el archivo original, seccion
+"Cerebro neuronal y sinapsis (Etapas 16 y 17)" mas "Composicion del cerebro
+en el hero (Etapa 17)", resumen de suites 370, etapa 17 del checklist y item
+15 de la revision visual) y DOCUMENTACION (fila 17, nota en 4.13, nueva 4.14
+con el diagnostico y las medidas, 5 con 370 y el detalle de la suite visual).
+
+PENDIENTE: revision visual humana del resultado estetico (la imagen no se
+puede ver desde aqui; se midio todo por pixeles y quedan capturas en
+pruebas/shots/hero-*.png). Sin commit ni push. Sigue pendiente ejecutar
+supabase/migracion-soporte.sql (Etapa 9).
+
+- FIN DE LA SESIÓN: se detiene y se espera la revisión del usuario.
+
+
+SESIÓN 26 (22/10/2026) — Hero limpio: se retira la imagen del cerebro y la
+capa de sinapsis del hero
+---------------------------------------------------------------------------
+
+Pedido: simplificar el hero porque la integracion del cerebro no quedo como
+se esperaba. Requisitos: quitar la imagen y el canvas de sinapsis, sacar el
+CSS que ya no se usa, conservar el fondo negro y la estetica tecnologica, NO
+tocar el titulo, el texto, los botones, el encabezado, la navegacion ni el
+resto de las secciones, conservar el fondo de particulas si es independiente,
+no borrar archivos de imagen, no tocar funcionalidades ajenas, todo local y
+sin commit ni push. Antes de editar habia que identificar que partes de la
+implementacion de sinapsis eran exclusivas del cerebro y cuales del fondo
+general.
+
+1) Diagnostico previo (sin tocar archivos):
+- js/main.js tenia dos IIFE de canvas:
+  * "Fondo dinamico: red de orbes flotantes" (canvas #fondo-particulas, fixed,
+    aria-hidden, pointer-events none): NO depende del hero ni de la imagen ->
+    es el fondo general -> SE CONSERVA.
+  * "Sinapsis del hero" (canvas.hero__neural, lineas 232-596): depende de
+    figure.hero__visual, img.hero__img, data-intensidad y data-sinapsis ->
+    es EXCLUSIVA del cerebro -> SE ELIMINA.
+- Tambien se conservaron la IIFE "Escritura del hero" (pill, titulo y parrafo
+  con cursor) y el reveal del resto de las secciones.
+
+2) Cambios:
+- index.html: se elimino <figure class="hero__visual reveal"
+  data-sinapsis="cargando"> con <img class="hero__img"
+  src="Imagenes/cerebro-neuronal.png"> y <canvas class="hero__neural">. El
+  resto del hero quedo intacto (pill, titulo con span.tg, parrafo, botones).
+- css/styles.css: bloque del hero reemplazado por "composicion limpia"; se
+  retiraron .hero__visual, .hero__img, .hero__visual.visible, el @media
+  (min-width: 901px) que ampliaba la figura, .hero__neural y el max-width
+  34rem de la figura en el breakpoint de 900 px.
+- js/main.js: se elimino la IIFE "Sinapsis del hero" (365 lineas). El archivo
+  paso de 1185 a 820 lineas. El resto del JS no se toco.
+- Composicion resultante: .hero .container mantiene la grilla de dos columnas
+  (minmax(0,1.1fr) minmax(0,.9fr)); el texto ocupa la primera y la segunda
+  queda RESERVADA como espacio negativo sobre el fondo negro, con los orbes
+  del fondo general detras. A <=900 px la grilla pasa a una sola columna. A
+  1440 px el titulo ocupa el 53 % del contenedor (la mitad izquierda). No se
+  toco la tipografia ni el espaciado del texto.
+- Imagenes: NO se borro ninguna. cerebro-neuronal.png (recortado con alfa),
+  "Cerebro neural de neon azul.png" (original intacto) e imagen.jpg siguen en
+  el repo, sin uso en el hero.
+
+3) Pruebas (fuera del proyecto, carpeta temporal):
+- etapa4-visual.js: se retiraron las aserciones del cerebro y se agregaron 7
+  del hero limpio (3 a 1440: sin img/canvas/.hero__visual en #inicio, botones y
+  fondo general conservados, espacio negativo con el titulo en menos del 60 %;
+  1 por viewport 1440/390/360: sin decorativos y con #fondo-particulas; 1 con
+  reducedMotion: hero sin decoracion, con fondo general y texto completo sin
+  escritura). Queda en 84/84 PASS.
+- probe-hero.js: se reescribio como sonda del hero limpio (1440/768/390/360):
+  sin decorativos, titulo y botones intactos, fondo de particulas dibujando
+  (>100 px con alfa), navegacion conservada, sin desborde horizontal, consola
+  limpia y capturas en pruebas/shots/hero-limpio-*.png. TODO OK.
+- probe-sinapsis.js: se elimino por obsoleto.
+- Bateria completa: 368 PASS, 0 FAIL (91 + 11 + 84 + 36 + 66 + 80).
+- Verificadores: verificar-csp TODO OK (0 cortes), probe-soporte TODO OK.
+  verificar-soporte sigue con los mismos 3 fallos PREEVISTENTES (boton solido
+  de soporte, Instagram y despliegue del formulario), atadas al formulario de
+  soporte y no al hero.
+
+Documentacion actualizada: README (arbol con las imagenes como "sin uso",
+seccion nueva "Hero limpio (Etapa 18)", seccion "Cerebro neuronal y sinapsis
+(Etapas 16 y 17, en pausa)", resumen de suites 368, etapa 18 del checklist e
+items 12, 14 y 15 de la revision visual) y DOCUMENTACION (fila 18, notas en
+4.13 y 4.14, nueva 4.15 con el diagnostico previo y los cambios, 5 con 368 y el
+detalle de la suite visual).
+
+PENDIENTE: revision visual humana del hero limpio (desde aqui no se pueden ver
+las capturas; quedaron en pruebas/shots/hero-limpio-*.png). Sin commit ni push.
+Sigue pendiente ejecutar supabase/migracion-soporte.sql (Etapa 9).
+
+- FIN DE LA SESIÓN: se detiene y se espera la revisión del usuario.
+
