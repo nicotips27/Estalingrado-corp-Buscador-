@@ -783,16 +783,13 @@ p { margin: 0; }
 
 /* ---------- Formulario compartido por sección ---------- */
 
-/* #recepcion (técnico y web) y #soporte comparten el mismo formulario:
-   el JS mueve el bloque entre sus slots. Con contenido, el slot de soporte
-   separa el formulario de los pasos y canales de arriba. */
+/* El formulario es uno solo: el JS lo mueve al slot de #soporte. Con
+   contenido, ese slot separa el formulario de los pasos y canales de arriba. */
 .slot-form:not(:empty) { margin-top: clamp(2rem, 4vw, 3rem); }
 
 .bloque-formulario.entrando { animation: fade-up .45s var(--ease); }
 
-/* ---------- Recepción: stepper ---------- */
-
-#recepcion .section__desc { font-size: 1.0625rem; }
+/* ---------- Solicitud: stepper ---------- */
 
 .stepper {
   display: flex;

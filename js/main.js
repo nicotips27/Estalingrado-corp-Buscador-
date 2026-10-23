@@ -373,19 +373,16 @@ var ENVIO = (function () {
   var form = document.getElementById('form-solicitud');
   if (!form) return;
 
-  /* El formulario es uno solo: se mueve al slot de la sección que lo pide.
-     Técnico y web lo usan en #recepcion; soporte lo usa al final de #soporte,
-     debajo de sus pasos y canales. Se mueve el mismo nodo para conservar los
-     datos cargados y no duplicar ids. */
+  /* El formulario es uno solo y vive oculto en el documento: al pedir soporte
+     se mueve al final de #soporte, debajo de sus pasos y canales. Se mueve el
+     mismo nodo para conservar los datos cargados y no duplicar ids. */
   var bloque = document.getElementById('bloque-formulario');
-  var slotRecepcion = document.getElementById('slot-recepcion');
   var slotSoporte = document.getElementById('slot-soporte');
 
-  function ubicarFormulario(valor) {
-    if (!bloque) return;
-    var slot = valor === 'soporte' ? slotSoporte : slotRecepcion;
-    if (!slot || bloque.parentNode === slot) return;
-    slot.appendChild(bloque);
+  function ubicarFormulario() {
+    if (!bloque || !slotSoporte) return;
+    if (bloque.parentNode === slotSoporte) return;
+    slotSoporte.appendChild(bloque);
     /* Entrada suave cada vez que el formulario cambia de sección. */
     bloque.classList.remove('entrando');
     void bloque.offsetWidth;
@@ -413,9 +410,8 @@ var ENVIO = (function () {
   var btnNueva = document.getElementById('btn-nueva');
   var honeypot = document.getElementById('hp-empresa');
 
-  /* El servicio se elige con las entradas [data-servicio]: las tarjetas de
-     #servicios (técnico y web) y el botón de la sección #soporte, sin
-     duplicar la selección dentro del formulario. */
+  /* El servicio se elige con las entradas [data-servicio]: hoy solo el botón
+     de la sección #soporte, sin duplicar la selección dentro del formulario. */
   var servicioActual = null;
 
   var SERVICIOS = {
@@ -513,11 +509,10 @@ var ENVIO = (function () {
     stepperServicio.textContent = textoServicio(valor);
   }
 
-  /* El formulario se despliega al tocar una tarjeta de servicio o el botón
-     de soporte (paso 2). El de soporte se ubica dentro de #soporte. */
+  /* El formulario se despliega al tocar el botón de soporte (paso 2). */
   function abrirFormulario(valor) {
     servicioActual = valor;
-    ubicarFormulario(valor);
+    ubicarFormulario();
     aplicarServicio(valor);
     stepper.hidden = false;
     form.hidden = false;

@@ -37,7 +37,6 @@
 
     <nav class="nav-links" aria-label="Navegación principal">
       <a href="#inicio" class="nav-links__item">Inicio</a>
-      <a href="#recepcion" class="nav-links__item">Recepción</a>
       <a href="#soporte" class="nav-links__item">Soporte</a>
       <a href="#contacto" class="nav-links__item">Contacto</a>
     </nav>
@@ -55,7 +54,6 @@
   </button>
   <nav class="mobile-menu__links" aria-label="Navegación móvil">
     <a href="#inicio" class="mobile-menu__link">Inicio</a>
-    <a href="#recepcion" class="mobile-menu__link">Recepción</a>
     <a href="#soporte" class="mobile-menu__link">Soporte</a>
     <a href="#contacto" class="mobile-menu__link">Contacto</a>
   </nav>
@@ -89,20 +87,9 @@
     </div>
   </section>
 
-  <!-- RECEPCIÓN -->
-  <section class="section" id="recepcion" aria-labelledby="recepcion-title">
-    <div class="container container--narrow">
-      <div class="section__head reveal">
-        <p class="section__label"><span class="section__line" aria-hidden="true"></span>Recepción · Solicitud</p>
-        <h2 class="section__title" id="recepcion-title">Iniciá tu <span class="tg">solicitud</span></h2>
-        <p class="section__desc">Elegí el servicio, completá tus datos y revisá todo antes de dejarla lista para el envío.</p>
-      </div>
-
-      <!-- El formulario es uno solo y se comparte: las tarjetas de técnico/web
-           lo ubican en #slot-recepcion; el botón de soporte lo mueve a
-           #slot-soporte, al final de la sección Soporte. -->
-      <div class="slot-form" id="slot-recepcion">
-      <div class="bloque-formulario" id="bloque-formulario">
+  <!-- FORMULARIO (oculto hasta pedir "Soporte al cliente"; el JS lo mueve
+       al slot de la sección Soporte) -->
+  <div class="bloque-formulario" id="bloque-formulario">
       <ol class="stepper reveal" id="stepper" aria-label="Pasos de la solicitud" hidden>
         <li class="stepper__item is-done" data-paso="1"><span class="stepper__num" aria-hidden="true">01</span> <span id="stepper-servicio">Servicio</span></li>
         <li class="stepper__item" data-paso="2"><span class="stepper__num" aria-hidden="true">02</span> Datos</li>
@@ -247,9 +234,6 @@
 
       </form>
       </div>
-      </div>
-    </div>
-  </section>
 
   <!-- SOPORTE -->
   <section class="section" id="soporte" aria-labelledby="soporte-title">
@@ -324,8 +308,8 @@
         </a>
       </div>
 
-      <!-- Acá se despliega el formulario de soporte (el JS lo trae desde
-           #recepcion al elegir "Soporte al cliente"). -->
+      <!-- Acá se despliega el formulario de soporte (el JS lo trae al elegir
+           "Soporte al cliente"). -->
       <div class="slot-form" id="slot-soporte"></div>
     </div>
   </section>
@@ -343,8 +327,8 @@
 
       <!-- Teléfono oficial: pendiente de que nos lo pase la empresa.
            El correo de soporte sí está verificado y publicado arriba. -->
-      <!-- El formulario compartido vive en #recepcion; al pedir soporte se
-           despliega al final de la sección #soporte (ver js/main.js). -->
+      <!-- El formulario compartido se despliega al final de la sección
+           #soporte (ver js/main.js). -->
 
       <ul class="contact-list reveal">
         <li class="contact-list__item">
