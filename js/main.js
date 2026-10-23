@@ -86,7 +86,7 @@ var ENVIO = (function () {
         clicsLogo = 0;
         return;
       }
-      /* Evita que Ctrl+clic abra una pestaña con el ancla del logo. */
+      /* Evita que Ctrl+clic abra el sitio oficial en otra pestaña. */
       e.preventDefault();
       clicsLogo += 1;
       if (reinicioLogo) clearTimeout(reinicioLogo);
