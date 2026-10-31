@@ -70,8 +70,9 @@ la Etapa 1). Este proyecto no modifica ni depende de sus archivos.
 | 16 (21/10/2026) | **Cerebro neuronal y sinapsis**: `cerebro-neuronal.png` (1672×940) reemplaza a `imagen.jpg` en el hero y se integra sin marco (`mix-blend-mode: screen` + máscara radial); una capa Canvas superpuesta dibuja pulsos que recorren **solo los píxeles luminosos reales** de la ilustración (muestreo único, sin unir puntos por cercanía), con brillo tenue del chip, hover con vuelta suave, pausa con pestaña oculta y estático con movimiento reducido. Suites en 369 aserciones. Ver §4.13. | Hecha (local) y **retirada del hero en la Etapa 18** |
 | 17 (21/10/2026) | **Composición del cerebro en el hero**: el asset se recorta (banda negra izquierda eliminada) y su fondo negro pasa a **alfa real**, con desvanecido de bordes, así que desaparece el rectángulo oscuro y el dibujo se funde con el fondo; el encuadre crece ~45 % en escritorio sin invadir el título ni generar scroll horizontal. Se conserva la capa de sinapsis (el canvas sigue alineado y los pulsos siguen las líneas). Suites en 370 aserciones. Ver §4.14. | Hecha (local) y **sin efecto visible desde la Etapa 18** |
 | 18 (22/10/2026) | **Hero limpio**: a pedido del usuario se retiran del hero la imagen del cerebro y la capa de sinapsis — `figure.hero__visual`, `img.hero__img` y `canvas.hero__neural` del HTML, sus reglas del CSS y la IIFE "Sinapsis del hero" de `js/main.js` (365 líneas). El hero queda minimalista: texto a la izquierda y columna derecha reservada como espacio negativo, con el fondo negro y la estética tecnológica intactos. **Se conservan** el fondo de partículas general (`#fondo-particulas`), la escritura del hero, el título, el párrafo, los botones, el encabezado, la navegación y el resto de las secciones; **no se borra ningún archivo de imagen**. Suites en 368 aserciones. Ver §4.15. | Hecha (local, pendiente de revisión del usuario) |
-| 19 (29/10/2026) | **Banner con la foto a pantalla completa**: `imagen/portada/Retrato corporativo con logo EC.png` (1535×1024) ocupa todo el hero (`100dvh`, `object-fit: cover`). Se retiran el botón "Conocer la empresa" y **todo el texto del hero** (pill, título y párrafo), su CSS, la escritura animada de `js/main.js` y la regla `.hero__actions`; queda un `h1.sr-only` para lectores de pantalla y SEO. Ver §4.16. | Hecha (pendiente de revisión visual del usuario) |
+| 19 (29/10/2026) | **Banner con la foto a pantalla completa**: `imagen/portada/Retrato corporativo con implantes cibernéticos.png` (1535×1024) ocupa todo el hero (`100dvh`, `object-fit: cover`). Se retiran el botón "Conocer la empresa" y **todo el texto del hero** (pill, título y párrafo), su CSS, la escritura animada de `js/main.js` y la regla `.hero__actions`; queda un `h1.sr-only` para lectores de pantalla y SEO. Ver §4.16. | Hecha (pendiente de revisión visual del usuario) |
 | 20 (29/10/2026) | **Corrección: `[hidden]` respetado**: el stepper "01 Servicio / 02 Datos / 03 Revisión" se veía debajo del banner antes de iniciar una solicitud, porque `.stepper { display: flex }` y `.btn { display: inline-flex }` anulaban el `[hidden]` del navegador. Regla global `[hidden] { display: none !important; }`. Ver §4.17. | Hecha |
+| 21 (31/10/2026) | **Cambio de la foto del banner**: la empresa reemplazó el asset del hero por `imagen/portada/Retrato corporativo con implantes cibernéticos.png` (1535×1024, ~1,8 MB). Se actualizan la ruta codificada (`%20` y `%C3%A9`), el `alt` y el `preload`; el resto del banner (100dvh, `object-fit: cover`) no cambia. Ver §4.16. | Hecha |
 
 ## 4. Recepción: diseño actual del flujo
 
@@ -752,7 +753,7 @@ las capturas.
 
 A pedido del usuario, el hero deja de ser un bloque de texto y pasa a ser **solo
 la foto corporativa ocupando todo el banner**. La imagen la agregó la empresa en
-`imagen/portada/Retrato corporativo con logo EC.png` (PNG 1535×1024, ~1,8 MB,
+`imagen/portada/Retrato corporativo con implantes cibernéticos.png` (PNG 1535×1024, ~1,8 MB,
 sin transparencia).
 
 - **Primer intento (descartado)**: se reemplazó solo el botón "Conocer la
@@ -763,7 +764,8 @@ sin transparencia).
   `h1.sr-only` ("Servicio técnico y sitios web — Estalingrado Corp") para
   conservar el título semántico y de SEO sin mostrarlo. Se eliminan la pill, el
   título visible, el párrafo y el botón. La ruta se escribe codificada
-  (`Retrato%20corporativo%20con%20logo%20EC.png`) por los espacios del nombre;
+  (`Retrato%20corporativo%20con%20implantes%20cibern%C3%A9ticos.png`) por los
+  espacios y el acento del nombre;
   la imagen declara `width`/`height`, `fetchpriority="high"`,
   `decoding="async"` y `alt` descriptivo, y se precarga con
   `<link rel="preload" as="image">` (es el LCP de la página).
@@ -787,6 +789,12 @@ sin transparencia).
   revisión visual fina (encuadre del recorte, especialmente en celular vertical)
   queda para el usuario; si la carga resulta lenta, conviene exportar la foto a
   ~1600 px de ancho en JPG/WebP (~200–400 KB).
+- **Cambio de foto (31/10/2026, Etapa 21)**: la empresa reemplazó el asset por
+  `imagen/portada/Retrato corporativo con implantes cibernéticos.png`
+  (1535×1024, ~1,8 MB) y borró el anterior. Se actualizaron la ruta codificada
+  del `src` y del `preload` (`Retrato%20corporativo%20con%20implantes%20
+  cibern%C3%A9ticos.png`) y el `alt` ("Retrato corporativo de Estalingrado Corp
+  con implantes cibernéticos"). La composición del banner no cambia.
 
 ### 4.17 Corrección: el atributo `hidden` siempre se respeta (29/10/2026)
 

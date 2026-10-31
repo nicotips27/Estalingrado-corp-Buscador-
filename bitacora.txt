@@ -1219,3 +1219,25 @@ Documentacion: DOCUMENTACION (fila 20 y nueva 4.17) y README (checklist,
 Etapa 20). Sin commit ni push.
 
 - FIN DE LA SESIÓN: se detiene y se espera la revisión del usuario.
+
+SESIÓN 30 (31/10/2026) — Cambio de la foto del banner
+---------------------------------------------------------------------------
+
+Pedido: reemplazar la portada por la nueva foto que dejo la empresa en
+imagen/portada (ahora "Retrato corporativo con implantes cibernéticos.png",
+1535x1024, ~1,8 MB). El archivo anterior fue borrado por el usuario.
+
+Hecho:
+- index.html: se actualizan la ruta del preload y el src de img.hero__imagen a
+  imagen/portada/Retrato%20corporativo%20con%20implantes%20cibern%C3%A9ticos.png
+  (espacios como %20 y el acento como %C3%A9). El alt pasa a "Retrato
+  corporativo de Estalingrado Corp con implantes cibernéticos".
+- Sin cambios en el CSS: el banner sigue a 100dvh con object-fit cover, asi que
+  la nueva foto llena el espacio sin deformarse.
+- Verificacion local: la nueva imagen responde 200 image/png (1.830.627 bytes) y
+  la ruta vieja da 404 (el archivo ya no existe).
+
+Documentacion: DOCUMENTACION (fila 21 y nota en 4.16) y README (arbol,
+secciones, checklist).
+
+- FIN DE LA SESIÓN: se detiene y se espera la revisión del usuario.

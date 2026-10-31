@@ -40,7 +40,7 @@ Servicio tecnico y paginas web/
 │   └── oficina.jpg   # Foto de la oficina (intro de #soporte, Etapa 14)
 ├── imagen/
 │   └── portada/
-│       └── Retrato corporativo con logo EC.png  # Foto del banner del hero (Etapa 19)
+│       └── Retrato corporativo con implantes cibernéticos.png  # Foto del banner del hero (Etapa 19)
 ├── robots.txt        # Bloquea /admin.html para buscadores
 ├── DOCUMENTACION.md  # Historial completo: etapas, diseño del flujo, pruebas, sistema de gestión
 ├── bitacora.txt      # Cronología de sesiones de trabajo
@@ -146,7 +146,7 @@ Dos fotos agregadas por la empresa en `Imagenes/`, integradas cada una en un
 lugar pensado (nunca juntas):
 
 - **Hero**: desde la **Etapa 19** el banner es solo la foto corporativa
-  `imagen/portada/Retrato corporativo con logo EC.png`, a pantalla completa
+  `imagen/portada/Retrato corporativo con implantes cibernéticos.png`, a pantalla completa
   (ver "Banner con la foto a pantalla completa"). La ilustración del cerebro se
   había retirado en la Etapa 18; `Imagenes/imagen.jpg` y
   `Imagenes/cerebro-neuronal.png` se conservan en el repo, sin uso.
@@ -186,7 +186,7 @@ espacio negativo reservado y el fondo negro y la estética tecnológica intactos
 
 ### Banner con la foto a pantalla completa (Etapa 19, 29/10/2026)
 
-La foto **`imagen/portada/Retrato corporativo con logo EC.png`** (1535×1024,
+La foto **`imagen/portada/Retrato corporativo con implantes cibernéticos.png`** (1535×1024,
 agregada por la empresa) ocupa **todo el banner**: no queda texto ni botón a la
 vista, solo la imagen al tamaño de la ventana.
 
@@ -501,7 +501,7 @@ institucional.
       secciones, y **no se borró ningún archivo de imagen**. Local, pendiente de
       revisión del usuario.
 - [x] Etapa 19 (29/10/2026): **banner con la foto a pantalla completa**:
-      `imagen/portada/Retrato corporativo con logo EC.png` ocupa todo el hero
+      `imagen/portada/Retrato corporativo con implantes cibernéticos.png` ocupa todo el hero
       (`100dvh`, `object-fit: cover`). Se quitaron el botón "Conocer la empresa"
       y todo el texto visible del hero (pill, título y párrafo), su CSS y la
       escritura animada del JS; queda un `h1.sr-only` para lectores de pantalla.
@@ -511,6 +511,11 @@ institucional.
       `.stepper { display: flex }` (y `.btn { display: inline-flex }`) anulaban
       el `[hidden]` del navegador. Se agregó `[hidden] { display: none
       !important; }` en la base del CSS.
+- [x] Etapa 21 (31/10/2026): **cambio de la foto del banner**: el asset pasó a
+      `imagen/portada/Retrato corporativo con implantes cibernéticos.png`
+      (1535×1024). Se actualizaron la ruta codificada (`%20` y `%C3%A9`), el
+      `alt` y el `preload`; la composición (100dvh, `object-fit: cover`) queda
+      igual.
 - [x] **Configurar Supabase (19/10/2026):** proyecto `estalingrado-corp` (São
       Paulo) creado, URL + anon key en `js/config.js`, `supabase/schema.sql`
       ejecutado, usuario admin `nbmn38@gmail.com` (Auto Confirm) e insertado su
@@ -570,7 +575,7 @@ Con el sitio servido localmente (`npx http-server . -p 8080`):
 11. Al cargar la página: el banner muestra la **foto corporativa a pantalla
     completa**, sin texto encima ni animación de escritura (desde la Etapa 19).
 12. Banner (Etapa 19): la **foto corporativa**
-    (`imagen/portada/Retrato corporativo con logo EC.png`) ocupa todo el alto de
+    (`imagen/portada/Retrato corporativo con implantes cibernéticos.png`) ocupa todo el alto de
     la ventana y todo el ancho, recortándose sin deformarse (`object-fit:
     cover`), sin texto encima ni scroll horizontal; el navbar glass se lee sobre
     la parte superior. Al bajar a "Soporte al cliente", el encabezado acompaña
