@@ -1241,3 +1241,41 @@ Documentacion: DOCUMENTACION (fila 21 y nota en 4.16) y README (arbol,
 secciones, checklist).
 
 - FIN DE LA SESIÓN: se detiene y se espera la revisión del usuario.
+
+
+SESIÓN 31 (01/11/2026) - La sección de soporte pasa a ser subpágina, con la
+foto del equipo
+---------------------------------------------------------------------------
+
+Pedido: la sección de soporte en sí tiene que ser una subpágina, y ahí va la
+foto de los trabajadores que la empresa dejó en la carpeta Imagenes.
+
+Hecho:
+- Nueva pagina soporte.html: la seccion #soporte completa, con su navbar
+  ("Soporte" queda como pagina actual), el fondo de orbes y el footer del
+  sitio. Contiene la foto del equipo (Imagenes/imgane subpages chica.png,
+  1535x1024), los tres pasos, el correo de soporte y el formulario de
+  solicitud.
+- Se traslado a soporte.html el bloque del formulario (#bloque-formulario con
+  #stepper y #form-solicitud) y su slot #slot-soporte, que antes vivian en
+  index.html. El JS no cambio: sigue siendo el mismo nodo el que se mueve al
+  slot al tocar "Soporte al cliente".
+- index.html: la seccion #soporte queda como entrada (encabezado, texto,
+  correo de soporte, foto de oficinas) con el boton "Ir al soporte" que lleva
+  a soporte.html. La navbar y el menu movil apuntan a la subpagina.
+- css/styles.css: se agrega el bloque .equipo (figura de la foto del equipo
+  con pie y titulo) y se retiran los estilos del marco reservado y de la
+  tarjeta de enlace, que ya no se usan.
+- Se elimino equipo.html: la subpagina es la de soporte, no una pagina de
+  equipo aparte.
+
+Verificacion: la barrera de pre-publicacion (carpeta verificacion-web, fuera
+del repo) recorre index, soporte y admin en Chromium real: consola limpia,
+sin recursos rotos, sin desborde horizontal a 1440/390/360 px, la foto carga,
+el formulario se despliega en su slot y el boton Enviar queda coherente con
+la configuracion de Supabase. BARRERA: TODO OK.
+
+PENDIENTE: publicacion (no se hizo push) y revision visual humana de la foto
+en la subpagina.
+
+- FIN DE LA SESIÓN: se detiene y se espera la revisión del usuario.
