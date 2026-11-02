@@ -1279,3 +1279,48 @@ PENDIENTE: publicacion (no se hizo push) y revision visual humana de la foto
 en la subpagina.
 
 - FIN DE LA SESIÓN: se detiene y se espera la revisión del usuario.
+
+
+SESIÓN 32 (02/11/2026) - Textos distintos entre la pagina principal y la
+subpagina, y link de vuelta
+---------------------------------------------------------------------------
+
+Pedido: la pagina principal y la subpagina de soporte no pueden repetir los
+mismos textos; cada una tiene que hablar de su propia cosa.
+
+Hecho:
+- index.html: la seccion #soporte ahora es una entrada, no una copia de la
+  subpagina. Encabezado + su propio texto ("¿Tenes una consulta, una
+  incidencia o un reclamo? Cada solicitud la atiende una persona de nuestro
+  equipo, no un sistema automatico.") y una banda .soporte-cta con icono,
+  texto ("Pedir, seguir y resolver: todo pasa por nuestra pagina de soporte.")
+  y el boton "Ir al soporte" hacia soporte.html. Se retiraron de esa seccion
+  el formulario, la foto de oficinas y el correo: el correo queda en #contacto
+  y la foto vive en la subpagina.
+- soporte.html: el texto propio de la subpagina se completa ("Atendemos desde
+  nuestra oficina, en Salta Capital (zona sur)") y se agrega arriba el link
+  .volver "Volver a la pagina principal", que marca visualmente que esta es
+  una subpagina.
+- css/styles.css: nuevos bloques .soporte-cta (banda de entrada, con hover y
+  responsive) y .volver (link de vuelta, con desplazamiento del icono en
+  hover). Todo con los tokens y la transicion ya existentes en el sitio.
+- La barrera de pre-publicacion gano un control nuevo: compara los textos
+  largos repetidos entre paginas (excluyendo el footer, que es comun) y
+  falla si dos paginas comparten el mismo parrafo largo.
+- Correccion de un bug real detectado por la barrera: faltaba #slot-soporte en
+  soporte.html, asi que el formulario no se desplegaba en su lugar.
+
+Verificacion: la barrera recorre index, soporte y admin en Chromium real:
+consola limpia, sin recursos rotos, sin desborde horizontal a 1440/390/360 px,
+la foto del equipo carga, el formulario se despliega en su slot, el boton
+Enviar queda coherente con la configuracion de Supabase, y ningun texto largo
+se repite entre paginas. BARRERA: TODO OK.
+
+Capturas para revision visual: index-soporte-entrada-1440.png (banda de
+entrada en la pagina principal) y soporte-1440.png / soporte-390.png
+(subpagina con la foto del equipo).
+
+PENDIENTE: publicacion (no se hizo push; se espera la orden expresa del
+usuario) y revision visual humana de las capturas.
+
+- FIN DE LA SESIÓN: se detiene y se espera la revisión del usuario.
