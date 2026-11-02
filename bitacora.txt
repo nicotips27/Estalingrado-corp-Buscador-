@@ -1434,3 +1434,40 @@ desplegado) y soporte-390.png (movil).
 PENDIENTE: publicacion (sigue sin push; todo local) y revision visual humana.
 
 - FIN DE LA SESIÓN: se detiene y se espera la revisión del usuario.
+
+
+SESIÓN 36 (02/11/2026) - Publicación con las dos barreras en verde
+---------------------------------------------------------------------------
+
+Orden del usuario: actualizar el repo y Pages con los cambios, sin tirar la
+página.
+
+Cómo se publicó (sin cortar el sitio):
+- Push normal (fast-forward), nada de force-push: 4fa5e83..cb3b322. El
+  historial remoto no se reescribió en ningún momento, así que la página nunca
+  dejó de servir.
+- Barrera previa (pre-publicar.js) en verde antes de tocar el remoto.
+- Se esperó el build de Pages (status: built, commit cb3b322) y recién
+  después se corrió la verificación post-publicación sobre lo que se descargó
+  del dominio real: SITIO PUBLICADO: SANO.
+- Estado final del remoto: main = cb3b322. El Pages sigue configurado igual
+  (source: main /, CNAME estalingradocorp.qzz.io): no se deshabilitó ni se
+  recreó.
+
+Verificacion post-publicacion (todo PASS):
+- La pagina principal publicada responde 200, sin errores de consola y sin
+  recursos rotos; cargan el banner corporativo y la foto de la oficina.
+- El enlace "Ir al soporte" abre la subpagina publicada.
+- La subpagina publicada: la foto del equipo carga, el stepper arranca oculto,
+  el boton "Soporte al cliente" despliega el formulario y el segundo toque lo
+  esconde, y las 7 preguntas frecuentes están al final y se abren de a una.
+- Los archivos servidos (css, js, index, soporte) son identicos a los locales.
+- Dominio en vivo: / y /soporte.html responden 200.
+
+Nota: el verificador post-publicacion se actualizó a la estructura actual (la
+subpagina es la que tiene el formulario y las preguntas; la pagina principal es
+la entrada). Los chequeos viejos del stepper en index daban falso negativo.
+
+PENDIENTE: nada pendiente de publicacion.
+
+- FIN DE LA SESIÓN: se detiene y se espera la revisión del usuario.
