@@ -1324,3 +1324,27 @@ PENDIENTE: publicacion (no se hizo push; se espera la orden expresa del
 usuario) y revision visual humana de las capturas.
 
 - FIN DE LA SESIÓN: se detiene y se espera la revisión del usuario.
+
+
+SESIÓN 33 (02/11/2026) - Todo queda en local y se despublica el Pages del
+repo personal
+---------------------------------------------------------------------------
+
+Instruccion del usuario: hasta que haya una instruccion clara y directa, no
+se toca el repositorio remoto. Todo se queda en local.
+
+Hecho:
+- El commit 4987d20 (textos distintos + link de vuelta) queda commiteado en
+  local. No se hizo push: la rama main local esta 3 commits adelante de
+  origin/main (f3300e2, 829f40c, 4987d20) y origin/main sigue en 4fa5e83.
+- Se despublico GitHub Pages del repo personal nicolabarranco27-a11y/
+  recepcion-estalingrado (DELETE /repos/.../pages con la cuenta propietaria):
+  la API ya no encuentra el sitio y la URL publica responde 404. El repo en
+  si no se borro, sigue clonable y con su historial.
+- No se toco el Pages ni el repositorio del CEO (nicotips27/
+  Estalingrado-corp-Buscador-), que siguen intactos.
+
+Estado: nada publicado. La barrera de pre-publicacion sigue en verde
+(BARRERA: TODO OK) y queda armada para cuando el usuario de la orden.
+
+- FIN DE LA SESIÓN: se detiene y se espera la revisión del usuario.
