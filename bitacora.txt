@@ -1388,3 +1388,49 @@ y la banda de entrada abajo.
 PENDIENTE: publicacion (sigue sin push; todo local) y revision visual humana.
 
 - FIN DE LA SESIÓN: se detiene y se espera la revisión del usuario.
+
+
+SESIÓN 35 (02/11/2026) - Vuelve la sección de preguntas frecuentes y el
+formulario se puede esconder
+---------------------------------------------------------------------------
+
+Pedido del usuario: la sección de preguntas y respuestas (en tarjetas) había
+desaparecido; hay que ponerla dentro de la subpágina, al final, siempre debajo
+del formulario (oculto o desplegado). Y el formulario tiene que poder
+esconderse si el usuario vuelve a tocar el botón "Soporte al cliente".
+
+Hecho:
+- Se recuperaron del respaldo (rama backup/faq-local-2026-11-01, commit
+  692643c, que se había perdido en el force-push del CEO) las 7 preguntas, sus
+  respuestas, los estilos del acordeón en tarjetas y el JS del acordeón.
+- soporte.html: nueva sección #preguntas-frecuentes al final de la subpágina,
+  después de la sección #soporte. Como el formulario vive en #slot-soporte
+  (dentro de #soporte), las preguntas quedan debajo del formulario tanto antes
+  como después de desplegarlo. Cada pregunta es una tarjeta con su marco
+  propio; se abre una sola a la vez.
+- js/main.js: el botón "Soporte al cliente" ahora es un interruptor. El primer
+  toque despliega el formulario; el segundo toque lo esconde (stepper y
+  formulario) sin borrar lo que el usuario ya cargó. Al volver a abrirlo, el
+  usuario conserva el paso en el que estaba. El botón lleva aria-expanded y
+  aria-controls, que se actualizan en cada cambio.
+- css/styles.css: estilos .faq (tarjeta, disparador, chevron y respuesta con
+  la transición del sitio).
+
+La barrera de pre-publicacion gano controles nuevos para que esto no se
+vuelva a romper:
+- la sección de preguntas existe, tiene 7 tarjetas y es la ultima seccion de
+  la subpagina;
+- las preguntas quedan debajo del formulario con el formulario desplegado y
+  tambien con el formulario escondido;
+- el segundo toque del boton esconde el formulario y el stepper, y el boton
+  vuelve a aria-expanded=false; un tercer toque lo vuelve a mostrar;
+- el acordeon abre la respuesta, la respuesta se ve, y solo queda una
+  pregunta abierta a la vez.
+
+Verificacion: BARRERA: TODO OK. Capturas: soporte-1440.png (subpagina
+completa con las preguntas al final), soporte-formulario-1440.png (formulario
+desplegado) y soporte-390.png (movil).
+
+PENDIENTE: publicacion (sigue sin push; todo local) y revision visual humana.
+
+- FIN DE LA SESIÓN: se detiene y se espera la revisión del usuario.

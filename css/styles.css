@@ -1246,6 +1246,90 @@ select.field__control option { background: var(--surface); color: var(--text); }
   color: var(--text-muted);
 }
 
+/* ---------- Preguntas frecuentes: acordeón en tarjetas ---------- */
+
+.faq {
+  display: grid;
+  gap: .75rem;
+}
+
+.faq__item {
+  position: relative;
+  overflow: hidden;
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-card);
+  transition: border-color var(--transition), background var(--transition);
+}
+
+.faq__item:hover {
+  border-color: rgba(59, 130, 246, .45);
+}
+
+.faq__item.is-open {
+  border-color: var(--blue-400);
+  background: rgba(96, 165, 250, .1);
+}
+
+.faq__trigger {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .75rem;
+  padding: 1rem 1.25rem;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  cursor: pointer;
+  text-align: left;
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-strong);
+  transition: background var(--transition), color var(--transition);
+}
+
+.faq__trigger:hover {
+  background: rgba(59, 130, 246, .07);
+}
+
+.faq__pregunta {
+  font-weight: 600;
+}
+
+.faq__chevron {
+  font-size: .65rem;
+  color: var(--blue-500);
+  transition: transform var(--transition), color var(--transition);
+}
+
+.faq__trigger[aria-expanded="true"] .faq__chevron {
+  transform: rotate(90deg);
+  color: var(--blue-400);
+}
+
+.faq__respuesta {
+  max-height: 0;
+  overflow: hidden;
+  padding: 0 1.25rem;
+  color: var(--text-muted);
+  font-size: .95rem;
+  line-height: 1.6;
+  opacity: 0;
+  transition: max-height var(--transition) var(--ease), padding-bottom var(--transition) var(--ease), opacity var(--transition) var(--ease);
+}
+
+.faq__trigger[aria-expanded="true"] + .faq__respuesta {
+  max-height: 40rem;
+  padding-bottom: 1.5rem;
+  opacity: 1;
+}
+
+.faq__respuesta p {
+  margin: 0;
+}
+
 @media (max-width: 768px) {
   :root {
     --section-space: 4.5rem;

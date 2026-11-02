@@ -229,6 +229,33 @@ var ENVIO = (function () {
     });
   })();
 
+  /* ---------- Acordeón de preguntas frecuentes ----------
+     Solo un ítem abierto a la vez. Respeta movimiento reducido. */
+  (function () {
+    var items = document.querySelectorAll('.faq__item');
+    items.forEach(function (item) {
+      var trigger = item.querySelector('.faq__trigger');
+      if (!trigger) return;
+      trigger.setAttribute('aria-expanded', 'false');
+      trigger.addEventListener('click', function (e) {
+        e.preventDefault();
+        var abrir = trigger.getAttribute('aria-expanded') !== 'true';
+        items.forEach(function (otro) {
+          var otroTrigger = otro.querySelector('.faq__trigger');
+          if (otroTrigger && otroTrigger !== trigger) {
+            otroTrigger.setAttribute('aria-expanded', 'false');
+            otro.removeAttribute('open');
+            otro.classList.remove('is-open');
+          }
+        });
+        trigger.setAttribute('aria-expanded', abrir);
+        item.classList.toggle('is-open', abrir);
+        if (abrir) item.setAttribute('open', '');
+        else item.removeAttribute('open');
+      });
+    });
+  })();
+
   /* ===================== Flujo de recepción ===================== */
 
   var form = document.getElementById('form-solicitud');
@@ -370,8 +397,19 @@ var ENVIO = (function () {
     stepperServicio.textContent = textoServicio(valor);
   }
 
-  /* El formulario se despliega al tocar el botón de soporte (paso 2). */
+  /* El formulario se despliega al tocar el botón de soporte (paso 2) y se
+     vuelve a esconder si se toca ese mismo botón otra vez. */
+  var formularioAbierto = false;
+  var botonesServicio = document.querySelectorAll('[data-servicio]');
+
+  function marcarBotonesServicio(abierto) {
+    botonesServicio.forEach(function (boton) {
+      boton.setAttribute('aria-expanded', abierto ? 'true' : 'false');
+    });
+  }
+
   function abrirFormulario(valor) {
+    var mismoServicio = servicioActual === valor;
     servicioActual = valor;
     ubicarFormulario();
     aplicarServicio(valor);
@@ -379,12 +417,33 @@ var ENVIO = (function () {
     form.hidden = false;
     stepper.classList.add('visible');
     form.classList.add('visible');
-    if (!pasoResumen.hidden || pasoDatos.hidden) irAPaso(2);
+    /* Si cambia el servicio, el flujo vuelve al paso 2. Si es el mismo, el
+       usuario conserva el paso en el que estaba y los datos ya cargados. */
+    if (!mismoServicio || (pasoDatos.hidden && pasoResumen.hidden)) irAPaso(2);
+    formularioAbierto = true;
+    marcarBotonesServicio(true);
   }
 
-  document.querySelectorAll('[data-servicio]').forEach(function (enlace) {
-    enlace.addEventListener('click', function () {
-      abrirFormulario(enlace.getAttribute('data-servicio'));
+  /* Esconder el formulario sin perder lo que el usuario ya cargó. */
+  function cerrarFormulario() {
+    stepper.hidden = true;
+    form.hidden = true;
+    stepper.classList.remove('visible');
+    form.classList.remove('visible');
+    formularioAbierto = false;
+    marcarBotonesServicio(false);
+  }
+
+  botonesServicio.forEach(function (enlace) {
+    enlace.addEventListener('click', function (e) {
+      var valor = enlace.getAttribute('data-servicio');
+      /* Segundo toque sobre el mismo botón: se esconde el formulario. */
+      if (formularioAbierto && servicioActual === valor) {
+        e.preventDefault();
+        cerrarFormulario();
+        return;
+      }
+      abrirFormulario(valor);
     });
   });
 
