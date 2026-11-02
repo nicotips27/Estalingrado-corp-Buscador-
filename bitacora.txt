@@ -1348,3 +1348,43 @@ Estado: nada publicado. La barrera de pre-publicacion sigue en verde
 (BARRERA: TODO OK) y queda armada para cuando el usuario de la orden.
 
 - FIN DE LA SESIÓN: se detiene y se espera la revisión del usuario.
+
+
+SESIÓN 34 (02/11/2026) - Meta descripciones mejoradas y vuelta de la foto de
+la oficina en la pagina principal
+---------------------------------------------------------------------------
+
+Correccion pedida por el usuario: el pedido era mejorar la meta descripcion,
+no sacar la foto de la oficina. Se arreglo.
+
+Hecho:
+- index.html: la meta description era la vieja ("Recepcion de clientes de
+  Estalingrado Corp. Servicio tecnico informatico y creacion y desarrollo de
+  sitios web."), escrita para el concepto de recepcion y sin decir que la
+  pagina es tambien la puerta de entrada al soporte. Ahora dice: "Estalingrado
+  Corp: servicio tecnico informatico, desarrollo de sitios web y soporte al
+  cliente en Salta Capital, Argentina. Pedi ayuda o envia tu consulta."
+- index.html y soporte.html: se sumo el bloque de metadatos para que la
+  descripcion se use tambien cuando se comparte el link: canonical, Open
+  Graph (type, site_name, locale, title, description, url, image con sus
+  medidas y alt) y Twitter Card. Las imagenes son las reales de cada pagina
+  (el banner corporativo en index, la foto del equipo en soporte), con URL
+  absoluta sobre el dominio del CNAME (estalingradocorp.qzz.io).
+- soporte.html: su meta description tambien se reescribio, ahora orientada a la
+  accion ("pedi ayuda con consultas, incidencias o reclamos y segui tu
+  solicitud desde el formulario") y distinta de la de index.
+- index.html: vuelve la foto de la oficina (Imagenes/oficina.jpg, 640x800) con
+  su pie "Oficinas / Salta Capital, Argentina", en su lugar original: al lado
+  del encabezado de la seccion #soporte, dentro del bloque .soporte__intro. La
+  banda .soporte-cta (entrada al soporte) queda abajo, con su propio texto.
+  No se toco ninguna foto de la subpagina: la foto del equipo y la de la
+  oficina siguen alli.
+
+Verificacion: barrera de pre-publicacion en verde (BARRERA: TODO OK) y captura
+regenerada de la seccion soporte de la pagina principal
+(index-soporte-entrada-1440.png): la foto de la oficina esta al lado del texto
+y la banda de entrada abajo.
+
+PENDIENTE: publicacion (sigue sin push; todo local) y revision visual humana.
+
+- FIN DE LA SESIÓN: se detiene y se espera la revisión del usuario.
