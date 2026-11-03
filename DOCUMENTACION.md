@@ -4,7 +4,9 @@ Este archivo reúne el historial completo del proyecto: qué se construyó, con 
 criterios, qué se verificó y qué queda pendiente. La bitácora cronológica de
 sesiones está en `bitacora.txt`.
 
-Fecha de esta versión: 19/10/2026.
+Fecha de esta versión: 03/11/2026. El estado **vigente** del sitio (estructura
+actual, protocolo de publicación y conexiones externas) está resumido en
+`README.md`; este archivo conserva el historial completo de etapas.
 
 ---
 
@@ -12,10 +14,12 @@ Fecha de esta versión: 19/10/2026.
 
 Carpeta de trabajo de Estalingrado Corp que contiene dos frentes:
 
-1. **Recepción de clientes (IMPLEMENTADA con Supabase en Etapa 7)** — página
-   HTML/CSS/JS vanilla en la raíz de la carpeta que centraliza los dos
-   servicios de la empresa (servicio técnico informático y creación/desarrollo
-   de sitios web) con un flujo de solicitud guiado de 3 pasos. Las solicitudes
+1. **Recepción de clientes y soporte al cliente (IMPLEMENTADA con Supabase en
+   Etapa 7, reorganizada en las Etapas 22-27)** — sitio HTML/CSS/JS vanilla en
+   la raíz de la carpeta, publicado en <https://estalingradocorp.qzz.io/>:
+   `index.html` (banner corporativo a pantalla completa, banda de entrada al
+   soporte y canales oficiales) y `soporte.html` (subpágina con banner,
+   pasos, formulario guiado de 3 pasos y preguntas frecuentes). Las solicitudes
    se guardan en PostgreSQL (Supabase) y se administran desde `admin.html`.
    Mientras `js/config.js` esté vacío, el envío queda deshabilitado y la
    interfaz lo informa (nunca simula un envío).
@@ -73,6 +77,11 @@ la Etapa 1). Este proyecto no modifica ni depende de sus archivos.
 | 19 (29/10/2026) | **Banner con la foto a pantalla completa**: `imagen/portada/Retrato corporativo con implantes cibernéticos.png` (1535×1024) ocupa todo el hero (`100dvh`, `object-fit: cover`). Se retiran el botón "Conocer la empresa" y **todo el texto del hero** (pill, título y párrafo), su CSS, la escritura animada de `js/main.js` y la regla `.hero__actions`; queda un `h1.sr-only` para lectores de pantalla y SEO. Ver §4.16. | Hecha (pendiente de revisión visual del usuario) |
 | 20 (29/10/2026) | **Corrección: `[hidden]` respetado**: el stepper "01 Servicio / 02 Datos / 03 Revisión" se veía debajo del banner antes de iniciar una solicitud, porque `.stepper { display: flex }` y `.btn { display: inline-flex }` anulaban el `[hidden]` del navegador. Regla global `[hidden] { display: none !important; }`. Ver §4.17. | Hecha |
 | 21 (31/10/2026) | **Cambio de la foto del banner**: la empresa reemplazó el asset del hero por `imagen/portada/Retrato corporativo con implantes cibernéticos.png` (1535×1024, ~1,8 MB). Se actualizan la ruta codificada (`%20` y `%C3%A9`), el `alt` y el `preload`; el resto del banner (100dvh, `object-fit: cover`) no cambia. Ver §4.16. | Hecha |
+| 22 (02/11/2026) | **Subpágina de soporte consolidada**: las preguntas frecuentes vuelven al **final de `soporte.html`** (siempre debajo del formulario) recuperadas del respaldo blindado `faq-respaldo-2026-11-01.bundle` / rama `backup/faq-local-2026-11-01`; el botón **"Soporte al cliente" pasa a ser interruptor** (abre y esconde el formulario sin perder lo cargado: `formularioAbierto` / `cerrarFormulario()` / `aria-expanded`); los textos de la portada y de la subpágina dejan de repetirse (`.volver`, `.soporte-cta` y control anti-textos repetidos en la barrera). Ver §4.18. | Hecha y publicada |
+| 23 (02/11/2026) | **Banner de la subpágina**: la foto `Imagenes/imgane subpages chica.png` pasa a ser el hero a pantalla completa de `soporte.html` (igual tratamiento que el banner principal: `fetchpriority`, `preload`, `alt`). Se retiran el bloque de figura de equipo con su pie y el bloque de oficinas con su texto; el CSS muerto (`.equipo*`) se borra. Ver §4.18. | Hecha y publicada |
+| 24 (02/11/2026) | **Portada minimalista**: `index.html` queda con el banner, **solo la banda de entrada** al soporte (`.soporte-cta`) y los canales. Se retiran de la portada la foto de oficinas, el encabezado "Soporte · Al cliente / Soporte al cliente" y la descripción; la descripción pasa a la subpágina, bajo el `h1` (`section__desc`). CSS muerto (`.soporte__intro`, `.oficinas_*`) fuera. Ver §4.18. | Hecha y publicada |
+| 25 (02/11/2026) | **Copy de la banda + móvil**: texto de entrada reescrito ("Consultas, incidencias o reclamos: escribinos y seguí tu solicitud desde la misma página."); en ≤768 px la banda y `.soporte-canales` se apilan en columna con **botón a todo el ancho**, áreas táctiles de 44 px (`.volver`, `.contact-list__value`, `.mobile-menu__link`, íconos del pie) y stepper en grilla de 3 columnas. La barrera suma una sección **MÓVIL** (390 px): menú abre/cierra, tap targets, banda apilada y botón a todo el ancho. Ver §4.18. | Hecha y publicada |
+| 26 (03/11/2026) | **Documentación al día**: `README.md` reescrito como documento de estado vigente (estructura real, páginas, interruptor del formulario, FAQ, móvil, Supabase, seguridad, conexiones externas y protocolo de publicación) y este archivo con la etapa actual (§4.18), el historial de etapas y los pendientes corregidos. Publicación de las Etapas 22-25 con las dos barreras en verde. | Hecha y publicada |
 
 ## 4. Recepción: diseño actual del flujo
 
@@ -817,6 +826,104 @@ elegir un servicio.
   que al banner lo sigue directamente la sección "Soporte al cliente" (sin
   franjas vacías ni textos sueltos).
 
+## 4.18 Estado vigente del sitio: portada minimalista + subpágina de soporte (Etapas 22-26, 02-03/11/2026)
+
+Después de las Etapas 1-21 el sitio era una sola página con todo apilado
+(`#servicios`, `#recepcion`, `#soporte`, `#contacto`). A pedido de la empresa
+la recepción se **separó en dos páginas** y la portada quedó minimalista.
+
+### 4.18.1 Las dos páginas
+
+- **`index.html` (portada)** — tres bloques:
+  1. `section.hero` con el banner `imagen/portada/Retrato corporativo con
+     implantes cibernéticos.png` a pantalla completa (`h1.sr-only` para
+     lectores de pantalla).
+  2. `section#soporte` con **solo la banda de entrada** `.soporte-cta`
+     (ícono + texto + botón "Ir al soporte" → `soporte.html`). Se retiraron
+     la foto de oficinas, el encabezado "Soporte · Al cliente / Soporte al
+     cliente" y la descripción.
+  3. `section#contacto` con los canales oficiales, más el pie.
+- **`soporte.html` (subpágina)** — en orden: banner con la foto
+  `Imagenes/imgane subpages chica.png` (mismo tratamiento que el banner
+  principal), link `.volver` a la portada, encabezado de sección (label +
+  `h1` + `section__desc` con la descripción que estaba en la portada), pasos
+  `01-03`, canales + botón "Soporte al cliente", **formulario** y
+  **preguntas frecuentes** al final.
+- **`admin.html`** — panel interno, sin cambios respecto de la Etapa 7.
+
+El JS es el mismo en las dos páginas (`js/main.js`): todo lo que no existe en
+la página simplemente no se encuentra (`if (!form) return;` y las funciones
+`ubicarFormulario()` / `aplicarServicio()` operan sobre `#slot-soporte`).
+
+### 4.18.2 El botón "Soporte al cliente" es un interruptor
+
+En `js/main.js`:
+
+- `formularioAbierto` (booleano) marca el estado.
+- `abrirFormulario(valor)` mueve el bloque al slot (`ubicarFormulario()`),
+  muestra stepper y formulario (`hidden = false`), aplica el servicio y deja
+  `aria-expanded="true"` en todos los `[data-servicio]`
+  (`marcarBotonesServicio(true)`).
+- `cerrarFormulario()` esconde stepper y formulario **sin borrar lo que la
+  persona ya cargó** y vuelve a `aria-expanded="false"`.
+- El listener de cada `[data-servicio]`: si el formulario ya está abierto con
+  ese mismo servicio → `cerrarFormulario()`; si no → `abrirFormulario(valor)`.
+
+El botón trae `aria-expanded="false"` y `aria-controls="bloque-formulario"` en
+el HTML inicial.
+
+### 4.18.3 Preguntas frecuentes
+
+Sección `#preguntas-frecuentes` al final de `soporte.html`, con 7
+`<details class="faq__item">` (`.faq__trigger` con `.faq__pregunta` y
+`.faq__chevron`, respuesta en `.faq__respuesta`): qué es Estalingrado Corp,
+qué es IA 27 / Atenea Omega, qué es el Big Data (Intranet), qué otros
+servicios existen, cómo pedir soporte, si hace falta ser cliente y qué se
+hace con los datos.
+
+- Se recuperaron del respaldo blindado
+  (`verificacion-web/faq-respaldo-2026-11-01.bundle`, rama
+  `backup/faq-local-2026-11-01`, commit `692643c`) después de que una
+  publication anterior las perdiera.
+- El acordeón (una pregunta abierta a la vez, `aria-expanded` sincronizado)
+  vive en `js/main.js` **antes** del `if (!form) return;`, para que funcione
+  aunque el formulario no exista en la página.
+- La barrera comprueba que la FAQ es la última sección, que queda debajo del
+  formulario con el formulario desplegado **y** oculto, y que el acordeón
+  abre y cierra.
+
+### 4.18.4 Móvil (≤768 px)
+
+- `.soporte-cta` y `.soporte-canales` pasan a **columna**; el botón ocupa todo
+  el ancho del bloque (se corrigió el `flex` de `.soporte-cta__texto` y de
+  `.contact-list` a `flex: 0 0 auto` para que no quedara una línea de texto
+  angosta al lado).
+- Áreas táctiles de 44 px: `.volver`, `.contact-list__value`, íconos del pie y
+  `.mobile-menu__link`.
+- Stepper en grilla de 3 columnas iguales.
+- La barrera previa a publicar suma una sección **MÓVIL** que abre y cierra el
+  menú a 390 px, mide los tap targets, y exige que la banda esté apilada y su
+  botón a todo el ancho.
+
+### 4.18.5 Publicación y operación (02-03/11/2026)
+
+- El sitio se publica en el repo de la empresa
+  <https://github.com/nicotips27/Estalingrado-corp-Buscador-> (rama `main`,
+  GitHub Pages con `CNAME` → `estalingradocorp.qzz.io`). La URL de Pages
+  (`nicotips27.github.io/Estalingrado-corp-Buscador-/`) responde 301 hacia el
+  dominio propio.
+- El repo personal `nicolabarranco27-a11y/recepcion-estalingrado` (copia
+  anterior) tiene sus **Pages despublicados** (la URL responde 404); el repo
+  sigue existiendo y su borrado quedó pendiente de orden expresa.
+- **Protocolo vigente** (`verificacion-web/PROTOCOLO.md`): ninguna publicación
+  sin las dos barreras en verde — `node pre-publicar.js` antes del push
+  (sintaxis, recursos, carga, estructura, `[hidden]`, flujo del soporte, FAQ,
+  banner, layout 1440/390/360 px, accesibilidad y sección MÓVIL) y
+  `node verificar-publicado.js` después del build de Pages (compara lo que
+  sirve el dominio con la copia local y abre la página viva). Push siempre
+  fast-forward, **nunca** force-push, **nunca** deshabilitar ni recrear Pages.
+- La cuenta con la que se publica es `nicolabarranco27-a11y`.
+
 ## 5. Pruebas (07/10 → 22/10/2026)
 
 Las suites viven **fuera del proyecto** (carpeta temporal de trabajo), porque
@@ -850,6 +957,15 @@ la lectura pública devuelve 0 filas y que las escrituras inválidas se rechazan
 Verificado lo funcional y geométrico; **no** se pudo verificar automáticamente
 la estética subjetiva (la asistente no ve imágenes) → checklist manual en
 `README.md`.
+
+**Verificación vigente (desde la Etapa 22):** las suites de arriba quedaron
+archivadas; la verificación que acompaña cada publicación es la **barrera de
+publicación** (`verificacion-web/PROTOCOLO.md`), que corre en navegador real
+(Chromium/Playwright) contra la copia local y contra el sitio vivo:
+`node pre-publicar.js` antes del push (incluye las comprobaciones de la FAQ,
+del interruptor del formulario, del banner de la subpágina y la sección
+**MÓVIL** a 390 px) y `node verificar-publicado.js` después del build de
+Pages. Los scripts viven fuera del repositorio y nunca se suben a GitHub.
 
 ## 6. Supabase y panel de solicitudes (Etapa 7)
 
@@ -912,14 +1028,17 @@ Pasos del usuario (resueltos el 19/10/2026; detalle en la guía):
    y admin habilitado. ✔ Falta *(hacer)* apagar "Allow new users to sign up" y
    re-ejecutar `schema.sql` para activar el anti-spam del §4.6.
 3. Envío y panel probados contra el proyecto Supabase real. ✔
-4. Repositorio en GitHub: **subido** a
-   <https://github.com/nicolabarranco27-a11y/recepcion-estalingrado> (público,
-   rama `main`). GitHub Pages activo con "Enforce HTTPS" en
-   <https://nicolabarranco27-a11y.github.io/recepcion-estalingrado/>.
-   Dominio y correo siguen sin configurar.
-5. Verificar teléfono/correo oficiales cuando se publiquen (correo propuesto
-   `estalingradocorp.servicios@gmail.com`, sin confirmar).
-6. No publicar ni configurar dominio (fuera de alcance hasta que se pida).
+4. Repositorio en GitHub: **subido** al repo de la empresa
+   <https://github.com/nicotips27/Estalingrado-corp-Buscador-> (público,
+   rama `main`). GitHub Pages activo con "Enforce HTTPS" y dominio propio
+   <https://estalingradocorp.qzz.io/> (la URL de Pages redirige con 301 al
+   dominio). El repo personal `nicolabarranco27-a11y/recepcion-estalingrado`
+   conserva sus **Pages despublicados** (404); queda decidir si se borra.
+5. Verificar teléfono/correo oficiales cuando se publiquen (el correo de
+   soporte publicado es `estalingradocorpsupport@protonmail.com`; el teléfono
+   oficial sigue sin publicarse y no se inventa).
+6. Revisión visual humana de los cambios de las Etapas 22-25 (barrera
+   automática en verde + capturas en `verificacion-web/capturas`).
 7. *(hacer)* contraseña fuerte para el panel y verificación en dos pasos en
    GitHub y Supabase.
 8. *(hacer)* **ejecutar `supabase/migracion-soporte.sql`** en el SQL Editor de
@@ -933,7 +1052,9 @@ Pasos del usuario (resueltos el 19/10/2026; detalle en la guía):
   asistente, no del proyecto); el usuario la hizo en varias rondas el
   20/10/2026 y aprobó el resultado.
 - Los enlaces del pie tienen objetivos táctiles de 17–26 px en móvil: se
-  mantienen iguales al sitio institucional por identidad aprobada.
+  mantienen iguales al sitio institucional por identidad aprobada. (Desde la
+  Etapa 25 los íconos del pie tienen 44 px en móvil; el criterio se mantiene
+  solo para los enlaces de texto de los canales.)
 - Las pruebas automatizadas no están versionadas en el proyecto (viven en
   carpeta temporal); si se quiere continuidad conviene llevarlas a `tests/`
   en una futura etapa con Node.
