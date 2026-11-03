@@ -1590,3 +1590,52 @@ soporte-formulario-390.png (stepper en tres columnas).
 PENDIENTE: publicacion (NO se hizo push; todo local).
 
 - FIN DE LA SESIÓN: se detiene y se espera la revisión del usuario.
+
+
+SESIÓN 40 (03/11/2026) - Documentación al día y publicación de los cambios de
+las sesiones 37 a 39
+---------------------------------------------------------------------------
+
+Instruccion del usuario: actualizar la documentación (README.md y
+DOCUMENTACION.md) y el repositorio con los cambios hechos, comprobar que todo
+funcione y que no se rompan las conexiones con otros sitios, y hacerlo desde la
+cuenta nicolabarranco27-a11y. Despues pidio expresamente subir los ultimos
+cambios (la foto de la chica como banner de la subpagina, la optimizacion para
+celulares, el retiro de la foto y del texto de oficinas, etc.).
+
+Hecho:
+- README.md reescrito como documento de estado vigente: que es el proyecto y
+  donde vive (sitio publicado, subpagina, panel y repo de la empresa),
+  estructura de archivos, pagina principal, subpagina de soporte (banner,
+  pasos, boton interruptor del formulario, preguntas frecuentes), panel
+  interno, identidad visual, movil, Supabase, seguridad, tabla de conexiones
+  con otros sitios, protocolo de publicacion de las dos barreras, pendientes y
+  accesibilidad. Se sacaron las referencias viejas (repo personal, pagina
+  unica con #servicios/#recepcion, foto de oficinas).
+- DOCUMENTACION.md: fecha de version actualizada, seccion 1 corregida (ya no
+  es una sola pagina), filas de las etapas 22 a 26 en la tabla de historial,
+  nueva seccion 4.18 con el estado vigente (las dos paginas, el boton
+  interruptor, la FAQ, el movil y la operacion/publicacion), nota de que la
+  verificacion vigente es la barrera de publicacion, y pendientes corregidos
+  (repo, dominio, telefono, Pages del repo personal despublicados).
+- Conexiones verificadas sin tocar nada: sitio institucional 200,
+  YouTube/Instagram/Facebook/X/Telegram 200, Supabase responde y la RLS
+  bloquea la lectura publica ([]), CNAME intacto (estalingradocorp.qzz.io),
+  robots.txt intacto y js/config.js sin tocar.
+- Publicacion: barrera previa BARRERA: TODO OK; push fast-forward
+  c6ebb02..fc0f069 desde la cuenta nicolabarranco27-a11y (nunca force-push y
+  nunca se deshabilito Pages); build de GitHub Pages "built"; barrera
+  posterior SITIO PUBLICADO: SANO (lo que sirve el dominio es identico a la
+  copia local, sin errores de consola, banner de la subpagina con la foto de
+  la chica, FAQ con 7 preguntas y toggle del formulario funcionando en la
+  version publicada).
+
+Verificacion: las dos barreras en verde. El sitio vivo responde 200 en /, en
+/soporte.html y en /admin.html.
+
+PENDIENTE: nada del lado del usuario. Queda la revision visual humana de los
+cambios (capturas en verificacion-web/capturas) y decidir si se borra el repo
+personal nicolabarranco27-a11y/recepcion-estalingrado (sus Pages ya estan
+despublicados).
+
+- FIN DE LA SESIÓN: se detiene y se espera la revisión del usuario.
