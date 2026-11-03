@@ -1682,7 +1682,13 @@ Hecho (variante B, elegida por el usuario entre tres):
 Verificacion: BARRERA: TODO OK (con los dos controles nuevos del banner en
 verde).
 
-PENDIENTE: publicacion (NO se hizo push; todo local). Queda la revision visual
-del usuario sobre las capturas del banner.
+Publicacion (con orden expresa del usuario): barrera previa BARRERA: TODO OK;
+push fast-forward 5948b18..2437662 desde la cuenta nicolabarranco27-a11y
+(nunca force-push, nunca se deshabilito Pages); build de GitHub Pages "built";
+barrera posterior SITIO PUBLICADO: SANO (lo que sirve el dominio es identico a
+la copia local y la pagina viva abre sin errores).
+
+PENDIENTE: nada del lado del usuario. Queda la revision visual humana de las
+capturas del banner.
 
 - FIN DE LA SESIÓN: se detiene y se espera la revisión del usuario.
