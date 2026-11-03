@@ -1639,3 +1639,50 @@ personal nicolabarranco27-a11y/recepcion-estalingrado (sus Pages ya estan
 despublicados).
 
 - FIN DE LA SESIÓN: se detiene y se espera la revisión del usuario.
+
+
+SESIÓN 41 (03/11/2026) - Banner del celular: la foto ya no se recorta de los
+bordes
+---------------------------------------------------------------------------
+
+Instruccion del usuario: lo unico para corregir es como se ven los banners
+desde el celular; no estan optimizados, se ve la imagen ancha saliendo de los
+bordes del celular. Todo local hasta instruccion clara.
+
+Diagnostico (medido con una sonda de navegador, no a ojo):
+- Las dos fotos son apaisadas (1535x1024). En 390x844, el hero con object-fit
+  cover a pantalla completa escalaba la foto por el alto: se veia solo el 30,8%
+  del ancho (473 de 1535 px) y se cortaba de los dos lados.
+- El sujeto (zona con mas detalle de cada foto, medida por varianza de
+  luminancia por columna) esta en el 54-85% del ancho de la portada y en el
+  61-92% en la subpagina; con object-position:center el recorte mostraba la
+  franja 34,6-65,4%, o sea el sujeto quedaba medio fuera de cuadro.
+
+Hecho (variante B, elegida por el usuario entre tres):
+- css/styles.css (reglas de 768px para abajo): el hero pasa a height:auto +
+  aspect-ratio 4/5 (390x488 en un celu normal) y el recorte se centra en el
+  sujeto de cada pagina (object-position 92% en la portada y 100% en la
+  subpagina). En escritorio no se toca nada: el banner sigue a pantalla
+  completa.
+- index.html y soporte.html: una clase por banner (hero--portada y
+  hero--equipo) para que el encuadre sea distinto en cada pagina.
+- Resultado medido a 390 y 360 px: se ve el 53,4% del ancho de la foto (antes
+  30,8%) y el 100% del sujeto queda dentro del recorte, sin desborde
+  horizontal.
+- La barrera de pre-publicacion gano dos controles en la seccion MOVIL: el
+  banner no puede recortar mas del 55% del ancho de la foto y el sujeto tiene
+  que estar al menos un 70% dentro del recorte.
+- Se prepararon y compararon tres variantes con capturas a 390 y 360 px: A
+  (pantalla completa, solo recentrado), B (banner 4/5 con recorte centrado, la
+  elegida) y C (foto completa sobre un fondo difuminado de la misma foto).
+  Quedan las capturas en verificacion-web/capturas.
+- Documentacion al dia: README (seccion Movil) y DOCUMENTACION (etapa 27 y
+  seccion 4.18.4) con el diagnostico, la correccion y las cifras medidas.
+
+Verificacion: BARRERA: TODO OK (con los dos controles nuevos del banner en
+verde).
+
+PENDIENTE: publicacion (NO se hizo push; todo local). Queda la revision visual
+del usuario sobre las capturas del banner.
+
+- FIN DE LA SESIÓN: se detiene y se espera la revisión del usuario.

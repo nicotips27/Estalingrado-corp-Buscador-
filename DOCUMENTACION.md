@@ -82,6 +82,7 @@ la Etapa 1). Este proyecto no modifica ni depende de sus archivos.
 | 24 (02/11/2026) | **Portada minimalista**: `index.html` queda con el banner, **solo la banda de entrada** al soporte (`.soporte-cta`) y los canales. Se retiran de la portada la foto de oficinas, el encabezado "Soporte · Al cliente / Soporte al cliente" y la descripción; la descripción pasa a la subpágina, bajo el `h1` (`section__desc`). CSS muerto (`.soporte__intro`, `.oficinas_*`) fuera. Ver §4.18. | Hecha y publicada |
 | 25 (02/11/2026) | **Copy de la banda + móvil**: texto de entrada reescrito ("Consultas, incidencias o reclamos: escribinos y seguí tu solicitud desde la misma página."); en ≤768 px la banda y `.soporte-canales` se apilan en columna con **botón a todo el ancho**, áreas táctiles de 44 px (`.volver`, `.contact-list__value`, `.mobile-menu__link`, íconos del pie) y stepper en grilla de 3 columnas. La barrera suma una sección **MÓVIL** (390 px): menú abre/cierra, tap targets, banda apilada y botón a todo el ancho. Ver §4.18. | Hecha y publicada |
 | 26 (03/11/2026) | **Documentación al día**: `README.md` reescrito como documento de estado vigente (estructura real, páginas, interruptor del formulario, FAQ, móvil, Supabase, seguridad, conexiones externas y protocolo de publicación) y este archivo con la etapa actual (§4.18), el historial de etapas y los pendientes corregidos. Publicación de las Etapas 22-25 con las dos barreras en verde. | Hecha y publicada |
+| 27 (03/11/2026) | **Banner del celular**: las fotos apaisadas (1535×1024) se recortaban al 30,8% de su ancho en vertical y el sujeto quedaba medio fuera de cuadro. En ≤768 px el hero pasa a proporción **4/5** (390×488) con el recorte centrado en el sujeto de cada página (`hero--portada` 92%, `hero--equipo` 100%): se ve el **53,4%** de la foto y el **100%** del sujeto. Escritorio sin cambios. La barrera suma dos controles del banner en móvil. Ver §4.18.4. | Hecha (local, pendiente de publicación y de revisión visual) |
 
 ## 4. Recepción: diseño actual del flujo
 
@@ -894,6 +895,27 @@ hace con los datos.
 
 ### 4.18.4 Móvil (≤768 px)
 
+- **Banner (Etapa 27, 03/11/2026):** las dos fotos son apaisadas (1535×1024) y
+  con `object-fit: cover` a pantalla completa en vertical se escalaba la foto
+  por el alto: **solo se veía el 30,8% del ancho** (473 de 1535 px), con las
+  personas cortadas en los bordes. Además, la zona con más detalle de cada foto
+  (medida por varianza de luminancia por columna) está en el **54–85%** del
+  ancho de la portada y en el **61–92%** de la subpágina, mientras el
+  `object-position: center` mostraba la franja 34,6–65,4%: el sujeto quedaba
+  medio fuera de cuadro. Corrección: en celular el hero pasa a
+  `height: auto` + `aspect-ratio: 4 / 5` (390×488) y el recorte se centra en
+  el sujeto de cada página (`object-position: 92%` en `hero--portada`, `100%`
+  en `hero--equipo`); en escritorio no se toca nada (sigue a pantalla
+  completa). Resultado medido a 390 y 360 px: **53,4% del ancho visible** y el
+  **100% del sujeto dentro del cuadro**, sin desborde horizontal. Se
+  compararon tres variantes con capturas (A: pantalla completa solo
+  recentrado; B: banner 4/5 con recorte centrado; C: foto completa sobre
+  fondo difuminado) y quedó la **B**, elegida por el usuario.
+- La barrera previa a publicar suma dos controles en la sección **MÓVIL**: el
+  banner no puede recortar más del 55% del ancho de la foto y el sujeto tiene
+  que estar al menos un 70% dentro del recorte.
+- Menú hamburguesa con `aria-expanded`/`aria-controls`, Escape y retorno del
+  foco.
 - `.soporte-cta` y `.soporte-canales` pasan a **columna**; el botón ocupa todo
   el ancho del bloque (se corrigió el `flex` de `.soporte-cta__texto` y de
   `.contact-list` a `flex: 0 0 auto` para que no quedara una línea de texto
@@ -902,8 +924,8 @@ hace con los datos.
   `.mobile-menu__link`.
 - Stepper en grilla de 3 columnas iguales.
 - La barrera previa a publicar suma una sección **MÓVIL** que abre y cierra el
-  menú a 390 px, mide los tap targets, y exige que la banda esté apilada y su
-  botón a todo el ancho.
+  menú a 390 px, mide los tap targets, exige que la banda esté apilada y su
+  botón a todo el ancho, y (desde la Etapa 27) controla el recorte del banner.
 
 ### 4.18.5 Publicación y operación (02-03/11/2026)
 

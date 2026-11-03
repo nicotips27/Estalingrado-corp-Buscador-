@@ -1254,6 +1254,20 @@ select.field__control option { background: var(--surface); color: var(--text); }
     --nav-height: 64px;
   }
 
+  /* Banner en celular: las fotos son apaisadas (1535x1024) y a pantalla
+     completa en vertical se recortaba casi el 70% del ancho, con las
+     personas cortadas en los bordes. En celular el banner baja a
+     proporcion 4/5 (se ve mas de la mitad de la foto, de punta a punta
+     en vertical) y el recorte se centra en el sujeto de cada pagina. */
+  .hero {
+    height: auto;
+    min-height: 0;
+    aspect-ratio: 4 / 5;
+  }
+
+  .hero--portada .hero__imagen { object-position: 92% center; }
+  .hero--equipo .hero__imagen { object-position: 100% center; }
+
   .nav-links { display: none; }
   .nav-toggle { display: block; }
 

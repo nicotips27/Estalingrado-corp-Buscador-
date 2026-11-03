@@ -136,6 +136,12 @@ exportación a Excel (`.xlsx`). No hay enlace público: el acceso es Ctrl/Cmd +
 
 ## 6. Móvil
 
+- **Banner**: las fotos son apaisadas (1535×1024), así que a pantalla completa en
+  vertical se recortaba casi el 70% del ancho y las personas quedaban cortadas
+  en los bordes. En ≤768 px el hero pasa a **proporción 4/5** (390×488) y el
+  recorte se centra en el sujeto de cada página (`hero--portada` 92%,
+  `hero--equipo` 100%): se ve el **53%** del ancho de la foto y el sujeto
+  completo. En escritorio el banner sigue a pantalla completa.
 - Menú hamburguesa con `aria-expanded`/`aria-controls`, Escape y retorno del
   foco.
 - ≤768 px: banda de entrada apilada en columna con **botón a todo el ancho**;
