@@ -1259,8 +1259,75 @@ select.field__control option { background: var(--surface); color: var(--text); }
 
   .card { padding: 1.75rem; }
 
-  .stepper { gap: 1.25rem; }
-  .stepper__item { font-size: .6875rem; letter-spacing: .12em; }
+  /* Banda de entrada: en el celu se apila y el boton ocupa todo el ancho */
+  .soporte-cta {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1rem;
+    padding: 1.25rem;
+  }
+
+  .soporte-cta__icon {
+    align-self: flex-start;
+    width: 2.5rem;
+    height: 2.5rem;
+  }
+
+  .soporte-cta__texto {
+    flex: 0 0 auto;
+    font-size: .9375rem;
+  }
+
+  .soporte-cta .btn { width: 100%; }
+
+  /* Canales de soporte: la lista arriba y el boton a todo el ancho */
+  .soporte-canales {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1.25rem;
+  }
+
+  .soporte-canales .contact-list { flex: 0 0 auto; }
+
+  .soporte-canales .btn { width: 100%; }
+
+  /* Link de vuelta: area de toque mas comoda con el dedo */
+  .volver {
+    min-height: 2.75rem;
+    padding: .5rem 0;
+    margin-bottom: 1.25rem;
+  }
+
+  /* Correo y enlaces de contacto: que se puedan tocar con el dedo */
+  .contact-list__value {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.75rem;
+  }
+
+  /* Enlaces del menu movil: area de toque comoda */
+  .mobile-menu__link { padding: .5rem 1rem; }
+
+  /* Iconos del footer: area de toque minima para el dedo */
+  .site-footer__social a {
+    min-width: 2.75rem;
+    min-height: 2.75rem;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Stepper: tres columnas iguales, sin que el paso largo apriete al resto */
+  .stepper {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: .75rem;
+  }
+
+  .stepper__item {
+    font-size: .625rem;
+    letter-spacing: .08em;
+    line-height: 1.5;
+  }
 
   .flow { padding: 1.5rem 1.25rem; }
 

@@ -1549,3 +1549,44 @@ index-soporte-entrada-1440.png (solo la banda de entrada) y soporte-1440.png
 PENDIENTE: publicacion (NO se hizo push; todo local).
 
 - FIN DE LA SESIÓN: se detiene y se espera la revisión del usuario.
+
+
+SESIÓN 39 (02/11/2026) - Texto nuevo de la banda de entrada y ajuste para
+celulares
+---------------------------------------------------------------------------
+
+Instruccion del usuario: el texto de la banda de entrada ("Pedir, seguir y
+resolver: todo pasa por nuestra página de soporte.") se ve tosco y generico;
+escribir algo mejor. Y optimizar el sitio para que se vea y se use desde los
+celulares.
+
+Hecho:
+- index.html: la banda de entrada ahora dice "Consultas, incidencias o
+  reclamos: escribinos y seguí tu solicitud desde la misma página." Dice
+  concretamente los tres motivos que maneja el formulario y qué se puede hacer
+  en la pagina, en vez de una frase de手册.
+- css/styles.css (reglas de 768px para abajo):
+  - la banda de entrada se apila (icono arriba, texto abajo) y el boton "Ir al
+    soporte" ocupa todo el ancho, para que se pulse bien con el dedo;
+  - los canales de soporte de la subpagina quedan en columna y el boton
+    "Soporte al cliente" tambien a todo el ancho (se corrigio el flex-basis
+    de la lista de contactos, que en columna se habia convertido en altura);
+  - el link "Volver a la pagina principal", el correo de contacto y los enlaces
+    del menu movil tienen area de toque de 44px o mas;
+  - los iconos del footer tienen area de toque minima de 44px;
+  - el stepper del formulario pasa a tres columnas iguales: el paso largo
+    ("Soporte al cliente") ya no aprieta a los otros dos.
+- La barrera de pre-publicacion gano una seccion MOVIL (390px) que verifica:
+  el menu hamburguesa abre y cierra con sus enlaces a la vista; los botones,
+  correos, disparadores de las preguntas, links del menu y link de vuelta
+  tienen area de toque comoda; los iconos del footer tambien; y en index la
+  banda se apila con el boton a todo el ancho.
+
+Verificacion: BARRERA: TODO OK. Capturas nuevas: index-390.png,
+index-soporte-entrada-390.png (banda apilada con el boton a todo el ancho),
+index-menu-390.png (menu movil abierto), soporte-390.png y
+soporte-formulario-390.png (stepper en tres columnas).
+
+PENDIENTE: publicacion (NO se hizo push; todo local).
+
+- FIN DE LA SESIÓN: se detiene y se espera la revisión del usuario.
