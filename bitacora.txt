@@ -1471,3 +1471,40 @@ la entrada). Los chequeos viejos del stepper en index daban falso negativo.
 PENDIENTE: nada pendiente de publicacion.
 
 - FIN DE LA SESIÓN: se detiene y se espera la revisión del usuario.
+
+
+SESIÓN 37 (02/11/2026) - La foto de la chica pasa a banner y se borra el
+bloque de la subpágina
+---------------------------------------------------------------------------
+
+Instruccion del usuario: tomar como referencia cómo está colocada la foto del
+modelo masculino en la sección principal; así tiene que verse la foto de la
+chica en la subpágina. Y sacar toda esa sección de la subpágina. Todo en local
+(sin push).
+
+Hecho:
+- soporte.html: la foto de la chica (Imagenes/imgane subpages chica.png) deja
+  de ser una figura con pie y pasa a ser el banner de la subpágina, igual que
+  el modelo en la pagina principal: una seccion .hero con la imagen a
+  pantalla completa (100vh, object-fit: cover) y la navbar glass flotando
+  arriba. Se le agregó el preload de la imagen y el h1 visible queda en el
+  encabezado de la sección de soporte (un solo h1 en la pagina).
+- Se borro de la subpágina: la figura de la foto con su pie "Nuestro equipo /
+  Salta Capital, Argentina", el texto introductorio ("Si ya sos cliente o
+  estás usando alguno de nuestros servicios... Atendemos desde nuestra
+  oficina, en Salta Capital (zona sur)") y la figura de la oficina ("Oficina
+  de trabajo de Estalingrado Corp / Oficinas / Salta Capital, Argentina"). La
+  foto de la oficina no se toco en la pagina principal.
+- css/styles.css: se retiraron los estilos .equipo que quedaron sin uso. Los
+  .oficinas_* y .soporte__intro se mantienen porque la pagina principal los
+  sigue usando.
+- La barrera de pre-publicacion se actualizo: ahora pide que el banner de la
+  subpágina cargue y ocupe la pantalla, y que el bloque de la figura con pie y
+  el de oficinas con el texto introductorio ya no existan.
+
+Verificacion: BARRERA: TODO OK. Capturas regeneradas: soporte-1440.png y
+soporte-390.png (banner a pantalla completa y subpágina limpia).
+
+PENDIENTE: publicacion (NO se hizo push; el usuario pidio trabajar en local).
+
+- FIN DE LA SESIÓN: se detiene y se espera la revisión del usuario.

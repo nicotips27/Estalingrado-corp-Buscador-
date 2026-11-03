@@ -24,6 +24,7 @@
 <meta name="twitter:image" content="https://estalingradocorp.qzz.io/Imagenes/imgane%20subpages%20chica.png">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:; style-src 'self' https://cdnjs.cloudflare.com https://fonts.googleapis.com; font-src https://cdnjs.cloudflare.com https://fonts.gstatic.com; script-src 'self'; connect-src 'self' https://*.supabase.co; object-src 'none'; frame-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests">
 <link rel="icon" type="image/jpeg" href="assets/favicon.jpg">
+<link rel="preload" as="image" href="Imagenes/imgane%20subpages%20chica.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
@@ -76,6 +77,16 @@
 
 <main id="contenido">
 
+  <!-- HERO: la foto del equipo a pantalla completa, igual que el banner de la
+       página principal. -->
+  <section class="hero" id="inicio" aria-label="Estalingrado Corp">
+    <img class="hero__imagen" src="Imagenes/imgane%20subpages%20chica.png"
+         alt="Retrato corporativo de Estalingrado Corp con el logotipo de la empresa"
+         width="1535" height="1024"
+         fetchpriority="high"
+         decoding="async">
+  </section>
+
   <!-- SOPORTE (subpágina) -->
   <section class="section section--pagina" id="soporte" aria-labelledby="soporte-title">
     <div class="container container--narrow">
@@ -88,38 +99,6 @@
       <div class="section__head reveal">
         <p class="section__label"><span class="section__line" aria-hidden="true"></span>Soporte · Al cliente</p>
         <h1 class="section__title" id="soporte-title">Soporte al <span class="tg">cliente</span></h1>
-      </div>
-
-      <!-- Foto del equipo (imagen de la subpágina) -->
-      <figure class="equipo reveal">
-        <img class="equipo__img" src="Imagenes/imgane%20subpages%20chica.png"
-             alt="Retrato corporativo de Estalingrado Corp con el logotipo de la empresa"
-             width="1535" height="1024"
-             decoding="async">
-        <figcaption class="equipo__pie">
-          <span class="equipo__titulo">Nuestro equipo</span>
-          <span class="equipo__desc">Salta Capital, Argentina</span>
-        </figcaption>
-      </figure>
-
-      <div class="soporte__intro reveal">
-        <div>
-          <p class="section__desc">
-            Si ya sos cliente o estás usando alguno de nuestros servicios, acá pedís
-            ayuda: consultas, incidencias, reclamos y seguimiento de lo que tenés en curso.
-            Atendemos desde nuestra oficina, en Salta Capital (zona sur).
-          </p>
-        </div>
-
-        <figure class="oficinas__figura">
-          <img class="oficinas__img" src="Imagenes/oficina.jpg"
-               alt="Oficina de trabajo de Estalingrado Corp"
-               width="640" height="800">
-          <figcaption class="oficinas__pie">
-            <span class="oficinas__titulo">Oficinas</span>
-            <span class="oficinas__desc">Salta Capital, Argentina</span>
-          </figcaption>
-        </figure>
       </div>
 
       <ol class="soporte-steps reveal">
