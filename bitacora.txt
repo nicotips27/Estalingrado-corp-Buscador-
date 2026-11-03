@@ -1508,3 +1508,44 @@ soporte-390.png (banner a pantalla completa y subpágina limpia).
 PENDIENTE: publicacion (NO se hizo push; el usuario pidio trabajar en local).
 
 - FIN DE LA SESIÓN: se detiene y se espera la revisión del usuario.
+
+
+SESIÓN 38 (02/11/2026) - La pagina principal queda con la banda de entrada y
+la descripción pasa a la subpágina
+---------------------------------------------------------------------------
+
+Instruccion del usuario: en la pagina principal sacar la foto de la oficina
+(con sus textos "Oficinas / Salta Capital, Argentina"), sacar el encabezado de
+al lado ("Soporte · Al cliente / Soporte al cliente") y sacar la descripcion
+("¿Tenés una consulta, una incidencia o un reclamo?..."), que esa descripcion
+tiene que quedar acomodada de forma organizada en la subpágina. Todo en local.
+
+Hecho:
+- index.html: la seccion #soporte queda reducida a la banda de entrada (icono,
+  texto "Pedir, seguir y resolver: todo pasa por nuestra página de soporte." y
+  boton "Ir al soporte"). Se fueron la foto de la oficina con su pie, el
+  encabezado de la seccion y la descripcion. Como ya no hay encabezado, la
+  seccion se identifica con aria-label="Soporte al cliente" en vez de
+  aria-labelledby.
+- soporte.html: la descripcion "¿Tenés una consulta, una incidencia o un
+  reclamo? Cada solicitud la atiende una persona de nuestro equipo, no un
+  sistema automático." queda acomodada bajo el h1, dentro del .section__head,
+  como descripcion de la seccion. Ahí es donde el usuario la pide.
+- css/styles.css: se retiraron los estilos .soporte__intro y .oficinas_* (con
+  sus reglas responsive), que quedaron sin uso en las dos paginas.
+- La barrera de pre-publicacion quedo con controles para esta estructura: en
+  index no puede haber foto de oficinas, ni encabezado de la seccion soporte,
+  ni la descripcion, y la banda de entrada con su enlace tiene que estar; en
+  soporte la descripcion tiene que estar bajo el titulo y los bloques viejos
+  no pueden existir. El verificador post-publicacion quedo en la misma linea.
+- Correccion de un error propio: se habia agregado un chequeo con document
+  fuera de page.evaluate (se rompia la barrera). Se saco; el control equivalente
+  ya estaba dentro del evaluate.
+
+Verificacion: BARRERA: TODO OK. Capturas regeneradas:
+index-soporte-entrada-1440.png (solo la banda de entrada) y soporte-1440.png
+(banner + titulo con la descripcion debajo).
+
+PENDIENTE: publicacion (NO se hizo push; todo local).
+
+- FIN DE LA SESIÓN: se detiene y se espera la revisión del usuario.
