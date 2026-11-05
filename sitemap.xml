@@ -16,11 +16,6 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://estalingradocorp.qzz.io/soporte/</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
     <loc>https://estalingradocorp.qzz.io/soporte/soporte.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>

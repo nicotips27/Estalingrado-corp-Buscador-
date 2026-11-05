@@ -20,20 +20,18 @@ El portal está compuesto por cuatro páginas HTML estáticas (sin build, sin de
 | `index.html` | Inicio | Landing, servicios, proyectos activos y pipeline de desarrollo |
 | `market.html` | Market | Catálogo de productos y licencias con filtros y carrito |
 | `empresa.html` | Empresa | Historia, identidad corporativa y productos físicos |
-| `soporte/index.html` | Soporte | Portada de soporte: banner, acceso y canales oficiales |
-| `soporte/soporte.html` | Soporte | Formulario guiado de soporte al cliente y preguntas frecuentes |
+| `soporte/soporte.html` | Soporte | Página de soporte: formulario guiado, canales oficiales y preguntas frecuentes |
 
 ### Soporte (`soporte/`)
 
-Sub-página del portal (URL: `https://estalingradocorp.github.io/EstalingradoCorp/soporte/`).
+Página de soporte del portal (URL: `https://estalingradocorp.qzz.io/soporte/soporte.html`).
 Es la versión nueva del proyecto de recepción y soporte al cliente (reemplaza al
 proyecto anterior de una sola página):
 
-- `soporte/index.html`: portada con banner corporativo, banda de entrada al
-  soporte y canales oficiales. Mantiene la navegación completa del portal
-  (Inicio, Market, Empresa, Soporte y Contacto) en escritorio y móvil.
-- `soporte/soporte.html`: formulario guiado (servicio → datos → revisión), con
-  envío a Supabase y preguntas frecuentes.
+- `soporte/soporte.html`: página de soporte con formulario guiado (servicio →
+  datos → revisión), envío a Supabase, canales oficiales y preguntas frecuentes.
+  Mantiene la navegación del portal (Inicio, Market, Empresa y Soporte) en
+  escritorio y móvil.
 - `soporte/admin.html`: panel interno de solicitudes (sin enlace público,
   `noindex` y bloqueado en `robots.txt`).
 

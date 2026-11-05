@@ -7,16 +7,15 @@ interno para administrar las solicitudes.
 
 > **Copia integrada al portal (05/11/2026):** esta carpeta vive dentro del
 > repositorio institucional como sub-página. URLs en el portal:
-> - **Portada:** <https://estalingradocorp.github.io/EstalingradoCorp/soporte/>
-> - **Formulario de soporte:** <https://estalingradocorp.github.io/EstalingradoCorp/soporte/soporte.html>
-> - **Panel interno:** <https://estalingradocorp.github.io/EstalingradoCorp/soporte/admin.html>
+> - **Página de soporte:** <https://estalingradocorp.qzz.io/soporte/soporte.html>
+> - **Panel interno:** <https://estalingradocorp.qzz.io/soporte/admin.html>
 >
-> El despliegue original con dominio propio sigue disponible en
+> El despliegue con dominio propio sirve el portal completo en
 > <https://estalingradocorp.qzz.io/>.
 
-- **Sitio publicado (original):** <https://estalingradocorp.qzz.io/>
-- **Subpágina de soporte:** <https://estalingradocorp.qzz.io/soporte.html>
-- **Panel interno:** <https://estalingradocorp.qzz.io/admin.html> (sin enlace
+- **Sitio publicado:** <https://estalingradocorp.qzz.io/>
+- **Página de soporte:** <https://estalingradocorp.qzz.io/soporte/soporte.html>
+- **Panel interno:** <https://estalingradocorp.qzz.io/soporte/admin.html> (sin enlace
   público: se entra con Ctrl/Cmd + 3 clics sobre el logo, o por acceso directo
   guardado en el celular)
 - **Repositorio de la empresa:** <https://github.com/nicotips27/Estalingrado-corp-Buscador->
@@ -38,8 +37,7 @@ Fecha de esta versión: 03/11/2026.
 ## 1. Estructura del proyecto
 
 ```
-index.html            Página principal: banner + banda de entrada + canales + pie
-soporte.html          Subpágina de soporte: banner + pasos + formulario + preguntas frecuentes
+soporte.html          Página de soporte: banner + pasos + formulario + canales + preguntas frecuentes
 admin.html            Panel interno de solicitudes (noindex, sin enlace público)
 CNAME                 Dominio de GitHub Pages del despliegue original: estalingradocorp.qzz.io
 robots.txt            (En el despliegue original) permite indexar las páginas y bloquea admin.html;
@@ -60,35 +58,22 @@ supabase/             schema.sql, migracion-soporte.sql, INSTRUCCIONES.md
 No hay dependencias de producción: solo Google Fonts (Inter + JetBrains Mono) y
 Font Awesome 6.5.1 por CDN, idénticas a las del sitio institucional.
 
-## 2. Página principal (`index.html`)
+## 2. Portada eliminada (05/11/2026)
 
-Estructura, en orden:
+La antigua portada `index.html` se eliminó: ahora la página de soporte es
+`soporte.html` y el acceso directo desde el portal apunta a ella. Su sección de
+**Canales oficiales** (`section#contacto`) se trasladó al final de
+`soporte.html`, antes de las preguntas frecuentes, y se mantiene aunque
+"Contacto" ya no figure en el menú.
 
-1. **Banner** (`section.hero`): la foto corporativa
-   `imagen/portada/Retrato corporativo con implantes cibernéticos.png`
-   (1535×1024) a pantalla completa (`100dvh`, `object-fit: cover`), con `alt`,
-   `width`/`height`, `fetchpriority="high"` y `<link rel="preload">`. El texto
-   vive en un `h1.sr-only` (lectores de pantalla y SEO).
-2. **Banda de entrada al soporte** (`section#soporte`): tarjeta `.soporte-cta`
-   con ícono, texto breve y botón **"Ir al soporte"** → `soporte.html`. Es el
-   único acceso al soporte desde la portada; **no** lleva foto de oficinas, ni
-   encabezado propio, ni descripción (todo eso vive en la subpágina).
-3. **Canales oficiales** (`section#contacto`): correo de soporte, YouTube,
-   Instagram, Facebook, X y Telegram.
-4. **Pie**: copyright, íconos de redes y estado del sistema.
-
-Navegación: la marca y el enlace "Inicio" apuntan al **sitio institucional**
-(<https://estalingradocorp.github.io/EstalingradoCorp/index.html>) en pestaña
-nueva; "Soporte" a `soporte.html`; "Contacto" a `#contacto`.
-
-## 3. Subpágina de soporte (`soporte.html`)
+## 3. Página de soporte (`soporte.html`)
 
 Estructura, en orden:
 
 1. **Banner** (`section.hero`): la foto
    `Imagenes/imgane subpages chica.png` a pantalla completa, con el mismo
    tratamiento que el banner principal (`fetchpriority`, `preload`, `alt`).
-2. **Link "Volver a la página principal"** (`.volver`).
+2. **Link "Volver al portal"** (`.volver` → `../index.html`).
 3. **Encabezado** de sección: label "Soporte · Al cliente", `h1` "Soporte al
    cliente" y la descripción de la sección
    (`.section__desc`: "¿Tenés una consulta, una incidencia o un reclamo?…").
@@ -102,7 +87,9 @@ Estructura, en orden:
    (`01 Servicio / 02 Datos / 03 Revisión`) y el formulario `#form-solicitud`
    (datos del cliente, motivo, producto relacionado, descripción, trampa
    anti-bot, envío con estados y botón "Nueva solicitud").
-7. **Preguntas frecuentes** (`section#preguntas-frecuentes`): 7 `<details
+7. **Canales oficiales** (`section#contacto`): correo de soporte, YouTube,
+   Instagram, Facebook, X y Telegram (se conserva aunque no esté en el menú).
+8. **Preguntas frecuentes** (`section#preguntas-frecuentes`): 7 `<details
    class="faq__item">` — qué es Estalingrado Corp, qué es IA 27 / Atenea Omega,
    qué es el Big Data (Intranet), qué otros servicios existen, cómo pedir
    soporte, si hace falta ser cliente y qué se hace con los datos. Siempre
@@ -189,11 +176,10 @@ CSS hay que comprobarlos:
 
 | Destino | Dónde |
 |---|---|
-| Sitio institucional `estalingradocorp.github.io/EstalingradoCorp/index.html` | marca, "Inicio" (nav de escritorio y móvil) |
-| `https://estalingradocorp.qzz.io/` | `canonical`, Open Graph y Twitter Card de `index.html` |
-| `https://estalingradocorp.qzz.io/soporte.html` | `canonical`, Open Graph y Twitter Card de `soporte.html` |
-| `mailto:estalingradocorpsupport@protonmail.com` | correo de soporte en `index.html` y `soporte.html` |
-| YouTube `@Estalingradocorp` · Instagram `@nicotips27` · Facebook `estalingradocorp` · X `@estalingrado27` · Telegram `t.me/estalingradocorp` | sección de canales y pie de las dos páginas |
+| Portal institucional (`../index.html`, `../market.html`, `../empresa.html`) | marca y navegación (escritorio y móvil) |
+| `https://estalingradocorp.qzz.io/soporte/soporte.html` | `canonical`, Open Graph y Twitter Card de `soporte.html` |
+| `mailto:estalingradocorpsupport@protonmail.com` | correo de soporte en `soporte.html` |
+| YouTube `@Estalingradocorp` · Instagram `@nicotips27` · Facebook `estalingradocorp` · X `@estalingrado27` · Telegram `t.me/estalingradocorp` | sección de canales y pie |
 | `https://*.supabase.co` | envío de solicitudes y panel |
 | `CNAME` → `estalingradocorp.qzz.io` | GitHub Pages |
 
