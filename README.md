@@ -2,9 +2,14 @@
 
 Portal oficial de la Corporación Estalingrado. Plataforma central que agrupa todos los servicios, proyectos y sistemas de la organización.
 
-## 🌐 GitHub Pages
+## 🌐 Sitio publicado
 
-**[Visitar el sitio →](https://estalingradocorp.github.io/EstalingradoCorp/)**
+**[Visitar el portal →](https://estalingradocorp.qzz.io/)**
+
+Publicado con GitHub Pages desde este repositorio
+(`nicotips27/Estalingrado-corp-Buscador-`) y el dominio propio
+`estalingradocorp.qzz.io`. La copia original sigue disponible en
+[estalingradocorp.github.io/EstalingradoCorp](https://estalingradocorp.github.io/EstalingradoCorp/).
 
 ## Estructura del sitio
 
