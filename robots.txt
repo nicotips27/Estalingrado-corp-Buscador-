@@ -1,2 +1,5 @@
 User-agent: *
-Disallow: /admin.html
+Allow: /
+Disallow: /soporte/admin.html
+
+Sitemap: https://estalingradocorp.qzz.io/sitemap.xml

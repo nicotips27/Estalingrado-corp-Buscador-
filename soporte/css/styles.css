@@ -267,7 +267,7 @@ p { margin: 0; }
 
 .nav-links {
   display: flex;
-  gap: 2.5rem;
+  gap: clamp(1rem, 2.5vw, 2.5rem);
 }
 
 .nav-links__item {
@@ -281,7 +281,8 @@ p { margin: 0; }
 }
 
 .nav-links__item:hover,
-.nav-links__item[aria-current="true"] { color: var(--text-strong); }
+.nav-links__item[aria-current="true"],
+.nav-links__item[aria-current="page"] { color: var(--text-strong); }
 
 /* Subrayado que crece desde la izquierda al pasar el puntero */
 .nav-links__item::after {
@@ -298,7 +299,8 @@ p { margin: 0; }
 }
 
 .nav-links__item:hover::after,
-.nav-links__item[aria-current="true"]::after { transform: scaleX(1); }
+.nav-links__item[aria-current="true"]::after,
+.nav-links__item[aria-current="page"]::after { transform: scaleX(1); }
 
 .nav-toggle {
   display: none;
@@ -372,6 +374,7 @@ p { margin: 0; }
 }
 
 .mobile-menu__link:hover { color: var(--blue-400); }
+.mobile-menu__link[aria-current] { color: var(--blue-400); }
 
 /* ---------- Hero: banner con la foto a pantalla completa ---------- */
 

@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Estalingrado Corp — Recepción de clientes</title>
+<meta name="description" content="Estalingrado Corp: servicio técnico informático, desarrollo de sitios web y soporte al cliente en Salta Capital, Argentina. Pedí ayuda o enviá tu consulta.">
+<meta name="author" content="Estalingrado Corp">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<link rel="canonical" href="https://estalingradocorp.qzz.io/soporte/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Estalingrado Corp">
+<meta property="og:locale" content="es_AR">
+<meta property="og:title" content="Estalingrado Corp — Recepción de clientes">
+<meta property="og:description" content="Servicio técnico informático, desarrollo de sitios web y soporte al cliente en Salta Capital, Argentina. Pedí ayuda o enviá tu consulta.">
+<meta property="og:url" content="https://estalingradocorp.qzz.io/soporte/">
+<meta property="og:image" content="https://estalingradocorp.qzz.io/soporte/imagen/portada/Retrato%20corporativo%20con%20implantes%20cibern%C3%A9ticos.png">
+<meta property="og:image:width" content="1535">
+<meta property="og:image:height" content="1024">
+<meta property="og:image:alt" content="Retrato corporativo de Estalingrado Corp con implantes cibernéticos">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Estalingrado Corp — Recepción de clientes">
+<meta name="twitter:description" content="Servicio técnico informático, desarrollo de sitios web y soporte al cliente en Salta Capital, Argentina.">
+<meta name="twitter:image" content="https://estalingradocorp.qzz.io/soporte/imagen/portada/Retrato%20corporativo%20con%20implantes%20cibern%C3%A9ticos.png">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:; style-src 'self' https://cdnjs.cloudflare.com https://fonts.googleapis.com; font-src https://cdnjs.cloudflare.com https://fonts.gstatic.com; script-src 'self'; connect-src 'self' https://*.supabase.co; object-src 'none'; frame-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests">
+<link rel="icon" type="image/jpeg" href="assets/favicon.jpg">
+<link rel="preload" as="image" href="imagen/portada/Retrato%20corporativo%20con%20implantes%20cibern%C3%A9ticos.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+<a class="skip-link" href="#contenido">Saltar al contenido</a>
+
+<!-- Fondo dinámico: red de orbes flotantes (canvas decorativo) -->
+<canvas id="fondo-particulas" aria-hidden="true"></canvas>
+
+<!-- NAVBAR -->
+<header class="navbar glass" id="navbar">
+  <div class="container navbar__inner">
+    <a href="../index.html" class="brand" aria-label="Estalingrado Corp — Sitio oficial">
+      <span class="brand__avatar">
+        <img src="assets/logo.jpg" alt="" width="40" height="40">
+      </span>
+      <span class="brand__text">
+        <span class="brand__name">Estalingrado</span>
+        <span class="brand__suffix">Corp.</span>
+      </span>
+    </a>
+
+    <nav class="nav-links" aria-label="Navegación principal">
+      <a href="../index.html" class="nav-links__item">Inicio</a>
+      <a href="../market.html" class="nav-links__item">Market</a>
+      <a href="../empresa.html" class="nav-links__item">Empresa</a>
+      <a href="soporte.html" class="nav-links__item">Soporte</a>
+      <a href="#contacto" class="nav-links__item">Contacto</a>
+    </nav>
+
+    <button class="nav-toggle" id="nav-toggle" type="button" aria-expanded="false" aria-controls="mobile-menu" aria-label="Abrir menú">
+      <i class="fa-solid fa-bars" aria-hidden="true"></i>
+    </button>
+  </div>
+</header>
+
+<!-- MENÚ MÓVIL -->
+<div class="mobile-menu" id="mobile-menu" hidden>
+  <button class="mobile-menu__close" id="mobile-menu-close" type="button" aria-label="Cerrar menú">
+    <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+  </button>
+  <nav class="mobile-menu__links" aria-label="Navegación móvil">
+    <a href="../index.html" class="mobile-menu__link">Inicio</a>
+    <a href="../market.html" class="mobile-menu__link">Market</a>
+    <a href="../empresa.html" class="mobile-menu__link">Empresa</a>
+    <a href="soporte.html" class="mobile-menu__link">Soporte</a>
+    <a href="#contacto" class="mobile-menu__link">Contacto</a>
+  </nav>
+</div>
+
+<main id="contenido">
+
+  <!-- HERO: banner con la foto corporativa a pantalla completa -->
+  <section class="hero hero--portada" id="inicio" aria-label="Estalingrado Corp">
+    <h1 class="sr-only">Servicio técnico y sitios web — Estalingrado Corp</h1>
+    <img
+      class="hero__imagen"
+      src="imagen/portada/Retrato%20corporativo%20con%20implantes%20cibern%C3%A9ticos.png"
+      alt="Retrato corporativo de Estalingrado Corp con implantes cibernéticos"
+      width="1535" height="1024"
+      fetchpriority="high"
+      decoding="async">
+  </section>
+
+  <!-- SOPORTE: la sección vive en su propia subpágina (soporte.html).
+       Acá queda solo la banda de entrada. -->
+  <section class="section" id="soporte" aria-label="Soporte al cliente">
+    <div class="container container--narrow">
+      <div class="soporte-cta reveal">
+        <span class="soporte-cta__icon" aria-hidden="true"><i class="fa-solid fa-headset"></i></span>
+        <p class="soporte-cta__texto">
+          Consultas, incidencias o reclamos: escribinos y seguí tu solicitud desde la misma página.
+        </p>
+        <a href="soporte.html" class="btn btn--solid">
+          Ir al soporte
+          <i class="fa-solid fa-arrow-right btn__arrow" aria-hidden="true"></i>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACTO -->
+  <section class="section" id="contacto" aria-labelledby="contacto-title">
+    <div class="container container--narrow">
+      <div class="section__head reveal">
+        <p class="section__label"><span class="section__line" aria-hidden="true"></span>Contacto</p>
+        <h2 class="section__title" id="contacto-title">Canales <span class="tg">oficiales</span></h2>
+        <p class="section__desc">
+          Estalingrado Corp · Salta Capital, Argentina (zona sur).
+        </p>
+      </div>
+
+      <!-- Teléfono oficial: pendiente de que nos lo pase la empresa.
+           El correo de soporte sí está verificado y publicado arriba. -->
+      <!-- El formulario compartido se despliega al final de la sección
+           #soporte (ver js/main.js). -->
+
+      <ul class="contact-list reveal">
+        <li class="contact-list__item">
+          <span class="contact-list__icon" aria-hidden="true"><i class="fa-solid fa-envelope"></i></span>
+          <div>
+            <p class="contact-list__label">Soporte al cliente</p>
+            <a class="contact-list__value" href="mailto:estalingradocorpsupport@protonmail.com">estalingradocorpsupport@protonmail.com</a>
+          </div>
+        </li>
+        <li class="contact-list__item">
+          <span class="contact-list__icon" aria-hidden="true"><i class="fa-brands fa-youtube"></i></span>
+          <div>
+            <p class="contact-list__label">YouTube</p>
+            <a class="contact-list__value" href="https://www.youtube.com/@Estalingradocorp" target="_blank" rel="noopener">@Estalingradocorp</a>
+          </div>
+        </li>
+        <li class="contact-list__item">
+          <span class="contact-list__icon" aria-hidden="true"><i class="fa-brands fa-instagram"></i></span>
+          <div>
+            <p class="contact-list__label">Instagram</p>
+            <a class="contact-list__value" href="https://www.instagram.com/nicotips27/" target="_blank" rel="noopener">@nicotips27</a>
+          </div>
+        </li>
+        <li class="contact-list__item">
+          <span class="contact-list__icon" aria-hidden="true"><i class="fa-brands fa-facebook"></i></span>
+          <div>
+            <p class="contact-list__label">Facebook</p>
+            <a class="contact-list__value" href="https://web.facebook.com/estalingradocorp" target="_blank" rel="noopener">estalingradocorp</a>
+          </div>
+        </li>
+        <li class="contact-list__item">
+          <span class="contact-list__icon" aria-hidden="true"><i class="fa-brands fa-x-twitter"></i></span>
+          <div>
+            <p class="contact-list__label">X (Twitter)</p>
+            <a class="contact-list__value" href="https://x.com/estalingrado27" target="_blank" rel="noopener">@estalingrado27</a>
+          </div>
+        </li>
+        <li class="contact-list__item">
+          <span class="contact-list__icon" aria-hidden="true"><i class="fa-brands fa-telegram"></i></span>
+          <div>
+            <p class="contact-list__label">Telegram</p>
+            <a class="contact-list__value" href="https://t.me/estalingradocorp" target="_blank" rel="noopener">t.me/estalingradocorp</a>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+</main>
+
+<!-- FOOTER -->
+<footer class="site-footer">
+  <div class="container">
+    <div class="glow-line" aria-hidden="true"></div>
+    <div class="site-footer__inner">
+      <p class="site-footer__copy">Estalingrado Corp. © <span id="year"></span></p>
+
+      <div class="site-footer__social">
+        <a class="sf--yt" href="https://www.youtube.com/@Estalingradocorp" target="_blank" rel="noopener" title="YouTube" aria-label="YouTube"><i class="fa-brands fa-youtube" aria-hidden="true"></i></a>
+        <a class="sf--ig" href="https://www.instagram.com/nicotips27/" target="_blank" rel="noopener" title="Instagram" aria-label="Instagram"><i class="fa-brands fa-instagram" aria-hidden="true"></i></a>
+        <a class="sf--fb" href="https://web.facebook.com/estalingradocorp" target="_blank" rel="noopener" title="Facebook" aria-label="Facebook"><i class="fa-brands fa-facebook" aria-hidden="true"></i></a>
+        <a class="sf--x" href="https://x.com/estalingrado27" target="_blank" rel="noopener" title="X (Twitter)" aria-label="X (Twitter)"><i class="fa-brands fa-x-twitter" aria-hidden="true"></i></a>
+        <a class="sf--tg" href="https://t.me/estalingradocorp" target="_blank" rel="noopener" title="Telegram" aria-label="Telegram"><i class="fa-brands fa-telegram" aria-hidden="true"></i></a>
+      </div>
+
+      <p class="site-footer__status">
+        <span class="site-footer__status-dot" aria-hidden="true"></span>
+        SYS: ONLINE&nbsp;&nbsp;|&nbsp;&nbsp;SEC: CLR&nbsp;&nbsp;|&nbsp;&nbsp;REG: AR
+      </p>
+    </div>
+  </div>
+</footer>
+
+<script src="js/config.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>
