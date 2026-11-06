@@ -13,7 +13,7 @@ Publicado con GitHub Pages desde este repositorio
 
 ## Estructura del sitio
 
-El portal está compuesto por cuatro páginas HTML estáticas (sin build, sin dependencias):
+El portal está compuesto por páginas HTML estáticas (sin build, sin dependencias):
 
 | Archivo | Sección | Descripción |
 |---|---|---|
@@ -22,6 +22,7 @@ El portal está compuesto por cuatro páginas HTML estáticas (sin build, sin de
 | `empresa.html` | Empresa | Historia, identidad corporativa y productos físicos |
 | `soporte/soporte.html` | Soporte | Página de soporte: formulario guiado, canales oficiales y preguntas frecuentes |
 | `BigData/Bigdata.html` | Big Data (Intranet) | Sub-página del servicio Big Data, accesible desde su tarjeta en Inicio (sin enlace en el menú) |
+| `Buscador/index.html` | Buscador | Sub-página del Buscador Estalingrado, accesible desde su tarjeta en Inicio (sin enlace en el menú) |
 
 ### Soporte (`soporte/`)
 
@@ -46,11 +47,22 @@ la navegación del portal.
 - `BigData/Bigdata.html`: experiencia visual de la Intra-net (canvas, telemetría
   y comandos internos). El comando "Ir a la empresa" vuelve a `../index.html`.
 
+### Buscador (`Buscador/`)
+
+Sub-página del servicio **Buscador Estalingrado**, accesible desde su tarjeta en
+la sección de servicios de `index.html` mediante el botón "Abrir servicio" del
+modal (en la misma pestaña); **no** aparece en la navegación del portal y
+conserva su propio menú nativo.
+
+- `Buscador/index.html`: buscador multimotor y dashboard corporativo.
+- `Buscador/app.js`, `Buscador/osint.js`, `Buscador/style.css` y
+  `Buscador/assets/logo.jpg`: recursos de la aplicación.
+
 ## Servicios integrados
 
 | Plataforma | Descripción |
 |---|---|
-| [Buscador Estalingrado](https://estalingradocorp.qzz.io/) | Motor de búsqueda principal |
+| [Buscador Estalingrado](Buscador/index.html) | Motor de búsqueda principal (sub-página del portal) |
 | [EC WebSend](https://estalingradocorp.github.io/ECsendpro/) | Transferencia segura de archivos |
 | [EC News](https://nicotips27.github.io/ECnews/) | Portal de noticias corporativas |
 | [EC Download](https://nicotips27.github.io/ec-download/) | Centro de descargas |

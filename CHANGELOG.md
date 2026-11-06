@@ -40,6 +40,23 @@ Cambios realizados sobre el estado publicado en GitHub Pages.
 - El comando **"Ir a la empresa"** de la sub-página vuelve al portal con la ruta
   relativa `../index.html`.
 
+### Buscador como sub-página (`Buscador/`)
+
+#### Añadido
+- `Buscador/index.html`: integración del proyecto
+  `Buscador/Estalingrado-corp-Buscador-` como **página principal** de la
+  subcarpeta, junto con `app.js`, `osint.js`, `style.css` y `assets/logo.jpg`.
+- La página se abre en la **misma pestaña** desde el botón **"Abrir servicio"**
+  del modal del servicio **Buscador Estalingrado** en `index.html`; no se agregó
+  ningún enlace al menú del portal y conserva su propio menú nativo.
+- URL añadida a `sitemap.xml`
+  (`https://estalingradocorp.qzz.io/Buscador/index.html`).
+
+#### Cambiado
+- El servicio **Buscador Estalingrado** de `index.html` dejó de apuntar al sitio
+  externo `estalingradocorp.github.io/estalingradocorpbuscador/` y ahora usa la
+  ruta local `Buscador/index.html`.
+
 ### Cambios en Market (`market.html`)
 
 #### Añadido
