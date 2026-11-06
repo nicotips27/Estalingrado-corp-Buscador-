@@ -4,12 +4,16 @@ Portal oficial de la Corporación Estalingrado. Plataforma central que agrupa to
 
 ## 🌐 Sitio publicado
 
-**[Visitar el portal →](https://estalingradocorp.qzz.io/)**
+**[Visitar el portal →](https://estalingradocorp.com.ar/)**
 
 Publicado con GitHub Pages desde este repositorio
 (`nicotips27/Estalingrado-corp-Buscador-`) y el dominio propio
-`estalingradocorp.qzz.io`. La copia original sigue disponible en
+`estalingradocorp.com.ar`. La copia original sigue disponible en
 [estalingradocorp.github.io/EstalingradoCorp](https://estalingradocorp.github.io/EstalingradoCorp/).
+
+La **página de inicio** es el **Buscador Estalingrado** (`index.html`). La
+antigua landing del portal quedó como `inicio.html` y se abre desde el ítem
+**“Página de la Empresa”** del menú desplegable del buscador.
 
 ## Estructura del sitio
 
@@ -17,16 +21,16 @@ El portal está compuesto por páginas HTML estáticas (sin build, sin dependenc
 
 | Archivo | Sección | Descripción |
 |---|---|---|
-| `index.html` | Inicio | Landing, servicios, proyectos activos y pipeline de desarrollo |
+| `index.html` | Inicio (Buscador) | Página de inicio: buscador multimotor y dashboard corporativo con menú nativo propio |
+| `inicio.html` | Página de la Empresa | Antigua landing del portal (servicios, proyectos activos y pipeline), accesible desde el menú del buscador |
 | `market.html` | Market | Catálogo de productos y licencias con filtros y carrito |
 | `empresa.html` | Empresa | Historia, identidad corporativa y productos físicos |
 | `soporte/soporte.html` | Soporte | Página de soporte: formulario guiado, canales oficiales y preguntas frecuentes |
-| `BigData/Bigdata.html` | Big Data (Intranet) | Sub-página del servicio Big Data, accesible desde su tarjeta en Inicio (sin enlace en el menú) |
-| `Buscador/index.html` | Buscador | Sub-página del Buscador Estalingrado, accesible desde su tarjeta en Inicio (sin enlace en el menú) |
+| `BigData/Bigdata.html` | Big Data (Intranet) | Sub-página del servicio Big Data, accesible desde su tarjeta en la Página de la Empresa (sin enlace en el menú del portal) |
 
 ### Soporte (`soporte/`)
 
-Página de soporte del portal (URL: `https://estalingradocorp.qzz.io/soporte/soporte.html`).
+Página de soporte del portal (URL: `https://estalingradocorp.com.ar/soporte/soporte.html`).
 Es la versión nueva del proyecto de recepción y soporte al cliente (reemplaza al
 proyecto anterior de una sola página):
 
@@ -41,32 +45,32 @@ proyecto anterior de una sola página):
 
 Sub-página del servicio Big Data (Intranet) del portal. Se abre en la **misma
 pestaña** desde la tarjeta **Big Data** de la sección de servicios de
-`index.html`, mediante el botón "Abrir servicio" del modal; **no** aparece en
+`inicio.html`, mediante el botón "Abrir servicio" del modal; **no** aparece en
 la navegación del portal.
 
 - `BigData/Bigdata.html`: experiencia visual de la Intra-net (canvas, telemetría
-  y comandos internos). El comando "Ir a la empresa" vuelve a `../index.html`.
+  y comandos internos). El comando "Ir a la empresa" vuelve a `../inicio.html`.
 
-### Buscador (`Buscador/`)
+### Buscador (página de inicio)
 
-Sub-página del servicio **Buscador Estalingrado**, accesible desde su tarjeta en
-la sección de servicios de `index.html` mediante el botón "Abrir servicio" del
-modal (en la misma pestaña); **no** aparece en la navegación del portal y
-conserva su propio menú nativo.
+El **Buscador Estalingrado** es la **página de inicio** del sitio (`index.html`).
+Conserva su propio menú nativo y **no** aparece en la navegación del portal.
 
-- `Buscador/index.html`: buscador multimotor y dashboard corporativo.
-- `Buscador/app.js`, `Buscador/osint.js`, `Buscador/style.css` y
-  `Buscador/assets/logo.jpg`: recursos de la aplicación.
+- `index.html`: buscador multimotor y dashboard corporativo.
+- `app.js`, `osint.js`, `style.css` y `assets/logo.jpg`: recursos de la
+  aplicación.
+- El ítem **“Página de la Empresa”** del menú nativo abre `inicio.html`; el
+  ítem **Big-Data** abre `BigData/Bigdata.html`.
 
 ## Servicios integrados
 
 | Plataforma | Descripción |
 |---|---|
-| [Buscador Estalingrado](Buscador/index.html) | Motor de búsqueda principal (sub-página del portal) |
+| [Buscador Estalingrado](index.html) | Motor de búsqueda principal (página de inicio) |
 | [EC WebSend](https://estalingradocorp.github.io/ECsendpro/) | Transferencia segura de archivos |
 | [EC News](https://nicotips27.github.io/ECnews/) | Portal de noticias corporativas |
 | [EC Download](https://nicotips27.github.io/ec-download/) | Centro de descargas |
-| [EC-OS](https://estalingradocorp.github.io/EstalingradoCorp/market.html#producto=ecospro) | Sistema operativo webizado (redirige a la licencia en el market) |
+| [EC-OS](https://estalingradocorp.com.ar/market.html#producto=ecospro) | Sistema operativo webizado (redirige a la licencia en el market) |
 | [Big Data (Intranet)](BigData/Bigdata.html) | Análisis de datos (sub-página del portal) |
 | [Antigua Wiki](https://estalingradocorp.github.io/Intra-net/) | Documentación legacy |
 | [IA 27](https://estalingradocorp.github.io/agente-IA27-/) | Página explicativa del Agente IA |
@@ -100,12 +104,12 @@ Catálogo de productos con filtros por categoría, búsqueda, carrito y compra p
 - **Compra**: botón "Comprar por WhatsApp" / "Finalizar compra" → genera un pedido a través de WhatsApp (`wa.me`).
 - **Redirección con aviso**: la función `redirectTo()` muestra un loader animado con mensaje antes de abrir el destino (pestaña nueva o misma pestaña según el caso).
 
-## Servicios (index.html)
+## Servicios (inicio.html)
 
 - El servicio **EC-OS** redirige en la misma pestaña a `market.html#producto=ecospro` mostrando un aviso de redirección animado, para que el usuario aterrice directamente en la oferta de la licencia.
 - Los servicios se abren en un modal estilo sistema operativo con logo, descripción, estado y características.
 
-## Proyectos Activos (index.html)
+## Proyectos Activos (inicio.html)
 
 Tabla de seguimiento con ID, designación, fase y estado. Todos los proyectos enlazan a la organización **https://github.com/Estalingradocorp**.
 

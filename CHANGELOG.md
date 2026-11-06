@@ -8,6 +8,29 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/es/1.1.0/) y
 
 Cambios realizados sobre el estado publicado en GitHub Pages.
 
+### Buscador como página de inicio
+
+#### Añadido
+- El **Buscador Estalingrado** pasa a ser la **página de inicio** del sitio:
+  `https://estalingradocorp.com.ar/` ahora sirve el buscador (`index.html`).
+- Sus recursos (`app.js`, `osint.js`, `style.css` y `assets/logo.jpg`) se
+  movieron a la raíz del sitio para que la página funcione como portada.
+- `inicio.html`: la antigua landing del portal (servicios, proyectos activos y
+  pipeline de desarrollo) se conserva como página independiente.
+
+#### Cambiado
+- El ítem **“Página de la Empresa”** del menú nativo del buscador abre
+  `https://estalingradocorp.com.ar/inicio.html`.
+- El ítem **Big-Data** del menú del buscador abre la sub-página local
+  `BigData/Bigdata.html` (antes apuntaba al sitio externo `ec-Intra-net`).
+- El ítem **Soporte** del menú del buscador abre
+  `https://estalingradocorp.com.ar/soporte/soporte.html`.
+- El comando **“Ir a la empresa”** de `BigData/Bigdata.html` vuelve a
+  `../inicio.html`.
+- Se eliminó la carpeta `Buscador/` (sus archivos ahora viven en la raíz).
+- Canonical, Open Graph, `sitemap.xml` y `robots.txt` usan el dominio real
+  `https://estalingradocorp.com.ar/` (antes `estalingradocorp.qzz.io`).
+
 ### Soporte como sub-página (`soporte/`)
 
 #### Añadido

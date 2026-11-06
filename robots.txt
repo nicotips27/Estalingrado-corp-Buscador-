@@ -2,4 +2,4 @@ User-agent: *
 Allow: /
 Disallow: /soporte/admin.html
 
-Sitemap: https://estalingradocorp.qzz.io/sitemap.xml
+Sitemap: https://estalingradocorp.com.ar/sitemap.xml
