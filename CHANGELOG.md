@@ -22,6 +22,24 @@ Cambios realizados sobre el estado publicado en GitHub Pages.
 - Rutas, canonical y metadatos Open Graph/Twitter adaptados a `https://estalingradocorp.github.io/EstalingradoCorp/soporte/`.
 - Los enlaces al portal desde la sub-página usan rutas relativas (`../`).
 
+### Big Data como sub-página (`BigData/`)
+
+#### Añadido
+- `BigData/Bigdata.html`: integración del HTML del proyecto `ec-Intra-net` como
+  **sub-página del portal** (experiencia visual de la Intra-net).
+- La página se abre en la **misma pestaña** desde el botón **"Abrir servicio"**
+  del modal del servicio **Big Data** en `index.html`; no se agregó ningún
+  enlace al menú de navegación.
+- URL añadida a `sitemap.xml`
+  (`https://estalingradocorp.qzz.io/BigData/Bigdata.html`).
+
+#### Cambiado
+- El servicio **Big Data** de `index.html` dejó de apuntar al sitio externo
+  `nicotips27.github.io/ec-Intra-net/` y ahora usa la ruta local
+  `BigData/Bigdata.html`.
+- El comando **"Ir a la empresa"** de la sub-página vuelve al portal con la ruta
+  relativa `../index.html`.
+
 ### Cambios en Market (`market.html`)
 
 #### Añadido

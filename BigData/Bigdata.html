@@ -1,0 +1,2292 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Estalingrado Corp - Intra-net Screensaver V16 Pro Mobile</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
+    <style>
+        :root {
+            --primary: #00ffff;
+            --primary-glow: rgba(0, 255, 255, 0.4);
+            --secondary: #0077ff;
+            --secondary-glow: rgba(0, 119, 255, 0.3);
+            --dark-bg: rgba(2, 10, 22, 0.82);
+            --tech-border: rgba(0, 170, 255, 0.3);
+            --alert-red: #ff3b30;
+            --success-green: #00ff66;
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: #01050d;
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+            color: #00d4ff;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        #canvas-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        /* Rejilla de Fondo Cyber */
+        .cyber-grid {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(0, 170, 255, 0.04) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 170, 255, 0.04) 1px, transparent 1px);
+            background-size: 50px 50px;
+            background-position: center center;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        /* =========================================
+           PANTALLA DE CARGA CORPORATIVA (BOOT SYSTEM)
+           ========================================= */
+        #loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background:
+                radial-gradient(ellipse 90% 60% at 50% 0%, rgba(0, 90, 180, 0.16) 0%, transparent 70%),
+                linear-gradient(180deg, #061020 0%, #020710 55%, #01040a 100%);
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.6s cubic-bezier(0.19, 1, 0.22, 1);
+            cursor: pointer;
+            padding: 20px;
+        }
+
+        /* Rejilla institucional de fondo */
+        #loading-screen::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(0, 170, 255, 0.045) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 170, 255, 0.045) 1px, transparent 1px);
+            background-size: 44px 44px;
+            pointer-events: none;
+        }
+
+        .loader-container {
+            --gutter: 20px;
+            position: relative;
+            width: min(620px, 94vw);
+            background: rgba(6, 16, 30, 0.94);
+            border: 1px solid var(--tech-border);
+            border-radius: 6px;
+            box-shadow: 0 24px 70px rgba(0, 0, 0, 0.85), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            overflow: hidden;
+        }
+
+        /* Cabecera corporativa: marca a la izquierda, build a la derecha (mismo renglón) */
+        .loader-topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            padding: 16px var(--gutter);
+            background: linear-gradient(90deg, rgba(0, 119, 255, 0.14), rgba(0, 255, 255, 0.03) 55%, transparent);
+            border-bottom: 1px solid rgba(0, 170, 255, 0.18);
+        }
+
+        .loader-brand {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            min-width: 0;
+        }
+
+        .loader-logo {
+            width: 46px;
+            height: 46px;
+            border-radius: 50%;
+            border: 1px solid var(--primary);
+            object-fit: cover;
+            flex-shrink: 0;
+            animation: pulse-ring 2.4s infinite;
+            box-shadow: 0 0 14px rgba(0, 170, 255, 0.35);
+        }
+
+        @keyframes pulse-ring {
+            0% { box-shadow: 0 0 0 0 rgba(0, 255, 255, 0.35); }
+            70% { box-shadow: 0 0 0 12px rgba(0, 255, 255, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(0, 255, 255, 0); }
+        }
+
+        .loader-brand-text {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            min-width: 0;
+        }
+
+        .loader-text {
+            font-size: 17px;
+            letter-spacing: 4px;
+            color: #ffffff;
+            margin: 0;
+            text-transform: uppercase;
+            font-weight: 700;
+            line-height: 1;
+            text-shadow: 0 0 12px rgba(0, 170, 255, 0.3);
+            white-space: nowrap;
+        }
+
+        .loader-tagline {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 8px;
+            letter-spacing: 1.6px;
+            color: rgba(0, 212, 255, 0.55);
+            text-transform: uppercase;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .loader-build {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 5px;
+            flex-shrink: 0;
+        }
+
+        .loader-badge {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 9px;
+            font-weight: 700;
+            letter-spacing: 1.4px;
+            color: #04121f;
+            background: var(--primary);
+            padding: 3px 8px;
+            border-radius: 3px;
+        }
+
+        .loader-session {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 8px;
+            letter-spacing: 1.4px;
+            color: rgba(0, 255, 102, 0.75);
+            white-space: nowrap;
+        }
+
+        /* Título de sección */
+        .loader-titlebar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 15px var(--gutter) 0;
+            font-size: 9px;
+            letter-spacing: 2.2px;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.55);
+        }
+
+        .loader-titlebar span:last-child {
+            font-family: 'Courier New', Courier, monospace;
+            color: var(--primary);
+            letter-spacing: 1.4px;
+            white-space: nowrap;
+        }
+
+        /* Tablero de módulos (estilo dashboard corporativo) */
+        .loader-modules {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1px;
+            margin: 12px var(--gutter) 0;
+            background: rgba(0, 170, 255, 0.14);
+            border: 1px solid rgba(0, 170, 255, 0.14);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .loader-module {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            padding: 10px 12px;
+            background: rgba(3, 12, 24, 0.92);
+        }
+
+        .lm-label {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 7.5px;
+            letter-spacing: 1.4px;
+            color: rgba(255, 255, 255, 0.38);
+        }
+
+        .lm-value {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 9.5px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            color: rgba(255, 255, 255, 0.25);
+        }
+
+        .lm-value::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            flex-shrink: 0;
+        }
+
+        .lm-value.ok { color: var(--success-green); }
+        .lm-value.ok::before { background: var(--success-green); box-shadow: 0 0 6px rgba(0, 255, 102, 0.8); }
+
+        .lm-value.load { color: var(--primary); }
+        .lm-value.load::before {
+            background: var(--primary);
+            box-shadow: 0 0 6px var(--primary-glow);
+            animation: record-pulse 0.6s infinite alternate;
+        }
+
+        /* Barra de progreso */
+        .loading-bar {
+            width: auto;
+            height: 5px;
+            border-radius: 3px;
+            background: rgba(255, 255, 255, 0.06);
+            overflow: hidden;
+            margin: 16px var(--gutter) 0;
+            position: relative;
+            border: 1px solid rgba(0, 170, 255, 0.2);
+        }
+
+        #loading-progress-bar {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--secondary), var(--primary));
+            box-shadow: 0 0 12px var(--primary);
+            transition: width 0.1s linear;
+        }
+
+        .loader-progress-row {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 9px var(--gutter) 0;
+            font-family: 'Courier New', Courier, monospace;
+        }
+
+        #loader-phase {
+            font-size: 8.5px;
+            letter-spacing: 1.4px;
+            color: rgba(0, 212, 255, 0.65);
+            text-transform: uppercase;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        #loading-percent {
+            color: var(--primary);
+            font-size: 15px;
+            font-weight: bold;
+            font-family: 'Courier New', Courier, monospace;
+            text-shadow: 0 0 8px var(--primary-glow);
+        }
+
+        .loader-console {
+            width: auto;
+            height: 96px;
+            background: rgba(0, 0, 0, 0.55);
+            border-radius: 4px;
+            border: 1px solid rgba(0, 170, 255, 0.15);
+            margin: 14px var(--gutter) 0;
+            padding: 10px 12px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 9px;
+            color: #00d4ff;
+            overflow-y: hidden;
+            text-align: left;
+            line-height: 1.55;
+        }
+
+        #loader-audio-prompt {
+            display: block;
+            margin: 16px var(--gutter) 0;
+            font-size: 9.5px;
+            color: var(--primary);
+            letter-spacing: 1.8px;
+            border: 1px dashed rgba(0, 170, 255, 0.5);
+            padding: 9px 16px;
+            border-radius: 4px;
+            background: rgba(0, 255, 255, 0.05);
+            animation: pulse-prompt 1.8s infinite;
+            text-align: center;
+        }
+
+        @keyframes pulse-prompt {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; text-shadow: 0 0 10px var(--primary); }
+        }
+
+        /* Pie corporativo */
+        .loader-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-top: 18px;
+            padding: 11px var(--gutter);
+            border-top: 1px solid rgba(0, 170, 255, 0.14);
+            background: rgba(0, 0, 0, 0.28);
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 7.5px;
+            letter-spacing: 1.4px;
+            color: rgba(255, 255, 255, 0.32);
+            text-transform: uppercase;
+        }
+
+        /* =========================================
+           HUD OVERLAY COMPACTO Y PREMIUM
+           ========================================= */
+        .ui-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 2;
+            pointer-events: none;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: radial-gradient(circle, transparent 20%, rgba(1, 5, 13, 0.75) 100%);
+        }
+
+        /* Logotipo Central con Anillos HUD Giratorios */
+        .logo-container {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 340px;
+            height: 340px;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .hud-ring-outer {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border: 1px dashed var(--primary);
+            border-radius: 50%;
+            animation: spinClockwise 15s linear infinite;
+            opacity: 0.35;
+        }
+        .hud-ring-mid {
+            position: absolute;
+            width: 86%;
+            height: 85%;
+            border: 2px solid transparent;
+            border-top: 2px double var(--secondary);
+            border-bottom: 2px double var(--secondary);
+            border-radius: 50%;
+            animation: spinCounterClockwise 10s linear infinite;
+            opacity: 0.55;
+        }
+        .hud-ring-inner {
+            position: absolute;
+            width: 72%;
+            height: 72%;
+            border: 1px solid rgba(0, 255, 255, 0.15);
+            border-left: 3px solid var(--primary);
+            border-radius: 50%;
+            animation: spinClockwise 5s linear infinite;
+            opacity: 0.75;
+        }
+
+        .logo-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: flex;
+            align-items: center;
+            z-index: 5;
+        }
+
+        /* Bloque de texto de marca: mismo renglón que el emblema, a su izquierda */
+        .brand-text {
+            position: absolute;
+            right: 100%;
+            top: 50%;
+            transform: translateY(-50%);
+            margin-right: 18px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 6px;
+            text-align: right;
+            padding: 8px 14px 8px 20px;
+            border-right: 2px solid var(--primary);
+            background: linear-gradient(270deg, rgba(1, 10, 22, 0.88), rgba(1, 10, 22, 0));
+        }
+
+        .logo-img {
+            width: 104px;
+            height: 104px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--primary);
+            box-shadow: 0 0 35px var(--primary-glow);
+            filter: drop-shadow(0 0 10px rgba(0, 255, 255, 0.5));
+            margin-bottom: 0;
+            transition: all 0.5s ease;
+        }
+
+        .company-name {
+            font-size: 1.45rem;
+            font-weight: 800;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: #ffffff;
+            text-shadow: 0 0 15px var(--primary-glow), 0 0 30px var(--secondary-glow);
+            margin: 0;
+            line-height: 1.05;
+            white-space: nowrap;
+        }
+
+        .intranet-label {
+            font-size: 0.72rem;
+            letter-spacing: 7px;
+            color: var(--primary);
+            margin-top: 0;
+            opacity: 0.9;
+            text-transform: uppercase;
+            font-weight: 600;
+            text-shadow: 0 0 8px var(--primary-glow);
+            white-space: nowrap;
+        }
+
+        /* Estilo general para los paneles HUD */
+        .hud-panel {
+            position: absolute;
+            background: var(--dark-bg);
+            border: 1px solid var(--tech-border);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            padding: 14px 18px;
+            border-radius: 4px;
+            box-shadow: inset 0 0 15px rgba(0, 170, 255, 0.1), 0 10px 30px rgba(0, 0, 0, 0.65);
+            pointer-events: auto;
+            transition: all 0.3s ease;
+        }
+
+        .hud-panel::before {
+            content: '';
+            position: absolute;
+            top: -1px; left: -1px;
+            width: 8px; height: 8px;
+            border-top: 2px solid var(--primary);
+            border-left: 2px solid var(--primary);
+        }
+        .hud-panel::after {
+            content: '';
+            position: absolute;
+            bottom: -1px; right: -1px;
+            width: 8px; height: 8px;
+            border-bottom: 2px solid var(--primary);
+            border-right: 2px solid var(--primary);
+        }
+
+        /* Posiciones HUD Desktop */
+        .top-left { top: 25px; left: 25px; min-width: 250px; }
+        .top-right { top: 25px; right: 25px; min-width: 250px; text-align: right; }
+        .bottom-left { bottom: 25px; left: 25px; min-width: 250px; }
+        .bottom-right { bottom: 25px; right: 25px; min-width: 250px; text-align: right; }
+
+        .hud-title {
+            font-size: 9px;
+            letter-spacing: 2px;
+            color: rgba(255, 255, 255, 0.45);
+            text-transform: uppercase;
+            margin-bottom: 6px;
+            border-bottom: 1px solid rgba(0, 170, 255, 0.15);
+            padding-bottom: 3px;
+        }
+
+        .hud-value {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 11px;
+            line-height: 1.5;
+            color: #00e5ff;
+        }
+
+        .mini-bar-container {
+            width: 100%;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 2px;
+            margin-top: 4px;
+            overflow: hidden;
+            position: relative;
+        }
+        .mini-bar-fill {
+            height: 100%;
+            width: 50%;
+            background: var(--primary);
+            box-shadow: 0 0 5px var(--primary-glow);
+            transition: width 0.2s linear; 
+        }
+
+        .data-stream {
+            position: absolute;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 10px;
+            color: rgba(0, 255, 255, 0.4);
+            white-space: nowrap;
+            user-select: none;
+            transition: opacity 0.5s; 
+            text-shadow: 0 0 8px rgba(0,255,255,0.4);
+        }
+
+        .mouse-data {
+            position: absolute;
+            font-family: monospace;
+            font-size: 10px;
+            color: #00ffff;
+            pointer-events: none;
+            text-shadow: 0 0 5px #00ffff;
+            z-index: 5;
+            background: rgba(0, 15, 30, 0.95);
+            padding: 4px 8px;
+            border: 1px solid rgba(0, 255, 255, 0.35);
+            border-left: 3px solid #00ffff;
+            border-radius: 2px;
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.25);
+            animation: fadeUp 1.2s cubic-bezier(0.075, 0.82, 0.165, 1) forwards;
+            line-height: 1.3;
+        }
+
+        /* =========================================
+           TERMINAL DE CAPTURA DE METADATOS PRO
+           ========================================= */
+        .capture-window {
+            position: absolute;
+            bottom: 140px;
+            right: 25px;
+            width: min(440px, 38vw);
+            height: min(320px, 38vh);
+            background: rgba(1, 8, 18, 0.88);
+            border: 1px solid var(--tech-border);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.85), inset 0 0 25px rgba(0, 170, 255, 0.15);
+            padding: 12px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            pointer-events: auto;
+            border-radius: 4px;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+
+        .capture-window::before {
+            content: '';
+            position: absolute;
+            top: -1px; left: -1px;
+            width: 10px; height: 10px;
+            border-top: 2px solid var(--secondary);
+            border-left: 2px solid var(--secondary);
+        }
+
+        .capture-header {
+            font-size: 10px;
+            font-weight: bold;
+            border-bottom: 1px solid rgba(0, 170, 255, 0.2);
+            padding-bottom: 6px;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            color: #ffffff;
+            letter-spacing: 1px;
+        }
+
+        .capture-header span::before {
+            content: '';
+            display: inline-block;
+            width: 6px;
+            height: 6px;
+            background-color: var(--alert-red);
+            border-radius: 50%;
+            margin-right: 6px;
+            animation: record-pulse 0.3s infinite alternate; 
+        }
+
+        @keyframes record-pulse {
+            from { opacity: 0.2; transform: scale(0.8); } 
+            to { opacity: 1; transform: scale(1.2); box-shadow: 0 0 8px var(--alert-red); }
+        }
+
+        .capture-content {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 8.5px;
+            line-height: 1.15;
+            color: #00d4ff;
+            flex-grow: 1;
+            overflow-y: auto;
+            padding-right: 4px;
+            scroll-behavior: smooth;
+            min-height: 0;
+        }
+
+        .capture-content::-webkit-scrollbar { width: 4px; }
+        .capture-content::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.4); }
+        .capture-content::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 2px; }
+
+        /* Barra de estadísticas de ingesta (Big Data) */
+        .capture-stats {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 6px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 7.5px;
+            letter-spacing: 0.5px;
+            color: rgba(0, 212, 255, 0.65);
+            padding: 3px 0 4px;
+            margin-bottom: 5px;
+            border-bottom: 1px dashed rgba(0, 170, 255, 0.18);
+            white-space: nowrap;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+
+        .capture-stats b {
+            color: #00ff9c;
+            font-weight: bold;
+            text-shadow: 0 0 6px rgba(0, 255, 156, 0.5);
+        }
+
+        .capture-buffer { display: flex; align-items: center; gap: 4px; }
+        .capture-buffer i {
+            display: inline-block;
+            width: 36px;
+            height: 3px;
+            flex-shrink: 0;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 2px;
+            overflow: hidden;
+            position: relative;
+        }
+        .capture-buffer i::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: var(--buf, 50%);
+            background: var(--primary);
+            box-shadow: 0 0 6px var(--primary-glow);
+            transition: width 0.25s linear;
+        }
+
+        /* Sparkline de tráfico (ingesta vs egress) */
+        .capture-spark {
+            height: 40px;
+            margin-bottom: 5px;
+            border: 1px solid rgba(0, 170, 255, 0.15);
+            background: rgba(0, 18, 38, 0.5);
+            border-radius: 2px;
+            overflow: hidden;
+            position: relative;
+            flex-shrink: 0;
+        }
+        .capture-spark canvas { display: block; width: 100%; height: 100%; }
+        .capture-spark-label {
+            position: absolute;
+            top: 3px;
+            left: 5px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 6.5px;
+            letter-spacing: 1px;
+            color: rgba(0, 255, 255, 0.4);
+            pointer-events: none;
+        }
+        .capture-spark-label i {
+            color: rgba(212, 0, 255, 0.75);
+            font-style: normal;
+            margin-left: 6px;
+        }
+
+        /* =========================================
+           MENÚ DE COMANDOS (IMPECABLE / COMPACTO)
+           ========================================= */
+        .company-btn-container {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 999;
+            pointer-events: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+            width: min(900px, 94vw);
+        }
+
+        /* Rótulo de la barra de comandos */
+        .cmd-bar-label {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 7.5px;
+            letter-spacing: 2.4px;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.26);
+            padding: 0 3px 5px;
+            border-bottom: 1px solid rgba(0, 170, 255, 0.13);
+            user-select: none;
+        }
+
+        .cmd-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 7px;
+        }
+
+        .company-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 12px;
+            font-family: 'Segoe UI', -apple-system, sans-serif;
+            font-size: 0.62rem;
+            font-weight: 700;
+            letter-spacing: 1.4px;
+            text-transform: uppercase;
+            color: #9fe9ff;
+            background: rgba(1, 15, 32, 0.82);
+            border: 1px solid rgba(0, 170, 255, 0.22);
+            border-radius: 3px;
+            text-decoration: none;
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.45), inset 0 0 8px rgba(0, 170, 255, 0.06);
+            transition: color 0.25s ease, background 0.25s ease, border-color 0.25s ease,
+                        box-shadow 0.25s ease, transform 0.25s cubic-bezier(0.25, 0.8, 0.25, 1);
+            cursor: pointer;
+            white-space: nowrap;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            text-align: left;
+        }
+
+        /* Índice de comando */
+        .cmd-idx {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.55rem;
+            font-weight: 400;
+            letter-spacing: 0;
+            color: rgba(0, 255, 255, 0.42);
+            padding-right: 7px;
+            border-right: 1px solid rgba(0, 170, 255, 0.2);
+            transition: color 0.25s ease;
+        }
+
+        /* Acento inferior que se despliega al enfocar */
+        .company-btn::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            height: 2px;
+            width: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            transform: scaleX(0);
+            transform-origin: left center;
+            transition: transform 0.35s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        .company-btn::after {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 255, 0.12), transparent);
+            transition: all 0.6s ease;
+        }
+
+        .company-btn:hover, .company-btn:focus-visible {
+            background: rgba(0, 170, 255, 0.14);
+            color: #ffffff;
+            border-color: rgba(0, 255, 255, 0.55);
+            box-shadow: 0 0 22px rgba(0, 170, 255, 0.28), inset 0 0 12px rgba(0, 255, 255, 0.12);
+            transform: translateY(-2px);
+            outline: none;
+        }
+
+        .company-btn:hover::before,
+        .company-btn:focus-visible::before { transform: scaleX(1); }
+
+        .company-btn:hover::after { left: 100%; }
+
+        .company-btn:hover .cmd-idx,
+        .company-btn:focus-visible .cmd-idx { color: var(--primary); }
+
+        .company-btn:active { transform: translateY(0); }
+
+        /* Etiqueta corta: solo se usa en móvil */
+        .lbl-short { display: none; }
+
+        /* Switch Táctico de Audio */
+        .audio-toggle-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .audio-switch {
+            position: relative;
+            display: inline-block;
+            width: 34px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .audio-switch input { opacity: 0; width: 0; height: 0; }
+
+        .audio-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(255, 59, 48, 0.2);
+            border: 1px solid rgba(255, 59, 48, 0.5);
+            transition: .3s;
+            border-radius: 20px;
+        }
+
+        .audio-slider::before {
+            position: absolute;
+            content: "";
+            height: 10px;
+            width: 100%;
+            max-width: 10px;
+            left: 3px;
+            bottom: 3px;
+            background-color: var(--alert-red);
+            transition: .3s;
+            border-radius: 50%;
+            box-shadow: 0 0 5px var(--alert-red);
+        }
+
+        input:checked + .audio-slider {
+            background-color: rgba(0, 255, 0, 0.15);
+            border-color: rgba(0, 255, 0, 0.6);
+        }
+
+        input:checked + .audio-slider::before {
+            transform: translateX(16px);
+            background-color: var(--success-green);
+            box-shadow: 0 0 8px var(--success-green);
+        }
+
+        .audio-label {
+            font-size: 10px;
+            font-weight: bold;
+            font-family: monospace;
+            color: #88a0c0;
+        }
+
+        .status-pulse {
+            display: inline-block;
+            width: 6px;
+            height: 6px;
+            background-color: var(--success-green);
+            border-radius: 50%;
+            margin-right: 6px;
+            animation: pulse 0.5s infinite; 
+        }
+
+        .telemetry-highlight {
+            color: var(--primary);
+            font-weight: bold;
+            text-shadow: 0 0 5px var(--primary-glow);
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-12px); }
+        }
+
+        @keyframes spinClockwise {
+            from { transform: rotate(0deg); } to { transform: rotate(360deg); }
+        }
+
+        @keyframes spinCounterClockwise {
+            from { transform: rotate(0deg); } to { transform: rotate(-360deg); }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 1; box-shadow: 0 0 0px var(--success-green); }
+            50% { transform: scale(1.5); opacity: 0.8; box-shadow: 0 0 10px var(--success-green); }
+            100% { transform: scale(1); opacity: 1; box-shadow: 0 0 0px var(--success-green); }
+        }
+
+        @keyframes fadeUp {
+            0% { transform: translateY(10px) scale(0.95); opacity: 0; }
+            15% { opacity: 1; }
+            100% { transform: translateY(-40px) scale(1.05); opacity: 0; }
+        }
+
+        .scanlines {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.15) 50%), 
+                        linear-gradient(90deg, rgba(255, 0, 0, 0.015), rgba(0, 255, 0, 0.005), rgba(0, 0, 255, 0.015));
+            background-size: 100% 3px, 4px 100%;
+            z-index: 10;
+            pointer-events: none;
+        }
+
+        /* =========================================
+           MEDIA QUERIES - RESPONSIVE MÓVIL
+           ========================================= */
+        @media (max-width: 1150px) and (min-width: 769px) {
+            /* La marca se comprime para no invadir el panel Big Data */
+            .logo-img { width: 92px; height: 92px; }
+            .brand-text { margin-right: 14px; padding: 8px 12px 8px 16px; gap: 5px; }
+            .company-name { font-size: 1.1rem; letter-spacing: 2.5px; }
+            .intranet-label { font-size: 0.6rem; letter-spacing: 5px; }
+        }
+
+        @media (max-width: 768px) {
+            /* Escalar el logo central */
+            .logo-container { width: 220px; height: 220px; }
+            .logo-img { width: 62px; height: 62px; border-width: 2px; }
+            .brand-text { gap: 3px; margin-right: 10px; padding: 5px 8px 5px 10px; }
+            .company-name { font-size: 0.58rem; letter-spacing: 0.9px; }
+            .intranet-label { font-size: 0.4rem; letter-spacing: 1.6px; }
+            
+            /* Escalar y reubicar paneles HUD para que no tapen la pantalla */
+            .hud-panel { min-width: 160px; padding: 10px 12px; }
+            .top-left { top: 15px; left: 15px; transform: scale(0.8); transform-origin: top left; }
+            .top-right { top: 15px; right: 15px; transform: scale(0.8); transform-origin: top right; }
+            .bottom-left { bottom: 180px; left: 15px; transform: scale(0.8); transform-origin: bottom left; }
+            .bottom-right { bottom: 180px; right: 15px; transform: scale(0.8); transform-origin: bottom right; }
+
+            /* Terminal compacto de Big Data: ahora también visible en móvil */
+            .capture-window {
+                top: 120px;
+                bottom: auto;
+                left: 10px;
+                right: 10px;
+                width: auto;
+                height: min(100px, 20vh);
+                padding: 8px;
+                border-radius: 3px;
+            }
+            .capture-content { font-size: 7.5px; line-height: 1.25; }
+            .capture-spark { display: none; }
+            .capture-stats { font-size: 6.5px; gap: 4px; letter-spacing: 0; }
+            .capture-buffer { display: none; }
+
+            /* Reorganizar botones táctiles en rejilla compacta para pulgares */
+            .company-btn-container {
+                bottom: 12px;
+                width: 94vw;
+                gap: 5px;
+            }
+            .cmd-bar-label { font-size: 6.5px; letter-spacing: 1.8px; padding-bottom: 4px; }
+            .cmd-grid {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 5px;
+            }
+            .company-btn {
+                width: 100%;
+                justify-content: center;
+                padding: 6px 8px;
+                font-size: 0.55rem;
+                letter-spacing: 0.8px;
+                gap: 6px;
+            }
+            .cmd-idx { display: none; }
+            .lbl-full { display: none; }
+            .lbl-short { display: inline; }
+
+            /* Ajustes en pantalla de carga para pantallas estrechas */
+            .loader-container { --gutter: 14px; width: 94vw; }
+            .loader-topbar { padding: 12px var(--gutter); gap: 10px; }
+            .loader-text { font-size: 13px; letter-spacing: 2.2px; }
+            .loader-tagline { font-size: 6.5px; letter-spacing: 1px; }
+            .loader-badge { font-size: 8px; }
+            .loader-session { font-size: 7px; }
+            .loader-modules { grid-template-columns: repeat(2, 1fr); }
+            .loader-console { height: 72px; font-size: 8px; }
+            .loader-footer { flex-direction: column; align-items: flex-start; gap: 4px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="cyber-grid"></div>
+
+    <!-- LOADER ESTALINGRADO PRO -->
+    <div id="loading-screen" onclick="unlockAudioWithPrompt()">
+        <div class="loader-container">
+            <!-- Cabecera corporativa: marca y build en el mismo renglón -->
+            <div class="loader-topbar">
+                <div class="loader-brand">
+                    <img src="https://64.media.tumblr.com/37c52c25279f877bd0bc2d538626c938/2f8407cc51b2210e-be/s540x810/c379bb3cd18325d6b075e62fd26ffe91f5093ee3.jpg" class="loader-logo" alt="Logo" loading="lazy">
+                    <div class="loader-brand-text">
+                        <span class="loader-text">Estalingrado Corp</span>
+                        <span class="loader-tagline">Intra-net 2.1 · Plataforma global de datos</span>
+                    </div>
+                </div>
+                <div class="loader-build">
+                    <span class="loader-badge">BUILD 5.1.0</span>
+                    <span class="loader-session">● SESIÓN SEGURA</span>
+                </div>
+            </div>
+
+            <!-- Encabezado de sección -->
+            <div class="loader-titlebar">
+                <span>Panel de arranque de sistemas</span>
+                <span>ESTALINGRADO-OS 5.1</span>
+            </div>
+
+            <!-- Tablero de módulos -->
+            <div class="loader-modules">
+                <div class="loader-module">
+                    <span class="lm-label">MÓDULOS</span>
+                    <span class="lm-value" id="lm-modules">—</span>
+                </div>
+                <div class="loader-module">
+                    <span class="lm-label">RED</span>
+                    <span class="lm-value" id="lm-red">—</span>
+                </div>
+                <div class="loader-module">
+                    <span class="lm-label">CIFRADO</span>
+                    <span class="lm-value" id="lm-crypto">—</span>
+                </div>
+                <div class="loader-module">
+                    <span class="lm-label">NODOS</span>
+                    <span class="lm-value" id="lm-nodes">—</span>
+                </div>
+            </div>
+
+            <div class="loading-bar">
+                <div id="loading-progress-bar"></div>
+            </div>
+
+            <div class="loader-progress-row">
+                <span id="loader-phase">Inicializando plataforma</span>
+                <span id="loading-percent">0%</span>
+            </div>
+
+            <!-- Monitor de Diagnóstico del cargador -->
+            <div class="loader-console" id="loader-console-log">
+                [ INIT ] Iniciando kernel ESTALINGRADO-OS 5.0_PRO...
+            </div>
+
+            <div id="loader-audio-prompt">🔊 TOCAR PANTALLA PARA INICIAR CON SONIDO</div>
+
+            <!-- Pie corporativo -->
+            <div class="loader-footer">
+                <span>© 2026 Estalingrado Corp</span>
+                <span>Entorno: Producción · Cluster global</span>
+            </div>
+        </div>
+    </div>
+
+    <div id="canvas-container"></div>
+
+    <!-- CAPA HUD OVERLAY -->
+    <div class="ui-overlay">
+        <!-- Logotipo Central -->
+        <div class="logo-container">
+            <div class="hud-ring-outer"></div>
+            <div class="hud-ring-mid"></div>
+            <div class="hud-ring-inner"></div>
+            <div class="logo-content">
+                <img src="https://64.media.tumblr.com/3d305395ebd099966bbd46734f6afa03/4d78480730607865-41/s540x810/3fe6a449b17bd152178f482c75dab5cd26aa27b3.pnj" 
+                     alt="Estalingrado Logo" 
+                     class="logo-img"
+                     onerror="this.src='https://via.placeholder.com/140?text=LOGO'">
+                <div class="brand-text">
+                    <h1 class="company-name">Estalingrado Corp</h1>
+                    <div class="intranet-label">Intra-net 2.1</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Módulos de Información HUD -->
+        <div class="hud-panel top-left">
+            <div class="hud-title">Información del Sistema</div>
+            <div class="hud-value">
+                <div>SYS-ID: <span class="telemetry-highlight">EST-OS V.5.1</span></div>
+                <div>RED-ST: <span class="status-pulse"></span>HYPER_LINK</div>
+                <div id="clock" style="font-size: 14px; margin-top: 4px; color: #fff; font-weight: bold;">00:00:00</div>
+                <div id="traffic-stats" style="font-size: 11px; color: rgba(0, 255, 100, 0.95); font-weight: bold;">RX/TX: 0 Gbps / 0 Gbps</div>
+                <div class="mini-bar-container"><div id="net-bar" class="mini-bar-fill"></div></div>
+            </div>
+        </div>
+        
+        <div class="hud-panel top-right">
+            <div class="hud-title">Protocolo Cifrado</div>
+            <div class="hud-value">
+                <div>CIPHER: <span class="telemetry-highlight">SHA-512_X64</span></div>
+                <div>LLAVE: <span id="telemetry-hash" style="color: #ffcc00;">F89A-0021</span></div>
+                <div>SEG: <span style="color: var(--alert-red); font-weight: bold;">TOP_SECRET</span></div>
+                <div id="ping-rate" style="font-size: 10px; color: rgba(0, 212, 255, 0.75);">LATENCY: 4ms</div>
+                <div class="mini-bar-container"><div id="enc-bar" class="mini-bar-fill" style="background: #ffcc00;"></div></div>
+            </div>
+        </div>
+
+        <!-- Ventana de Registro de Captura (Se oculta en móvil vía CSS) -->
+        <div class="capture-window">
+            <div class="capture-header">
+                <span>CAPTURA GLOBAL BIG DATA</span>
+                <span id="capture-status" style="color: var(--primary);">OVERLOAD ACTIVE</span>
+            </div>
+            <div class="capture-stats">
+                <span>EVENTS: <b id="stat-events">0</b></span>
+                <span>INGESTA: <b id="stat-ingest">0.0</b> GB/s</span>
+                <span>PAQUETES: <b id="stat-packets">0</b></span>
+                <span>EV/S: <b id="stat-rate">0</b></span>
+                <span class="capture-buffer">BUFFER<i id="stat-buffer"></i></span>
+            </div>
+            <div class="capture-spark">
+                <canvas id="spark-canvas"></canvas>
+                <div class="capture-spark-label">INGESTA<i>EGRESS</i></div>
+            </div>
+            <div id="capture-log" class="capture-content"></div>
+        </div>
+
+        <div class="hud-panel bottom-left">
+            <div class="hud-title">Telemetría de Hardware</div>
+            <div class="hud-value">
+                <div id="dynamic-temp">CORE_TEMP: 42°C</div>
+                <div id="dynamic-ram">MEM_USAGE: 89.2%</div>
+                <div style="font-size: 10px; color: rgba(0, 212, 255, 0.65);">UPTIME: 144:23:05</div>
+                
+                <div class="mini-bar-container"><div id="temp-bar" class="mini-bar-fill" style="background: var(--alert-red);"></div></div>
+                
+                <div class="audio-toggle-wrapper">
+                    <label class="audio-switch">
+                        <input type="checkbox" id="audio-checkbox" checked onchange="handleAudioToggle(this)">
+                        <span class="audio-slider"></span>
+                    </label>
+                    <span class="audio-label" id="audio-switch-label">AUDIO: ON</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="hud-panel bottom-right">
+            <div class="hud-title">Registro de Nodo</div>
+            <div class="hud-value">
+                <div>SVR-NODE: <span id="telemetry-node" class="telemetry-highlight">EST-GIGA-01</span></div>
+                <div>ZONA: GLOBAL_CLUSTER</div>
+                <div style="font-size: 9px; margin-top: 4px; color: rgba(255,255,255,0.3);">© 2026 ESTALINGRADO CORP</div>
+                <div class="mini-bar-container"><div id="node-bar" class="mini-bar-fill" style="background: var(--success-green);"></div></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- DOCK DE COMANDOS OPTIMIZADO PARA MÓVIL Y DESKTOP -->
+    <nav class="company-btn-container" aria-label="Comandos de la Intra-net">
+        <div class="cmd-bar-label">
+            <span>Comandos</span>
+            <span>06 accesos</span>
+        </div>
+
+        <div class="cmd-grid">
+            <a href="../index.html" 
+               target="_top" 
+               class="company-btn"
+               onmouseenter="synth.playHoverSweep()"
+               onclick="navigateToCompany(event)">
+                <span class="cmd-idx">01</span>
+                <span class="cmd-label"><span class="lbl-full">Ir a la empresa</span><span class="lbl-short">Empresa</span></span>
+            </a>
+
+            <a href="https://estalingradocorp.qzz.io/" 
+               target="_top" 
+               class="company-btn"
+               onmouseenter="synth.playHoverSweep()"
+               onclick="navigateToBuscador(event)">
+                <span class="cmd-idx">02</span>
+                <span class="cmd-label"><span class="lbl-full">Ir al buscador</span><span class="lbl-short">Buscador</span></span>
+            </a>
+
+            <a href="https://nicotips27.github.io/Estalingrado-corp-Terminal-data/" 
+               target="_top" 
+               class="company-btn"
+               onmouseenter="synth.playHoverSweep()"
+               onclick="navigateToTerminalData(event)">
+                <span class="cmd-idx">03</span>
+                <span class="cmd-label"><span class="lbl-full">Leer datos</span><span class="lbl-short">Datos</span></span>
+            </a>
+
+            <a href="https://estalingradocorp.github.io/Intra-net/" 
+               target="_top" 
+               class="company-btn"
+               onmouseenter="synth.playHoverSweep()"
+               onclick="navigateToOldIntranet(event)">
+                <span class="cmd-idx">04</span>
+                <span class="cmd-label"><span class="lbl-full">Intra-net web</span><span class="lbl-short">Intra web</span></span>
+            </a>
+
+            <a href="https://centercorpec.wixsite.com/estalingradocorp" 
+               target="_top" 
+               class="company-btn"
+               onmouseenter="synth.playHoverSweep()"
+               onclick="navigateToWixIntranet(event)">
+                <span class="cmd-idx">05</span>
+                <span class="cmd-label"><span class="lbl-full">Intra-net (Wix)</span><span class="lbl-short">Wix</span></span>
+            </a>
+
+            <a href="https://nicotips27.github.io/ECwebSend/" 
+               target="_top" 
+               class="company-btn"
+               onmouseenter="synth.playHoverSweep()"
+               onclick="navigateToECSend(event)">
+                <span class="cmd-idx">06</span>
+                <span class="cmd-label"><span class="lbl-full">Enviar paquetes con ECSend</span><span class="lbl-short">ECSend</span></span>
+            </a>
+        </div>
+    </nav>
+
+    <div class="scanlines"></div>
+
+    <script>
+        // Variables de rendimiento responsivo (Se ajustan según el dispositivo)
+        const isMobile = window.innerWidth < 768;
+        // Densidad de partículas y alcance del cursor: se adaptan al ancho en vivo
+        const particleTarget = () => (window.innerWidth < 768 ? 90 : 180);
+        const catchRadius = () => (window.innerWidth < 768 ? 210 : 300);
+        const metaRadius = () => (window.innerWidth < 768 ? 170 : 220);
+        const LINK_RADIUS = 100;              // Radio de conexión entre partículas (rendimiento)
+        const MAX_META_LABELS = 22;           // Tope de etiquetas por fotograma (rendimiento)
+        let CURSOR_CATCH_RADIUS = catchRadius();
+        let metaDrawn = 0;
+        const DATA_STREAM_SPEED = isMobile ? 120 : 40;  // Lluvia de datos más moderada en celular para evitar lag
+
+        // =========================================
+        // MOTOR DE AUDIO SINTETIZADO (Web Audio API)
+        // =========================================
+        class CyberSynth {
+            constructor() {
+                this.ctx = null;
+                this.muted = false; 
+                this.ambientOsc = null;
+                this.ambientGain = null;
+                this.hasPlayedHandshake = false;
+            }
+
+            init() {
+                if (this.ctx) return;
+                try {
+                    this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+                } catch (e) {
+                    console.error("AudioContext no admitido.", e);
+                }
+            }
+
+            unmute() {
+                this.init();
+                if (this.ctx && this.ctx.state === 'suspended') {
+                    this.ctx.resume();
+                }
+                this.muted = false;
+                this.startAmbientHum();
+            }
+
+            mute() {
+                this.muted = true;
+                this.stopAmbientHum();
+            }
+
+            playConnectionSequence() {
+                if (this.muted || this.hasPlayedHandshake) return;
+                this.init();
+                if (!this.ctx || this.ctx.state === 'suspended') return;
+
+                this.hasPlayedHandshake = true;
+                const now = this.ctx.currentTime;
+
+                const powerOsc = this.ctx.createOscillator();
+                const powerGain = this.ctx.createGain();
+                powerOsc.type = 'sawtooth';
+                powerOsc.frequency.setValueAtTime(32, now);
+                powerOsc.frequency.exponentialRampToValueAtTime(120, now + 0.5);
+                
+                const powerFilter = this.ctx.createBiquadFilter();
+                powerFilter.type = 'lowpass';
+                powerFilter.frequency.setValueAtTime(60, now);
+                powerFilter.frequency.exponentialRampToValueAtTime(220, now + 0.5);
+
+                powerGain.gain.setValueAtTime(0, now);
+                powerGain.gain.linearRampToValueAtTime(0.14, now + 0.15);
+                powerGain.gain.exponentialRampToValueAtTime(0.001, now + 0.5);
+
+                powerOsc.connect(powerFilter);
+                powerFilter.connect(powerGain);
+                powerGain.connect(this.ctx.destination);
+                powerOsc.start(now);
+                powerOsc.stop(now + 0.55);
+
+                const chirpTimes = [0.15, 0.26, 0.37, 0.48];
+                const chirpFreqs = [697, 770, 852, 941]; 
+                chirpTimes.forEach((time, idx) => {
+                    const o1 = this.ctx.createOscillator();
+                    const o2 = this.ctx.createOscillator();
+                    const g = this.ctx.createGain();
+                    o1.type = o2.type = 'sine';
+                    o1.frequency.setValueAtTime(chirpFreqs[idx], now + time);
+                    o2.frequency.setValueAtTime(chirpFreqs[idx] * 1.5, now + time);
+                    g.gain.setValueAtTime(0, now + time);
+                    g.gain.linearRampToValueAtTime(0.025, now + time + 0.01);
+                    g.gain.exponentialRampToValueAtTime(0.0001, now + time + 0.08);
+                    o1.connect(g);
+                    o2.connect(g);
+                    g.connect(this.ctx.destination);
+                    o1.start(now + time);
+                    o2.start(now + time);
+                    o1.stop(now + time + 0.09);
+                    o2.stop(now + time + 0.09);
+                });
+
+                try {
+                    const bufferSize = this.ctx.sampleRate * 0.8; 
+                    const buffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
+                    const channelData = buffer.getChannelData(0);
+                    for (let i = 0; i < bufferSize; i++) channelData[i] = Math.random() * 2 - 1;
+                    const noise = this.ctx.createBufferSource();
+                    noise.buffer = buffer;
+
+                    const noiseFilter = this.ctx.createBiquadFilter();
+                    noiseFilter.type = 'bandpass';
+                    noiseFilter.frequency.setValueAtTime(600, now + 0.5);
+                    noiseFilter.frequency.exponentialRampToValueAtTime(3200, now + 1.25);
+                    noiseFilter.Q.setValueAtTime(2.5, now + 0.5);
+
+                    const noiseGain = this.ctx.createGain();
+                    noiseGain.gain.setValueAtTime(0, now + 0.5);
+                    noiseGain.gain.linearRampToValueAtTime(0.045, now + 0.6);
+                    noiseGain.gain.exponentialRampToValueAtTime(0.0001, now + 1.3);
+
+                    noise.connect(noiseFilter);
+                    noiseFilter.connect(noiseGain);
+                    noiseGain.connect(this.ctx.destination);
+                    noise.start(now + 0.5);
+                    noise.stop(now + 1.35);
+                } catch(e) {}
+
+                const squeal = this.ctx.createOscillator();
+                const squealG = this.ctx.createGain();
+                squeal.type = 'triangle';
+                squeal.frequency.setValueAtTime(1800, now + 0.6);
+                squeal.frequency.linearRampToValueAtTime(1000, now + 0.9);
+                squeal.frequency.exponentialRampToValueAtTime(4200, now + 1.2);
+
+                squealG.gain.setValueAtTime(0, now + 0.6);
+                squealG.gain.linearRampToValueAtTime(0.015, now + 0.7);
+                squealG.gain.exponentialRampToValueAtTime(0.0001, now + 1.25);
+
+                squeal.connect(squealG);
+                squealG.connect(this.ctx.destination);
+                squeal.start(now + 0.6);
+                squeal.stop(now + 1.28);
+
+                const syncOsc = this.ctx.createOscillator();
+                const syncGain = this.ctx.createGain();
+                syncOsc.type = 'sine';
+                syncOsc.frequency.setValueAtTime(1320, now + 1.25);
+                syncGain.gain.setValueAtTime(0, now + 1.25);
+                syncGain.gain.linearRampToValueAtTime(0.045, now + 1.32);
+                syncGain.gain.exponentialRampToValueAtTime(0.0001, now + 1.6);
+                syncOsc.connect(syncGain);
+                syncGain.connect(this.ctx.destination);
+                syncOsc.start(now + 1.25);
+                syncOsc.stop(now + 1.62);
+            }
+
+            playDataBeep() {
+                if (this.muted || !this.ctx) return;
+                const osc = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(1200 + Math.random() * 800, this.ctx.currentTime); 
+                gain.gain.setValueAtTime(0.008, this.ctx.currentTime); 
+                gain.gain.exponentialRampToValueAtTime(0.0001, this.ctx.currentTime + 0.05);
+                osc.connect(gain);
+                gain.connect(this.ctx.destination);
+                osc.start();
+                osc.stop(this.ctx.currentTime + 0.06);
+            }
+
+            playTerminalClick() {
+                if (this.muted || !this.ctx) return;
+                const osc = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(100 + Math.random() * 50, this.ctx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(25, this.ctx.currentTime + 0.03);
+                gain.gain.setValueAtTime(0.01, this.ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.0001, this.ctx.currentTime + 0.03);
+                osc.connect(gain);
+                gain.connect(this.ctx.destination);
+                osc.start();
+                osc.stop(this.ctx.currentTime + 0.04);
+            }
+
+            playHoverSweep() {
+                if (this.muted || !this.ctx) return;
+                const osc = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(280, this.ctx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(850, this.ctx.currentTime + 0.12);
+                gain.gain.setValueAtTime(0.03, this.ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.0001, this.ctx.currentTime + 0.12);
+                osc.connect(gain);
+                gain.connect(this.ctx.destination);
+                osc.start();
+                osc.stop(this.ctx.currentTime + 0.13);
+            }
+
+            playLoadingTick(percent) {
+                if (this.muted || !this.ctx) return;
+                const osc = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(200 + (percent * 6), this.ctx.currentTime);
+                gain.gain.setValueAtTime(0.03, this.ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.0001, this.ctx.currentTime + 0.05);
+                osc.connect(gain);
+                gain.connect(this.ctx.destination);
+                osc.start();
+                osc.stop(this.ctx.currentTime + 0.06);
+            }
+
+            playButtonSelect() {
+                if (this.muted || !this.ctx) return;
+                const now = this.ctx.currentTime;
+                [0, 0.06].forEach((delay, idx) => {
+                    const osc = this.ctx.createOscillator();
+                    const gain = this.ctx.createGain();
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(idx === 0 ? 587.33 : 1174.66, now + delay); 
+                    gain.gain.setValueAtTime(0.05, now + delay);
+                    gain.gain.exponentialRampToValueAtTime(0.0001, now + delay + 0.12);
+                    osc.connect(gain);
+                    gain.connect(this.ctx.destination);
+                    osc.start(now + delay);
+                    osc.stop(now + delay + 0.14);
+                });
+            }
+
+            startAmbientHum() {
+                if (this.muted || !this.ctx) return;
+                try {
+                    this.stopAmbientHum();
+                    this.ambientOsc = this.ctx.createOscillator();
+                    this.ambientGain = this.ctx.createGain();
+                    this.ambientOsc.type = 'triangle';
+                    this.ambientOsc.frequency.setValueAtTime(50, this.ctx.currentTime); 
+                    this.ambientGain.gain.setValueAtTime(0.015, this.ctx.currentTime);
+                    this.ambientOsc.connect(this.ambientGain);
+                    this.ambientGain.connect(this.ctx.destination);
+                    this.ambientOsc.start();
+                } catch(e) {}
+            }
+
+            stopAmbientHum() {
+                if (this.ambientOsc) {
+                    try { this.ambientOsc.stop(); } catch(e) {}
+                    this.ambientOsc = null;
+                }
+                this.ambientGain = null;
+            }
+        }
+
+        const synth = new CyberSynth();
+
+        function navigateToCompany(event) {
+            event.preventDefault(); 
+            synth.playButtonSelect(); 
+            setTimeout(() => { window.top.location.href = "../index.html"; }, 150);
+        }
+
+        function navigateToBuscador(event) {
+            event.preventDefault(); 
+            synth.playButtonSelect(); 
+            setTimeout(() => { window.top.location.href = "https://estalingradocorp.qzz.io/"; }, 150);
+        }
+
+        function navigateToTerminalData(event) {
+            event.preventDefault(); 
+            synth.playButtonSelect(); 
+            setTimeout(() => { window.top.location.href = "https://nicotips27.github.io/Estalingrado-corp-Terminal-data/"; }, 150);
+        }
+
+        function navigateToOldIntranet(event) {
+            event.preventDefault(); 
+            synth.playButtonSelect(); 
+            // NUEVO ENLACE APLICADO
+            setTimeout(() => { window.top.location.href = "https://estalingradocorp.github.io/Intra-net/"; }, 150);
+        }
+
+        function navigateToECSend(event) {
+            event.preventDefault(); 
+            synth.playButtonSelect(); 
+            setTimeout(() => { window.top.location.href = "https://nicotips27.github.io/ECwebSend/"; }, 150);
+        }
+
+        function navigateToWixIntranet(event) {
+            event.preventDefault(); 
+            synth.playButtonSelect(); 
+            setTimeout(() => { window.top.location.href = "https://centercorpec.wixsite.com/estalingradocorp"; }, 150);
+        }
+
+        function handleAudioToggle(checkbox) {
+            synth.init();
+            const label = document.getElementById("audio-switch-label");
+            if (checkbox.checked) {
+                synth.unmute();
+                label.innerHTML = "AUDIO: ON";
+                label.style.color = "#00ff00";
+            } else {
+                synth.mute();
+                label.innerHTML = "AUDIO: OFF";
+                label.style.color = "#ff3b30";
+            }
+        }
+
+        function toggleAudio(e) {
+            if (e) e.stopPropagation();
+            const checkbox = document.getElementById("audio-checkbox");
+            checkbox.checked = !checkbox.checked;
+            handleAudioToggle(checkbox);
+        }
+
+        function unlockAudioWithPrompt() {
+            synth.init();
+            synth.unmute();
+            const checkbox = document.getElementById("audio-checkbox");
+            if(checkbox) checkbox.checked = true;
+            const label = document.getElementById("audio-switch-label");
+            if(label) { label.innerHTML = "AUDIO: ON"; label.style.color = "#00ff00"; }
+            synth.playConnectionSequence();
+            const prompt = document.getElementById("loader-audio-prompt");
+            if (prompt) { prompt.innerHTML = "SISTEMA DE AUDIO INTEGRADO ✓"; prompt.style.color = "#00ff00"; }
+        }
+
+        const diagnosticMessages = [
+            "[ INIT ] Cargando módulos principales de Estalingrado...",
+            "[ KERNEL ] Cargando estalingrado-OS-core-64.bin...",
+            "[ INT-OS ] Verificando firmas criptográficas... OK",
+            "[ CONEXIÓN ] Abriendo túnel seguro de datos de alta velocidad...",
+            "[ SHIELD ] Firewall cuántico activado. Escaneando amenazas globales...",
+            "[ PROTOCOLO ] Sincronizando llaves SHA-512 P2P...",
+            "[ PORT_SCAN ] Abriendo puertos masivos: 80, 443, 8443, 22, 27017... OK",
+            "[ BIG DATA ] Conectando con el almacén global de metadatos (Giga-Net)...",
+            "[ OVERLOAD ] Inicializando matrices neuronales de datos masivos...",
+            "[ HARDWARE ] Aumentando capacidad CPU al 99.8%. Enfriamiento extremo ACTIVO.",
+            "[ INTRA-NET ] Carga de hiper-tráfico completada con éxito."
+        ];
+
+        // Estado corporativo por módulo durante el arranque
+        const loaderModules = [
+            { id: 'lm-modules', start: 0, ok: 20 },
+            { id: 'lm-red', start: 30, ok: 50 },
+            { id: 'lm-crypto', start: 55, ok: 75 },
+            { id: 'lm-nodes', start: 80, ok: 95 }
+        ];
+
+        function startLoader() {
+            const loadingScreen = document.getElementById("loading-screen");
+            const progressBar = document.getElementById("loading-progress-bar");
+            const percentText = document.getElementById("loading-percent");
+            const consoleLog = document.getElementById("loader-console-log");
+            const phaseText = document.getElementById("loader-phase");
+            let start = null;
+            const duration = 2400; 
+            let lastPercentTick = 0;
+            let currentMessageIdx = 0;
+            
+            function anim() {
+                if (!start) start = performance.now();
+                const elapsed = performance.now() - start;
+                const p = Math.min((elapsed / duration) * 100, 100);
+                
+                if (progressBar) progressBar.style.width = p + '%';
+                if (percentText) percentText.textContent = Math.floor(p) + '%';
+
+                // Semáforo de módulos estilo dashboard corporativo
+                loaderModules.forEach(m => {
+                    const el = document.getElementById(m.id);
+                    if (!el) return;
+                    if (p >= m.ok) {
+                        el.innerText = 'OK';
+                        el.className = 'lm-value ok';
+                    } else if (p >= m.start) {
+                        el.innerText = 'CARGANDO';
+                        el.className = 'lm-value load';
+                    }
+                });
+                
+                let targetMsgIdx = Math.floor(p / (100 / diagnosticMessages.length));
+                if (targetMsgIdx > currentMessageIdx && targetMsgIdx < diagnosticMessages.length) {
+                    currentMessageIdx = targetMsgIdx;
+                    const logLine = document.createElement('div');
+                    logLine.innerText = diagnosticMessages[currentMessageIdx];
+                    if (consoleLog) {
+                        consoleLog.appendChild(logLine);
+                        consoleLog.scrollTop = consoleLog.scrollHeight;
+                    }
+                    if (phaseText) {
+                        phaseText.innerText = diagnosticMessages[currentMessageIdx].replace(/\[[^\]]+\]\s*/, '');
+                    }
+                }
+
+                let currentTick = Math.floor(p / 10);
+                if (currentTick > lastPercentTick) {
+                    synth.playLoadingTick(p);
+                    lastPercentTick = currentTick;
+                }
+                
+                if(p < 100) {
+                    // setTimeout en vez de rAF: el arranque no se congela si la
+                    // pestaña queda en segundo plano (rAF se pausa en background)
+                    setTimeout(anim, 40);
+                } else {
+                    synth.playButtonSelect();
+                    setTimeout(() => {
+                        if (loadingScreen) {
+                            loadingScreen.style.opacity = '0';
+                            setTimeout(() => { loadingScreen.style.display = 'none'; }, 600);
+                        }
+                    }, 200);
+                }
+            }
+            setTimeout(anim, 0);
+        }
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            synth.init();
+            synth.muted = false;
+            try { synth.unmute(); synth.playConnectionSequence(); } catch (e) { }
+            startLoader();
+        });
+
+        // =========================================
+        // BANCO MASIVO DE METADATOS
+        // =========================================
+        const bigDataPhrases = [
+            "Interceptando: 192.168.1.1", "Acceso concedido", "Análisis de tráfico activo", "Conexión en túnel SSH", "Consulta DB exitosa", "Descifrado al 74%", "Metadatos consolidados", "Indexando tabla 'usuarios'",
+            "Packet Loss: 0.00%", "Metadata Fragment: 0x8F9A", "Buffer overflow vulnerability detected", "Querying central DB...", "Routing socket initialized", "Handshake authorized", "METADATA: {hash_key:'7B9'}", "NODE_STETH: OK",
+            "данные системы [OK]", "Передача пакетов завершена", "Сеть active", "Доступ разрешен", "Протокол безопасности", "Загрузка хэш-таблицы", "Анализатор трафика",
+            "数据处理 100%", "网络连接 stable", "システムデータ更新", "データベース暗号化", "アクセス承認済み", "メタデータ解析中", "グローバル同期",
+            "Verbindung hergestellt", "System-Metadaten geladen", "Speicherzugriff erfolgreich", "Sicherheitsprotokoll aktiv", "Datenbank-Abfrage gestartet",
+            "Accès au réseau autorisé", "Données chiffrées", "Flux de datos establecido", "Acesso ao banco de dados", "Sincronização concluída", "Extraction de métadonnées", "Tradução de dados",
+            "تم الوصول إلى الشبكة", "데이터 조각 추출 완료", "동기화 모듈 활성화", "نظام تشفير مفعل", "데이터 스트림 동기화", "تفريغ الذاكرة الآمن",
+            "TCP_PORT: 8443 -> OPEN", "HTTP_STATUS: 200 OK", "DB_QUERY: SELECT * FROM secrets WHERE id='root'", "SHA256: e3b0c44298fc1c149afb",
+            "METADATA: {dev_id: 'EST-99', geo: '55.7558,37.6173'}", "SQL_INJECT: BLOCKED", "KERNEL_BOOT: SECURE_CONTAINER", "DOCKER_IMAGE: 'estalingrado-core'",
+            "IP_WAN: 185.220.101.5", "SUB_NET_MASK: 255.255.255.0", "MAC_ADDR: 00:1A:2B:3C:4D:5E", "METADATA: {app_id: 'EST-SEC-09', version: '5.0.3'}",
+            "SVR_HEALTH: {cpu_load: '94.2%', ram_usage: '92.8%'}", "MUTEX: [LOCKED_SECTOR_0x00F8]", "FIREWALL: QUANTUM_SHIELD_ACTIVE", "GEO_COORD: [55° 45' 21\" N, 37° 37' 4\" E]",
+            "TCP_OVERLOAD: WARNING", "BUFFER_FLUSH: COMPLETED", "CLUSTER_SYNC: NODE_1_TO_94_OK", "DEEP_PACKET_INSPECTION: ENGAGED"
+        ];
+
+        // =========================================
+        // GENERADOR DE EVENTOS BIG DATA (ALTA DENSIDAD)
+        // =========================================
+        const ri = (max) => Math.floor(Math.random() * max);
+        const rhex = (len) => {
+            const chars = '0123456789ABCDEF';
+            let out = '';
+            for (let i = 0; i < len; i++) out += chars[ri(16)];
+            return out;
+        };
+        const rpad = (n, l) => String(n).padStart(l, '0');
+        const rstamp = (d) => rpad(d.getHours(), 2) + ':' + rpad(d.getMinutes(), 2) + ':' + rpad(d.getSeconds(), 2) + '.' + rpad(d.getMilliseconds(), 3);
+        const rpick = (arr) => arr[ri(arr.length)];
+
+        const EVENT_BUILDERS = [
+            () => ({ text: `IP_STREAM: {"addr":"10.240.${ri(254)}.${ri(254)}","status":"CAPTURED","relay":"EST-SVR-${rpad(ri(99), 2)}"}`, color: '#00ffff' }),
+            () => ({ text: `[PACKET] TCP_STREAM -> PORT:${rpick([80, 443, 22, 8443, 3306, 5432, 27017, 8080, 9090, 9200])} [STATUS: CON] [SIZE: ${ri(15000)}b]`, color: '#42ff7b' }),
+            () => ({ text: rpick(bigDataPhrases), color: '#00d4ff' }),
+            () => ({ text: `MEM_DUMP: 0x${rhex(4)} ${rhex(4)} ${rhex(4)} | HASH_MATCH: OK | SEG:${rhex(4)}`, color: '#ff9a00' }),
+            () => ({ text: `[DB_SQL] ${rpick(['SELECT', 'UPDATE', 'INSERT', 'DELETE', 'INDEX'])} FROM "${rpick(['secrets', 'global_users', 'raw_telemetry', 'sys_logs_root', 'encryption_vault', 'node_registry'])}" [ROWS:${ri(99999)}] [EX_TIME: 0.${ri(99)}ms]`, color: '#d400ff' }),
+            () => ({ text: `GEO_TRACK: {"lat":"${(Math.random() * 30 + 35).toFixed(4)}","lon":"${(Math.random() * 30 - 90).toFixed(4)}","sat":${ri(24)},"speed_kph":${ri(320)}}`, color: '#ffe600' }),
+            () => ({ text: `[AUTH] user:est_${rpad(ri(9999), 4)} method:${rpick(['OAUTH2', 'JWT', 'SSH_KEY', 'BIOMETRIC'])} [RESULT: ${rpick(['GRANTED', 'GRANTED', 'GRANTED', 'DENIED', 'CHALLENGE'])}] [2FA:${rpick(['PASS', 'TOTP', 'NONE'])}]`, color: '#ff4d6d' }),
+            () => ({ text: `[AI_INFERENCE] model:EST-NEURAL-${ri(9)} task:"${rpick(['classify_anomaly', 'summarize_stream', 'predict_load', 'route_packet'])}" conf:${(0.7 + Math.random() * 0.3).toFixed(4)} tok:${ri(4096)}`, color: '#7cf9ff' }),
+            () => ({ text: `[IOT_SENSOR] node:${rpick(['EST-IOT-44', 'EST-IOT-77', 'EST-SENSOR-12', 'EST-EDGE-03'])} temp:${(ri(450) / 10 + 15).toFixed(1)}C hum:${ri(90)}% batt:${ri(100)}% [OK]`, color: '#39ff88' }),
+            () => ({ text: `[BANDWIDTH_SPIKE] node:${rpick(['EST-GIGA-01', 'EST-GIGA-09', 'EST-CLOUD-X1'])} +${(Math.random() * 8 + 2).toFixed(2)} GB/s [THRESHOLD_EXCEEDED]`, color: '#ff3b30' }),
+            () => ({ text: `[ANOMALY] signature:0x${rhex(8)} score:${(Math.random() * 0.5 + 0.5).toFixed(3)} src:${ri(255)}.${ri(255)}.${ri(255)}.${ri(255)} [QUARANTINED]`, color: '#ff6b00' }),
+            () => ({ text: `[SNAPSHOT] vault:${rpick(['secrets', 'global_users', 'telemetry'])} id:snap_${rhex(8)} size:${(Math.random() * 40 + 5).toFixed(2)}GB [COMMITTED]`, color: '#b388ff' }),
+            () => ({ text: `[CHAIN_TX] hash:0x${rhex(16)} block:#${ri(999999)} nonce:${ri(99999)} confirmations:${ri(64)} [FINALITY]`, color: '#c6ff00' }),
+            () => ({ text: `[DNS] ${rpick(['api.estalingrado.corp', 'giga-net.internal', 'cdn.est-global.io', 'db-master.cluster'])} -> ${ri(255)}.${ri(255)}.${ri(255)}.${ri(255)} [${ri(180) + 4}ms]`, color: '#66ccff' }),
+            () => ({ text: `[CDN_EDGE] pop:${rpick(['EST-POP-01', 'EST-POP-07', 'EST-POP-12', 'EST-POP-31'])} hit_ratio:${(Math.random() * 30 + 68).toFixed(1)}% req:${ri(99999)} [CACHED]`, color: '#00ff9c' }),
+            () => ({ text: `[ROVER] unit:EST-ROVER-${rpad(ri(99), 2)} odo:${ri(99999)}km solar:${ri(100)}% link:${(Math.random() * 30 + 55).toFixed(1)}% [STREAMING]`, color: '#8affc1' }),
+            () => ({ text: `[SHARD] cluster:GIGA-NET shard:${rpad(ri(64), 2)}/64 rebalance:${rpick(['START', 'DONE', 'SYNCING'])} lag:${ri(999)}ms`, color: '#e07bff' }),
+            () => ({ text: `[CRYPTO] key:${rpick(['AES-256', 'XCHACHA20', 'RSA-4096'])} rotation:${rpad(ri(60) + 1, 2)}min nonce:${rhex(8)} [REKEYED]`, color: '#9adcff' })
+        ];
+
+        function updateClock() {
+            const now = new Date();
+            document.getElementById('clock').innerText = now.getHours().toString().padStart(2, '0') + ":" + 
+                            now.getMinutes().toString().padStart(2, '0') + ":" + 
+                            now.getSeconds().toString().padStart(2, '0');
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        function updateTelemetry() {
+            const temp = Math.floor(Math.random() * 25) + 40; 
+            document.getElementById('dynamic-temp').innerText = `CORE_TEMP: ${temp}°C`;
+
+            const ram = (70 + Math.random() * 28).toFixed(1); 
+            document.getElementById('dynamic-ram').innerText = `MEM_USAGE: ${ram}%`;
+
+            const rx = (Math.random() * 150 + 20).toFixed(1);
+            const tx = (Math.random() * 800 + 100).toFixed(1);
+            document.getElementById('traffic-stats').innerText = `RX: ${rx} Gbps / TX: ${tx} Gbps`;
+
+            const ping = Math.floor(Math.random() * 8) + 1; 
+            document.getElementById('ping-rate').innerText = `LATENCY: ${ping}ms`;
+
+            document.getElementById('net-bar').style.width = Math.floor(60 + Math.random() * 40) + '%';
+            document.getElementById('enc-bar').style.width = Math.floor(50 + Math.random() * 50) + '%';
+            document.getElementById('temp-bar').style.width = Math.floor(40 + Math.random() * 60) + '%';
+            document.getElementById('node-bar').style.width = Math.floor(80 + Math.random() * 20) + '%';
+
+            if (Math.random() > 0.6) {
+                const hexLetters = '0123456789ABCDEF';
+                let dynamicHash = '';
+                for (let i = 0; i < 8; i++) {
+                    dynamicHash += hexLetters[Math.floor(Math.random() * 16)];
+                    if (i === 3) dynamicHash += '-';
+                }
+                document.getElementById('telemetry-hash').innerText = dynamicHash;
+            }
+
+            if (Math.random() > 0.8) {
+                const nodes = ["EST-GIGA-01", "EST-GIGA-09", "EST-GATE-04", "EST-BACKUP-MAX", "EST-NODE-OMEGA", "EST-CLOUD-X1"];
+                document.getElementById('telemetry-node').innerText = nodes[Math.floor(Math.random() * nodes.length)];
+            }
+        }
+        setInterval(updateTelemetry, 350); 
+
+        // =========================================
+        // TERMINAL DE CAPTURA BIG DATA (ALTA DENSIDAD)
+        // =========================================
+        const logContainer = document.getElementById('capture-log');
+        const MAX_LOG_NODES = 120;
+        const LOG_INTERVAL = 45;          // Tick base del motor de captura
+        const LOG_GAP_MOBILE = 140;       // Separación mínima entre eventos en pantallas < 768px
+        const SPARK_POINTS = 48;
+
+        let totalEvents = 1284903;
+        let totalPackets = 8421190;
+        let ingestGBps = 4.8;
+        let egressGBps = 2.6;
+        let eventsPerSec = 0;
+        let evCounter = 0;
+        let lastRateSample = performance.now();
+        let lastClickAt = 0;
+        let lastLogAt = 0;
+
+        const sparkRx = [];
+        const sparkTx = [];
+
+        function buildEvent(stampText) {
+            const ev = rpick(EVENT_BUILDERS)();
+            return { text: `[${stampText}] ${ev.text}`, color: ev.color };
+        }
+
+        function pushLogEntry(text, color) {
+            const p = document.createElement('div');
+            p.innerText = text;
+            p.style.color = color;
+            logContainer.prepend(p);
+            while (logContainer.childNodes.length > MAX_LOG_NODES) {
+                logContainer.removeChild(logContainer.lastChild);
+            }
+        }
+
+        // Precarga un backlog histórico para que el terminal nunca arranque vacío
+        function seedBacklog() {
+            const now = Date.now();
+            const count = window.innerWidth < 768 ? 45 : 75;
+            const step = 3500;
+
+            pushLogEntry(
+                `[${rstamp(new Date(now - count * step))}] >>> BACKLOG RECOVERED: ${totalEvents.toLocaleString('es-ES')} EVENTS / ${(totalPackets / 1e6).toFixed(2)}M PACKETS <<<`,
+                '#ffcc00'
+            );
+
+            for (let i = count - 1; i >= 0; i--) {
+                const d = new Date(now - i * step);
+                const ev = buildEvent(rstamp(d));
+                pushLogEntry(ev.text, ev.color);
+            }
+        }
+
+        function updateStats() {
+            const elEvents = document.getElementById('stat-events');
+            const elIngest = document.getElementById('stat-ingest');
+            const elPackets = document.getElementById('stat-packets');
+            const elRate = document.getElementById('stat-rate');
+            const elBuffer = document.getElementById('stat-buffer');
+
+            if (elEvents) elEvents.innerText = totalEvents.toLocaleString('es-ES');
+            if (elIngest) elIngest.innerText = ingestGBps.toFixed(1);
+            if (elPackets) elPackets.innerText = (totalPackets / 1e6).toFixed(2) + 'M';
+            if (elRate) elRate.innerText = eventsPerSec;
+            if (elBuffer) {
+                const pct = Math.round((logContainer.childNodes.length / MAX_LOG_NODES) * 100);
+                elBuffer.style.setProperty('--buf', pct + '%');
+            }
+        }
+
+        // Sparkline de tráfico (doble serie ingesta/egress)
+        function drawSpark() {
+            const canvas = document.getElementById('spark-canvas');
+            if (!canvas || !canvas.clientWidth) return;
+
+            const dpr = window.devicePixelRatio || 1;
+            const w = canvas.clientWidth;
+            const h = canvas.clientHeight;
+            const targetW = Math.round(w * dpr);
+            const targetH = Math.round(h * dpr);
+            if (canvas.width !== targetW || canvas.height !== targetH) {
+                canvas.width = targetW;
+                canvas.height = targetH;
+            }
+
+            const ctx = canvas.getContext('2d');
+            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+            ctx.clearRect(0, 0, w, h);
+
+            ctx.strokeStyle = 'rgba(0, 170, 255, 0.10)';
+            ctx.lineWidth = 1;
+            for (let g = 1; g < 4; g++) {
+                const y = Math.round((h / 4) * g) + 0.5;
+                ctx.beginPath();
+                ctx.moveTo(0, y);
+                ctx.lineTo(w, y);
+                ctx.stroke();
+            }
+
+            if (sparkRx.length < 2) return;
+
+            const max = Math.max(1, ...sparkRx, ...sparkTx);
+            const step = w / (SPARK_POINTS - 1);
+            const series = [
+                { data: sparkRx, stroke: 'rgba(0, 255, 255, 0.9)', fill: 'rgba(0, 255, 255, 0.16)' },
+                { data: sparkTx, stroke: 'rgba(212, 0, 255, 0.9)', fill: 'rgba(212, 0, 255, 0.14)' }
+            ];
+
+            series.forEach(s => {
+                const n = s.data.length;
+                const points = s.data.map((v, i) => ({
+                    x: w - (n - 1 - i) * step,
+                    y: h - (v / max) * (h - 4) - 2
+                }));
+
+                ctx.beginPath();
+                ctx.moveTo(points[0].x, h);
+                points.forEach(p => ctx.lineTo(p.x, p.y));
+                ctx.lineTo(points[points.length - 1].x, h);
+                ctx.closePath();
+                ctx.fillStyle = s.fill;
+                ctx.fill();
+
+                ctx.beginPath();
+                points.forEach((p, i) => (i === 0 ? ctx.moveTo(p.x, p.y) : ctx.lineTo(p.x, p.y)));
+                ctx.strokeStyle = s.stroke;
+                ctx.lineWidth = 1.2;
+                ctx.stroke();
+            });
+        }
+
+        function addLogEntry() {
+            // El ritmo se adapta al ancho actual de la ventana (redimensionable en vivo)
+            const now = performance.now();
+            const minGap = window.innerWidth < 768 ? LOG_GAP_MOBILE : LOG_INTERVAL;
+            if (now - lastLogAt < minGap) return;
+            lastLogAt = now;
+
+            const ev = buildEvent(rstamp(new Date()));
+            pushLogEntry(ev.text, ev.color);
+
+            totalEvents++;
+            totalPackets += 1 + ri(12);
+            evCounter++;
+
+            if (now - lastClickAt > 220 && Math.random() > 0.55) {
+                lastClickAt = now;
+                synth.playTerminalClick();
+            }
+        }
+
+        // Ciclo de captura en vivo (activo también en móvil)
+        setInterval(addLogEntry, LOG_INTERVAL);
+
+        // Muestreo de métricas + sparkline
+        setInterval(() => {
+            const now = performance.now();
+            const dt = (now - lastRateSample) / 1000;
+            eventsPerSec = dt > 0 ? Math.round(evCounter / dt) : 0;
+            evCounter = 0;
+            lastRateSample = now;
+
+            ingestGBps = Math.max(0.6, ingestGBps + (Math.random() - 0.48) * 1.1);
+            egressGBps = Math.max(0.3, egressGBps + (Math.random() - 0.52) * 0.8);
+
+            sparkRx.push(ingestGBps);
+            sparkTx.push(egressGBps);
+            if (sparkRx.length > SPARK_POINTS) {
+                sparkRx.shift();
+                sparkTx.shift();
+            }
+
+            updateStats();
+            drawSpark();
+        }, 500);
+
+        // Estado parpadeante de la cabecera
+        const STATUS_CYCLE = [
+            { t: 'OVERLOAD ACTIVE', c: '#ff3b30' },
+            { t: 'CAPTURING', c: '#00ff66' },
+            { t: 'SYNCING GIGA-NET', c: '#00d4ff' },
+            { t: 'INGEST NOMINAL', c: '#ffcc00' }
+        ];
+        let statusIdx = 0;
+        setInterval(() => {
+            const st = document.getElementById('capture-status');
+            if (!st) return;
+            const s = STATUS_CYCLE[statusIdx % STATUS_CYCLE.length];
+            statusIdx++;
+            st.innerText = s.t;
+            st.style.color = s.c;
+        }, 1600);
+
+        // Arranque: el panel ya aparece lleno desde el primer frame
+        seedBacklog();
+        updateStats();
+
+        // =========================================
+        // CIRCUITO E INTERACCIÓN DE RED ULTRA MASIVA (p5.js)
+        // =========================================
+        let particles = [];
+        let ripples = []; 
+        let targetX = 0, targetY = 0; 
+
+        function setup() {
+            let canvas = createCanvas(windowWidth, windowHeight);
+            canvas.parent('canvas-container');
+            targetX = width / 2;
+            targetY = height / 2;
+            CURSOR_CATCH_RADIUS = catchRadius();
+            // Crear el campo de partículas según el dispositivo
+            for (let i = 0; i < particleTarget(); i++) {
+                particles.push(new Particle());
+            }
+        }
+
+        function draw() {
+            CURSOR_CATCH_RADIUS = catchRadius();
+            metaDrawn = 0;
+            textFont("monospace");
+            textSize(7);
+            background(2, 8, 20);
+
+            stroke(0, 170, 255, 12);
+            strokeWeight(0.5);
+            for (let x = 0; x < width; x += 60) line(x, 0, x, height);
+            for (let y = 0; y < height; y += 60) line(0, y, width, y);
+
+            for (let i = ripples.length - 1; i >= 0; i--) {
+                ripples[i].update();
+                ripples[i].display();
+                if (ripples[i].isFinished()) ripples.splice(i, 1);
+            }
+            
+            for (let i = 0; i < particles.length; i++) {
+                particles[i].move();
+                particles[i].display();
+                
+                for (let j = i + 1; j < particles.length; j++) {
+                    // Distancia al cuadrado: evita 20k+ sqrt() por fotograma
+                    const dx = particles[i].x - particles[j].x;
+                    const dy = particles[i].y - particles[j].y;
+                    const d2 = dx * dx + dy * dy;
+                    if (d2 < LINK_RADIUS * LINK_RADIUS) {
+                        const d = sqrt(d2);
+                        let alpha = map(d, 0, LINK_RADIUS, 200, 0);
+                        stroke(0, 170, 255, alpha);
+                        strokeWeight(0.6);
+                        line(particles[i].x, particles[i].y, particles[j].x, particles[j].y);
+
+                        if ((i + j + frameCount) % 8 === 0) { 
+                            let speed = ((i * j) % 4 + 1) * 0.02; 
+                            let t = (frameCount * speed) % 1;
+                            let px = lerp(particles[i].x, particles[j].x, t);
+                            let py = lerp(particles[i].y, particles[j].y, t);
+                            noStroke();
+                            fill(0, 255, 255, alpha + 100);
+                            ellipse(px, py, 2.5, 2.5); 
+                        }
+                    }
+                }
+
+                let dMouse = dist(mouseX, mouseY, particles[i].x, particles[i].y);
+                if (dMouse < CURSOR_CATCH_RADIUS) {
+                    let force = map(dMouse, 0, CURSOR_CATCH_RADIUS, 0.18, 0);
+                    particles[i].x += (mouseX - particles[i].x) * force * 0.05;
+                    particles[i].y += (mouseY - particles[i].y) * force * 0.05;
+
+                    // El hilo solo se dibuja donde realmente se ve (evita llamadas inútiles)
+                    if (dMouse < 240) {
+                        stroke(0, 255, 255, map(dMouse, 0, CURSOR_CATCH_RADIUS, 170, 0));
+                        strokeWeight(0.8);
+                        line(mouseX, mouseY, particles[i].x, particles[i].y);
+
+                        if (frameCount % 4 === 0) {
+                            let t = (frameCount * 0.05) % 1;
+                            let px = lerp(particles[i].x, mouseX, t);
+                            let py = lerp(particles[i].y, mouseY, t);
+                            noStroke();
+                            fill(255, 255, 255, 200);
+                            ellipse(px, py, 3, 3);
+                        }
+
+                        // Partícula capturada: halo blanco cuando el cursor la atrapa
+                        if (dMouse < 42) {
+                            noFill();
+                            stroke(255, 255, 255, map(dMouse, 0, 42, 220, 60));
+                            strokeWeight(1.2);
+                            ellipse(particles[i].x, particles[i].y, 14, 14);
+                        }
+                    }
+                }
+
+                for (let r of ripples) {
+                    let dRipple = dist(r.x, r.y, particles[i].x, particles[i].y);
+                    if (abs(dRipple - r.currentRadius) < 30) {
+                        let angle = atan2(particles[i].y - r.y, particles[i].x - r.x);
+                        let push = map(abs(dRipple - r.currentRadius), 0, 30, 4, 0);
+                        particles[i].x += cos(angle) * push;
+                        particles[i].y += sin(angle) * push;
+                    }
+                }
+            }
+
+            targetX += (mouseX - targetX) * 0.15;
+            targetY += (mouseY - targetY) * 0.15;
+
+            noFill();
+            stroke(0, 255, 255, 60);
+            strokeWeight(0.8);
+            ellipse(targetX, targetY, 24, 24);
+            ellipse(targetX, targetY, 4, 4);
+            
+            let sweepAngle = (frameCount * 0.08) % TWO_PI; 
+            stroke(0, 255, 255, 120);
+            line(targetX, targetY, targetX + cos(sweepAngle) * 35, targetY + sin(sweepAngle) * 35);
+            stroke(0, 255, 255, 40);
+            ellipse(targetX, targetY, 70, 70);
+
+            line(targetX - 45, targetY, targetX + 45, targetY);
+            line(targetX, targetY - 45, targetX, targetY + 45);
+            
+            fill(0, 255, 255, 180);
+            noStroke();
+            textFont("monospace");
+            textSize(8);
+            text(`MATRIX_Y: [${Math.floor(targetX)}, ${Math.floor(targetY)}]`, targetX + 45, targetY - 15);
+            text(`V_SPEED : [${(abs(mouseX - pmouseX)).toFixed(2)} px/f]`, targetX + 45, targetY - 5);
+            text(`DECRYPT : [SHA512_STREAM]`, targetX + 45, targetY + 5);
+            text(`SIG_STR : [${Math.floor(map(dist(width/2, height/2, mouseX, mouseY), 0, width, 100, 12))}%]`, targetX + 45, targetY + 15);
+        }
+
+        // Toques en pantalla (Ripple Efect) para Web y Movil
+        function mousePressed() {
+            ripples.push(new Ripple(mouseX, mouseY));
+            synth.playButtonSelect();
+        }
+
+        // Interacción flotante con el cursor
+        window.addEventListener('mousemove', (e) => {
+            if (Math.random() > 0.6) { 
+                createMouseData(e.clientX, e.clientY);
+            }
+        });
+        // Soporte para touch (arrastrar dedo) en móviles
+        window.addEventListener('touchmove', (e) => {
+            if (Math.random() > 0.6 && e.touches.length > 0) { 
+                createMouseData(e.touches[0].clientX, e.touches[0].clientY);
+            }
+        }, {passive: true});
+
+        function createMouseData(x, y) {
+            const data = document.createElement('div');
+            data.className = 'mouse-data';
+            data.style.left = (x + (Math.random() * 50 - 25)) + 'px';
+            data.style.top = (y + (Math.random() * 50 - 25)) + 'px';
+            
+            const randVal = Math.random();
+            let text = "";
+            if (randVal < 0.25) {
+                const randomIP = `10.0.${Math.floor(Math.random()*15)}.${Math.floor(Math.random()*254)}`;
+                text = `IP: ${randomIP}\n[SECURE CONNECTION]`;
+            } else if (randVal < 0.50) {
+                const lat = (Math.random() * 30 + 35).toFixed(4);
+                const lon = (Math.random() * 30 - 90).toFixed(4);
+                text = `LOC: ${lat}, ${lon}\nNODE: EST-GEO-02`;
+            } else if (randVal < 0.75) {
+                const ports = [80, 443, 8443, 22];
+                text = `PORT: ${ports[Math.floor(Math.random()*ports.length)]}\n[TRANSMITTING...]`;
+            } else {
+                text = bigDataPhrases[Math.floor(Math.random() * bigDataPhrases.length)];
+            }
+            
+            data.innerText = text;
+            document.body.appendChild(data);
+            setTimeout(() => data.remove(), 1200); 
+
+            if(Math.random() > 0.8) synth.playDataBeep(); 
+        }
+
+        function windowResized() {
+            resizeCanvas(windowWidth, windowHeight);
+            // Ajustar la densidad de partículas al nuevo ancho de pantalla
+            const target = particleTarget();
+            while (particles.length < target) particles.push(new Particle());
+            while (particles.length > target) particles.pop();
+        }
+
+        class Particle {
+            constructor() {
+                this.x = random(width);
+                this.y = random(height);
+                this.vx = random(-0.5, 0.5); 
+                this.vy = random(-0.5, 0.5);
+                this.size = random(2.0, 4.0);
+                this.pulseOffset = random(100);
+                
+                const nodeTypes = ["0x3F", "0xA1", "0x5E", "TX_OK", "RX_BUF", "NODE_A", "NODE_B", "EST_SVR", "SEC_KEY", "0xD1", "SYS_RUN", "GIGA_07", "SHARD_4", "CAPTURE", "P2P_LINK", "0x7B2"];
+                this.metaTag = nodeTypes[Math.floor(random(nodeTypes.length))];
+                this.showMeta = random(100) > 55;  // Mayor proporción de partículas etiquetadas y capturables
+            }
+            move() {
+                this.x += this.vx;
+                this.y += this.vy;
+                if (this.x < 0 || this.x > width) this.vx *= -1;
+                if (this.y < 0 || this.y > height) this.vy *= -1;
+            }
+            display() {
+                noStroke();
+                let pulse = 150 + sin((frameCount + this.pulseOffset) * 0.08) * 105;
+                fill(0, 170, 255, pulse);
+                ellipse(this.x, this.y, this.size);
+
+                if (this.showMeta && metaDrawn < MAX_META_LABELS) {
+                    const d = dist(mouseX, mouseY, this.x, this.y);
+                    if (d < metaRadius()) {
+                        fill(0, 255, 255, map(d, 0, metaRadius(), 180, 0));
+                        text(this.metaTag, this.x + 6, this.y + 3);
+                        metaDrawn++;
+                    }
+                }
+            }
+        }
+
+        class Ripple {
+            constructor(x, y) {
+                this.x = x;
+                this.y = y;
+                this.currentRadius = 0;
+                this.maxRadius = random(150, 250);
+                this.speed = 5; 
+                this.opacity = 255;
+            }
+            update() {
+                this.currentRadius += this.speed;
+                this.opacity = map(this.currentRadius, 0, this.maxRadius, 255, 0);
+            }
+            display() {
+                noFill();
+                stroke(0, 255, 255, this.opacity);
+                strokeWeight(2);
+                ellipse(this.x, this.y, this.currentRadius * 2);
+            }
+            isFinished() {
+                return this.currentRadius >= this.maxRadius;
+            }
+        }
+
+        function createDataStream() {
+            const stream = document.createElement('div');
+            stream.className = 'data-stream';
+            stream.style.left = Math.random() * 100 + 'vw';
+            stream.style.top = Math.random() * 100 + 'vh';
+            
+            let content = "";
+            const streamType = Math.random();
+            if (streamType > 0.5) {
+                for(let i=0; i<12; i++) content += Math.random().toString(16).substring(2, 4).toUpperCase() + " ";
+            } else if (streamType > 0.2) {
+                content = bigDataPhrases[Math.floor(Math.random() * bigDataPhrases.length)];
+            } else {
+                for(let i=0; i<24; i++) content += Math.random() > 0.5 ? "1" : "0";
+            }
+            
+            stream.innerText = content;
+            document.body.appendChild(stream);
+            
+            setTimeout(() => {
+                stream.style.opacity = '0';
+                setTimeout(() => stream.remove(), 600); 
+            }, 1200);
+        }
+
+        // Frecuencia dinámica: En celular es más moderada para no tragar memoria
+        setInterval(createDataStream, DATA_STREAM_SPEED); 
+    </script>
+</body>
+</html>

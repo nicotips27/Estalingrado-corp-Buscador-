@@ -21,6 +21,7 @@ El portal está compuesto por cuatro páginas HTML estáticas (sin build, sin de
 | `market.html` | Market | Catálogo de productos y licencias con filtros y carrito |
 | `empresa.html` | Empresa | Historia, identidad corporativa y productos físicos |
 | `soporte/soporte.html` | Soporte | Página de soporte: formulario guiado, canales oficiales y preguntas frecuentes |
+| `BigData/Bigdata.html` | Big Data (Intranet) | Sub-página del servicio Big Data, accesible desde su tarjeta en Inicio (sin enlace en el menú) |
 
 ### Soporte (`soporte/`)
 
@@ -35,6 +36,16 @@ proyecto anterior de una sola página):
 - `soporte/admin.html`: panel interno de solicitudes (sin enlace público,
   `noindex` y bloqueado en `robots.txt`).
 
+### Big Data (`BigData/`)
+
+Sub-página del servicio Big Data (Intranet) del portal. Se abre en la **misma
+pestaña** desde la tarjeta **Big Data** de la sección de servicios de
+`index.html`, mediante el botón "Abrir servicio" del modal; **no** aparece en
+la navegación del portal.
+
+- `BigData/Bigdata.html`: experiencia visual de la Intra-net (canvas, telemetría
+  y comandos internos). El comando "Ir a la empresa" vuelve a `../index.html`.
+
 ## Servicios integrados
 
 | Plataforma | Descripción |
@@ -44,7 +55,7 @@ proyecto anterior de una sola página):
 | [EC News](https://nicotips27.github.io/ECnews/) | Portal de noticias corporativas |
 | [EC Download](https://nicotips27.github.io/ec-download/) | Centro de descargas |
 | [EC-OS](https://estalingradocorp.github.io/EstalingradoCorp/market.html#producto=ecospro) | Sistema operativo webizado (redirige a la licencia en el market) |
-| [Big Data (Intranet)](https://nicotips27.github.io/ec-Intra-net/) | Análisis de datos |
+| [Big Data (Intranet)](BigData/Bigdata.html) | Análisis de datos (sub-página del portal) |
 | [Antigua Wiki](https://estalingradocorp.github.io/Intra-net/) | Documentación legacy |
 | [IA 27](https://estalingradocorp.github.io/agente-IA27-/) | Página explicativa del Agente IA |
 
