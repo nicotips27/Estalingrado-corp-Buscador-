@@ -49,7 +49,8 @@ pestaña** desde la tarjeta **Big Data** de la sección de servicios de
 la navegación del portal.
 
 - `BigData/Bigdata.html`: experiencia visual de la Intra-net (canvas, telemetría
-  y comandos internos). El comando "Ir a la empresa" vuelve a `../inicio.html`.
+  y comandos internos). El comando "Ir a la empresa" vuelve a `../inicio.html`
+  y el comando "Ir al buscador" va a `../index.html` (página de inicio).
 
 ### Buscador (página de inicio)
 
