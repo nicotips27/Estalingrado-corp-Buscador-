@@ -16,7 +16,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=20261106" />
+  <link rel="stylesheet" href="style.css?v=20261107" />
 </head>
 <body>
   <!-- LOADER ESTALINGRADO -->
@@ -318,17 +318,36 @@
     </div>
 
     <div id="privacy-modal" class="modal-overlay">
-      <div class="modal-content-wrapper">
+      <div class="modal-content-wrapper privacy-content-wrapper">
         <button class="close-modal" onclick="window.mostrarPoliticaPrivacidad()">×</button>
-        <h2>Política de Privacidad Estalingrado</h2>
-        <p><strong>1. Entorno de Ejecución Local:</strong><br>
-        Todas las búsquedas, marcadores y configuraciones del Dashboard se guardan exclusivamente en el <code>localStorage</code> de tu navegador. Estalingrado Corp no recopila esta información en servidores externos.</p>
-        <p><strong>2. Consultas a APIs de terceros:</strong><br>
-        Las tarjetas enriquecidas (clima, mapas, criptomonedas, libros) realizan peticiones directas desde tu IP a servicios públicos (ej. Open-Meteo, OpenStreetMap, Open Library). Dichos servicios pueden registrar tu IP pública.</p>
-        <p><strong>3. Enlaces Externos:</strong><br>
-        Al hacer clic en un motor tradicional (Google, Bing, etc.), abandonas la intranet segura y te sometes a las políticas de rastreo de dicho buscador.</p>
-        <p><strong>4. Modo OSINT:</strong><br>
-        Consulta fuentes públicas directamente desde tu IP (DNS de Google, RDAP, Certificate Transparency, InternetDB de Shodan, ipwho.is, Wayback Machine y GitHub). No envía tu consulta a Estalingrado Corp. Las búsquedas de emails usan solo el hash MD5 para Gravatar: el email no se transmite. Los enlaces del directorio te llevan a servicios de terceros con sus propias políticas.</p>
+        <h2><i class="fas fa-shield-halved" style="color:var(--primary);"></i> Política de Privacidad</h2>
+        <div class="privacy-badge"><i class="fas fa-shield-check"></i> Estalingrado Corp no recopila datos personales</div>
+        <div class="privacy-chips">
+          <span class="privacy-chip"><i class="fas fa-user-xmark"></i> Sin cuentas</span>
+          <span class="privacy-chip"><i class="fas fa-ban"></i> Sin registro</span>
+          <span class="privacy-chip"><i class="fas fa-server"></i> Sin backend</span>
+          <span class="privacy-chip"><i class="fas fa-laptop"></i> 100% local</span>
+        </div>
+        <p class="privacy-lead">Este buscador funciona por completo en tu navegador. No creás una cuenta, no completás formularios y no registramos tus búsquedas: todo queda en tu dispositivo. Solo dejás de estar cubierto cuando la búsqueda sale a un tercero (motores externos o APIs públicas), tal como se explica a continuación.</p>
+        <div class="privacy-grid">
+          <div class="privacy-card">
+            <strong><i class="fas fa-laptop"></i> 1 · Entorno local</strong>
+            <span>Búsquedas, marcadores, historial y ajustes se guardan únicamente en el <code>localStorage</code> de tu navegador. Estalingrado Corp no los transmite ni los almacena en servidores externos.</span>
+          </div>
+          <div class="privacy-card">
+            <strong><i class="fas fa-cloud"></i> 2 · APIs de terceros</strong>
+            <span>Las tarjetas enriquecidas (clima, mapas, criptomonedas, libros) consultan servicios públicos directamente desde tu IP — Open-Meteo, OpenStreetMap, Open Library y similares. Esos servicios pueden registrar tu IP pública.</span>
+          </div>
+          <div class="privacy-card">
+            <strong><i class="fas fa-arrow-up-right-from-square"></i> 3 · Enlaces externos</strong>
+            <span>Al pulsar un motor tradicional (Google, Bing, etc.) salís de la intranet y pasás a estar sujeto a las políticas de rastreo de ese buscador.</span>
+          </div>
+          <div class="privacy-card">
+            <strong><i class="fas fa-user-secret"></i> 4 · Modo OSINT</strong>
+            <span>Consulta fuentes públicas directamente desde tu IP: DNS de Google, RDAP, Certificate Transparency, InternetDB de Shodan, ipwho.is, Wayback Machine y GitHub. No envía tu consulta a Estalingrado Corp. Las búsquedas de emails usan solo el hash MD5 para Gravatar: el email no se transmite. Los enlaces del directorio te llevan a servicios de terceros con sus propias políticas.</span>
+          </div>
+        </div>
+        <p class="privacy-note"><i class="fas fa-circle-info"></i>En resumen: tu actividad permanece en tu dispositivo. El único tránsito de red adicional es el que hacen, desde tu IP, las APIs y fuentes públicas que consultás.</p>
       </div>
     </div>
 
@@ -340,6 +359,6 @@
   </div>
 
 <script src="osint.js?v=20261106" defer></script>
-<script src="app.js?v=20261106" defer></script>
+<script src="app.js?v=20261107" defer></script>
 </body>
 </html>

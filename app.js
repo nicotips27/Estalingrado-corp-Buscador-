@@ -1862,7 +1862,7 @@ window.toggleSettings = () => UI.togglePanel("settingsPanel");
 window.toggleDashboardView = () => UI.toggleDashboard();
 window.toggleFullScreen = () => UI.toggleFullScreen();
 window.toggleHelp = () => UI.toggleModal("help-modal");
-window.mostrarPoliticaPrivacidad = () => UI.toggleModal("privacy-modal");
+window.mostrarPoliticaPrivacidad = () => { UI.closeAllPanels(); UI.toggleModal("privacy-modal"); };
 window.toggleTerminal = () => UI.toggleModal("modal-terminal");
 window.search = () => SearchManager.performSearch();
 
